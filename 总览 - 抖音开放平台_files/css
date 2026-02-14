@@ -1,0 +1,40 @@
+@font-face {
+    font-family: 'Roboto-Black';
+    src: url(//lf3-pendah.bytetos.com/obj/pendah/fonts/bfb8f7f3dffcffcc) format('truetype');
+    font-style: normal;
+    font-display: swap;
+    font-weight: 500;
+    unicode-range: U+506-fffd;
+}
+
+@font-face {
+    font-family: 'Roboto-Black';
+    src: url(//lf3-pendah.bytetos.com/obj/pendah/fonts/17d3f096dd51e6ed) format('truetype');
+    font-style: normal;
+    font-display: swap;
+    font-weight: 500;
+    unicode-range: U+100-505;
+}
+
+@font-face {
+    font-family: 'Roboto-Black';
+    src: url(//lf3-pendah.bytetos.com/obj/pendah/fonts/d846b0883c0a8046) format('truetype');
+    font-style: normal;
+    font-display: swap;
+    font-weight: 500;
+    unicode-range: U+a3-ff,U+2014,U+2018-2019,U+201c-201d;
+}
+
+@font-face {
+    font-family: 'Roboto-Black';
+    src: url(//lf3-pendah.bytetos.com/obj/pendah/fonts/14206db763747c6a) format('truetype');
+    font-style: normal;
+    font-display: swap;
+    font-weight: 500;
+    unicode-range: U+0-2,U+d,U+21-7e,U+a0-a2;
+}
+/* DEBUG:
+    env.APP_REGION: undefined
+    query region: 
+    final region: cn
+*/
