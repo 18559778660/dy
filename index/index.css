@@ -1,4 +1,4 @@
-<style>.semi-dy-open-space {
+.semi-dy-open-space {
     display: inline-flex
 }
 
@@ -59,7 +59,7 @@
     direction: rtl
 }
 
-</style><style>.semi-dy-open-badge {
+.semi-dy-open-badge {
     position: relative;
     display: inline-block
 }
@@ -215,7 +215,7 @@
     direction: rtl
 }
 
-</style><style>@keyframes semi-dy-open-tooltip-zoomIn {
+@keyframes semi-dy-open-tooltip-zoomIn {
     from {
         opacity: 0;
         transform: scale(0.8, 0.8)
@@ -468,7 +468,7 @@
     right: 0
 }
 
-</style><style>.semi-dy-open-portal {
+.semi-dy-open-portal {
     position: absolute;
     top: 0;
     left: 0;
@@ -482,7 +482,7 @@
     min-width: max-content
 }
 
-</style><style>.semi-dy-open-icon {
+.semi-dy-open-icon {
     display: inline-block;
     font-style: normal;
     line-height: 0;
@@ -527,7 +527,7 @@
     }
 }
 
-</style><style>.semi-dy-open-button-split {
+.semi-dy-open-button-split {
     display: inline-block
 }
 
@@ -1112,7 +1112,7 @@
     margin-left: 0
 }
 
-</style><style>@keyframes semi-dy-open-animation-rotate {
+@keyframes semi-dy-open-animation-rotate {
     from {
         transform: rotate(0)
     }
@@ -1314,7 +1314,7 @@
     margin-left: 0
 }
 
-</style><style>@keyframes semi-dy-open-popover-zoomIn {
+@keyframes semi-dy-open-popover-zoomIn {
     from {
         opacity: 0;
         transform: scale(0.8, 0.8)
@@ -1546,7 +1546,7 @@
     direction: rtl
 }
 
-</style><style>.semi-dy-open-avatar {
+.semi-dy-open-avatar {
     position: relative;
     display: inline-flex;
     overflow: hidden;
@@ -2380,7 +2380,7 @@
     margin-right: -4px
 }
 
-</style><style>.semi-dy-open-tag {
+.semi-dy-open-tag {
     box-sizing: border-box;
     border-radius: var(--semi-border-radius-small);
     background-color: rgba(0, 0, 0, 0);
@@ -2921,7 +2921,7 @@
     margin-left: 0
 }
 
-</style><style>.semi-dy-open-banner {
+.semi-dy-open-banner {
     padding: 12px 12px
 }
 
@@ -3031,7 +3031,7 @@
     margin-left: 12px
 }
 
-</style><style>.semi-dy-open-typography {
+.semi-dy-open-typography {
     color: var(--semi-color-text-0);
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -3451,7 +3451,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 4px
 }
 
-</style><style type="text/css">.carousel .control-arrow,
+.carousel .control-arrow,
 .carousel.carousel-slider .control-arrow {
     -webkit-transition: all .25s ease-in;
     -moz-transition: all .25s ease-in;
@@ -3765,7 +3765,7 @@ p.semi-dy-open-typography-extended,
     opacity: 1
 }
 
-</style><style type="text/css">.index-module_prompt-banner__pHblS .semi-dy-open-banner-content-wrapper {
+.index-module_prompt-banner__pHblS .semi-dy-open-banner-content-wrapper {
     width: 100%;
 }
 
@@ -3777,7 +3777,7 @@ p.semi-dy-open-typography-extended,
     position: relative;
 }
 
-</style><style type="text/css">.style_spin__5uCiL,
+.style_spin__5uCiL,
 .style_spin__5uCiL svg {
     animation: style_iconpark-spin__mGDV3 1s infinite linear;
 }
@@ -3816,7 +3816,7 @@ p.semi-dy-open-typography-extended,
     }
 }
 
-</style><style type="text/css">.index-module_mb8__TRdpD {
+.index-module_mb8__TRdpD {
     margin-bottom: 32px;
 }
 
@@ -3868,7 +3868,7 @@ p.semi-dy-open-typography-extended,
     color: inheri;
 }
 
-</style><style>.semi-dy-open-toast {
+.semi-dy-open-toast {
     pointer-events: none
 }
 
@@ -4025,7 +4025,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 12px
 }
 
-</style><style type="text/css">.index-module_code-container__7TLfk {
+.index-module_code-container__7TLfk {
     padding: 12px;
     display: flex;
     flex-direction: column;
@@ -4058,7 +4058,7 @@ p.semi-dy-open-typography-extended,
     border: 1px solid rgba(60, 137, 255, 0.5) !important;
 }
 
-</style><style>.semi-dy-open-overflow-list {
+.semi-dy-open-overflow-list {
     display: flex;
     flex-wrap: nowrap;
     min-width: 0
@@ -4081,7 +4081,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>@keyframes semi-dy-open-input-active {
+@keyframes semi-dy-open-input-active {
     from {
         transform: scale(1)
     }
@@ -4972,13 +4972,13 @@ p.semi-dy-open-typography-extended,
     padding-left: 36px
 }
 
-</style><style>.semi-dy-open-highlight-tag {
+.semi-dy-open-highlight-tag {
     color: var(--semi-color-highlight);
     background-color: var(--semi-color-highlight-bg);
     font-weight: 600
 }
 
-</style><style>.semi-dy-open-spin {
+.semi-dy-open-spin {
     position: relative;
     display: inline-block;
     width: 20px;
@@ -5100,7 +5100,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-select-option {
+.semi-dy-open-select-option {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px;
@@ -5768,7 +5768,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 8px
 }
 
-</style><style>.semi-dy-open-divider {
+.semi-dy-open-divider {
     margin: 1px 0px 1px 0px;
     border-bottom: 1px solid var(--semi-color-border);
     color: var(--semi-color-text-0);
@@ -5838,7 +5838,7 @@ p.semi-dy-open-typography-extended,
     border-left: 1px dashed var(--semi-color-border)
 }
 
-</style><style>.semi-dy-open-tabs {
+.semi-dy-open-tabs {
     box-sizing: border-box;
     position: relative
 }
@@ -6784,7 +6784,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 8px
 }
 
-</style><style>.semi-dy-open-dropdown {
+.semi-dy-open-dropdown {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px
@@ -6943,7 +6943,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 9px
 }
 
-</style><style>.semi-dy-open-empty {
+.semi-dy-open-empty {
     display: flex
 }
 
@@ -7001,7 +7001,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 32px
 }
 
-</style><style>.semi-dy-open-layout {
+.semi-dy-open-layout {
     display: flex;
     flex: auto;
     flex-direction: column;
@@ -7052,7 +7052,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style type="text/css">@charset "UTF-8";
+@charset "UTF-8";
 
 .index-module_ies-search-component__G2qQK {
     overflow-y: visible;
@@ -7204,14 +7204,14 @@ p.semi-dy-open-typography-extended,
     padding: 4px 11px;
 }
 
-</style><style type="text/css">.index-module_search-key-wrapper__1gHrJ {
+.index-module_search-key-wrapper__1gHrJ {
     display: flex;
     flex-direction: column;
     gap: 24px;
     padding: 20px;
 }
 
-</style><style type="text/css">.index-module_search-key-wrapper__F-hg9 .search-key-wrapper-title {
+.index-module_search-key-wrapper__F-hg9 .search-key-wrapper-title {
     display: flex;
     align-items: center;
     margin-bottom: 12px;
@@ -7269,7 +7269,7 @@ p.semi-dy-open-typography-extended,
     color: #1c5cfb;
 }
 
-</style><style type="text/css">.index-module_search-wrapper__RbP7U {
+.index-module_search-wrapper__RbP7U {
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -7366,7 +7366,7 @@ p.semi-dy-open-typography-extended,
     border-radius: 3px;
 }
 
-</style><style>.semi-dy-open-row {
+.semi-dy-open-row {
     display: block;
     box-sizing: border-box;
     position: relative;
@@ -13771,7 +13771,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-form .semi-dy-open-form-field {
+.semi-dy-open-form .semi-dy-open-form-field {
     box-sizing: border-box
 }
 
@@ -14113,7 +14113,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-input-textarea-wrapper {
+.semi-dy-open-input-textarea-wrapper {
     box-sizing: border-box;
     display: inline-block;
     position: relative;
@@ -14411,7 +14411,7 @@ p.semi-dy-open-typography-extended,
     padding-left: 36px
 }
 
-</style><style>.semi-dy-open-input-number {
+.semi-dy-open-input-number {
     display: inline-flex;
     align-items: center;
     box-sizing: border-box;
@@ -14540,7 +14540,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 0
 }
 
-</style><style>.semi-dy-open-checkbox {
+.semi-dy-open-checkbox {
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -14918,7 +14918,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-radio {
+.semi-dy-open-radio {
     box-sizing: border-box;
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -15326,7 +15326,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-scrolllist {
+.semi-dy-open-scrolllist {
     width: 100%;
     height: 100%;
     background: var(--semi-color-bg-3);
@@ -15538,7 +15538,7 @@ p.semi-dy-open-typography-extended,
     padding-left: 18px
 }
 
-</style><style>.semi-dy-open-datepicker {
+.semi-dy-open-datepicker {
     box-sizing: border-box;
     display: inline-block
 }
@@ -17221,7 +17221,7 @@ p.semi-dy-open-typography-extended,
     transform: translateX(-50%)
 }
 
-</style><style>.semi-dy-open-switch {
+.semi-dy-open-switch {
     box-sizing: border-box;
     display: inline-block;
     border-radius: 12px;
@@ -17584,7 +17584,7 @@ p.semi-dy-open-typography-extended,
     transform: translateX(-9px)
 }
 
-</style><style>.semi-dy-open-slider {
+.semi-dy-open-slider {
     padding: 0px 13px;
     margin: 0px
 }
@@ -17825,7 +17825,7 @@ p.semi-dy-open-typography-extended,
     transform: rotate(180deg)
 }
 
-</style><style>.semi-dy-open-timepicker {
+.semi-dy-open-timepicker {
     display: inline-block
 }
 
@@ -17958,7 +17958,7 @@ p.semi-dy-open-typography-extended,
     border-left: 2px solid var(--semi-color-border)
 }
 
-</style><style>.semi-dy-open-tree-search-wrapper {
+.semi-dy-open-tree-search-wrapper {
     padding: 8px 12px
 }
 
@@ -18635,7 +18635,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-tree-select {
+.semi-dy-open-tree-select {
     box-sizing: border-box;
     border-radius: var(--semi-border-radius-small);
     border: 1px solid rgba(0, 0, 0, 0);
@@ -19089,11 +19089,11 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-collapsible-transition {
+.semi-dy-open-collapsible-transition {
     transition: height 250ms cubic-bezier(0.25, 0.1, 0.25, 1) var(--semi-transition_delay-none), opacity 250ms var(--semi-transition_function-easeIn) var(--semi-transition_delay-none)
 }
 
-</style><style>.semi-dy-open-tagInput {
+.semi-dy-open-tagInput {
     background-color: var(--semi-color-fill-0);
     border: 1px rgba(0, 0, 0, 0) solid;
     border-radius: var(--semi-border-radius-small);
@@ -19421,7 +19421,7 @@ p.semi-dy-open-typography-extended,
     padding-right: 0
 }
 
-</style><style>.semi-dy-open-cascader {
+.semi-dy-open-cascader {
     box-sizing: border-box;
     border-radius: var(--semi-border-radius-small);
     border: 1px solid rgba(0, 0, 0, 0);
@@ -20073,7 +20073,7 @@ p.semi-dy-open-typography-extended,
     transform: scaleX(-1)
 }
 
-</style><style>.semi-dy-open-rating {
+.semi-dy-open-rating {
     display: inline-block;
     margin: 0px;
     padding: 0px;
@@ -20187,7 +20187,7 @@ p.semi-dy-open-typography-extended,
     right: 0
 }
 
-</style><style>.semi-dy-open-autocomplete-option {
+.semi-dy-open-autocomplete-option {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px;
@@ -20309,7 +20309,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-progress {
+.semi-dy-open-progress {
     display: flex;
     align-items: center
 }
@@ -20436,7 +20436,7 @@ p.semi-dy-open-typography-extended,
     transform: translate(50%, -50%)
 }
 
-</style><style>.semi-dy-open-upload {
+.semi-dy-open-upload {
     display: flex;
     flex-wrap: wrap
 }
@@ -21106,7 +21106,7 @@ p.semi-dy-open-typography-extended,
     left: 6px
 }
 
-</style><style>.semi-dy-open-modal {
+.semi-dy-open-modal {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px;
@@ -21403,7 +21403,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 12px
 }
 
-</style><style>.semi-dy-open-navigation {
+.semi-dy-open-navigation {
     box-sizing: border-box;
     display: inline-flex;
     width: 240px;
@@ -22416,7 +22416,7 @@ p.semi-dy-open-typography-extended,
     padding-left: 0
 }
 
-</style><style>.semi-dy-open-userGuide-spotlight {
+.semi-dy-open-userGuide-spotlight {
     position: fixed;
     top: 0;
     left: 0;
@@ -22548,7 +22548,7 @@ p.semi-dy-open-typography-extended,
     column-gap: 12px
 }
 
-</style><style type="text/css">.index-module_footer-container__hMTGt {
+.index-module_footer-container__hMTGt {
     width: 100%;
 }
 
@@ -22643,7 +22643,7 @@ p.semi-dy-open-typography-extended,
     cursor: pointer;
 }
 
-</style><style type="text/css">.carousel .control-arrow,
+.carousel .control-arrow,
 .carousel.carousel-slider .control-arrow {
     -webkit-transition: all .25s ease-in;
     -moz-transition: all .25s ease-in;
@@ -22957,7 +22957,7 @@ p.semi-dy-open-typography-extended,
     opacity: 1
 }
 
-</style><style type="text/css">.index-module_prompt-banner__pHblS .semi-dy-open-banner-content-wrapper {
+.index-module_prompt-banner__pHblS .semi-dy-open-banner-content-wrapper {
     width: 100%;
 }
 
@@ -22969,7 +22969,7 @@ p.semi-dy-open-typography-extended,
     position: relative;
 }
 
-</style><style>body {
+body {
     --semi-transform_scale-none: scale(1, 1);
     --semi-transform_scale-small: scale(1, 1);
     --semi-transform_scale-medium: scale(1, 1);
@@ -23686,7 +23686,7 @@ body .semi-always-dark {
     background: var(--semi-color-fill-1)
 }
 
-</style><style>.semi-dy-open-typography {
+.semi-dy-open-typography {
     color: var(--semi-color-text-0);
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -24106,7 +24106,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 4px
 }
 
-</style><style>@keyframes semi-dy-open-tooltip-zoomIn {
+@keyframes semi-dy-open-tooltip-zoomIn {
     from {
         opacity: 0;
         transform: scale(0.8, 0.8)
@@ -24358,7 +24358,7 @@ p.semi-dy-open-typography-extended,
     right: 0
 }
 
-</style><style>.semi-dy-open-portal {
+.semi-dy-open-portal {
     position: absolute;
     top: 0;
     left: 0;
@@ -24372,7 +24372,7 @@ p.semi-dy-open-typography-extended,
     min-width: max-content
 }
 
-</style><style>.semi-dy-open-icon {
+.semi-dy-open-icon {
     display: inline-block;
     font-style: normal;
     line-height: 0;
@@ -24417,7 +24417,7 @@ p.semi-dy-open-typography-extended,
     }
 }
 
-</style><style>@keyframes semi-dy-open-popover-zoomIn {
+@keyframes semi-dy-open-popover-zoomIn {
     from {
         opacity: 0;
         transform: scale(0.8, 0.8)
@@ -24648,7 +24648,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-anchor {
+.semi-dy-open-anchor {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px;
@@ -24797,7 +24797,7 @@ p.semi-dy-open-typography-extended,
     padding-left: auto
 }
 
-</style><style>.semi-dy-open-spin {
+.semi-dy-open-spin {
     position: relative;
     display: inline-block;
     width: 20px;
@@ -24919,7 +24919,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>@keyframes semi-dy-open-input-active {
+@keyframes semi-dy-open-input-active {
     from {
         transform: scale(1)
     }
@@ -25810,13 +25810,13 @@ p.semi-dy-open-typography-extended,
     padding-left: 36px
 }
 
-</style><style>.semi-dy-open-highlight-tag {
+.semi-dy-open-highlight-tag {
     color: var(--semi-color-highlight);
     background-color: var(--semi-color-highlight-bg);
     font-weight: 600
 }
 
-</style><style>.semi-dy-open-autocomplete-option {
+.semi-dy-open-autocomplete-option {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px;
@@ -25938,7 +25938,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-avatar {
+.semi-dy-open-avatar {
     position: relative;
     display: inline-flex;
     overflow: hidden;
@@ -26772,7 +26772,7 @@ p.semi-dy-open-typography-extended,
     margin-right: -4px
 }
 
-</style><style>.semi-dy-open-backtop {
+.semi-dy-open-backtop {
     position: fixed;
     box-sizing: border-box;
     right: 100px;
@@ -26790,7 +26790,7 @@ p.semi-dy-open-typography-extended,
     left: 100px
 }
 
-</style><style>.semi-dy-open-button-split {
+.semi-dy-open-button-split {
     display: inline-block
 }
 
@@ -27375,7 +27375,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 0
 }
 
-</style><style>@keyframes semi-dy-open-animation-rotate {
+@keyframes semi-dy-open-animation-rotate {
     from {
         transform: rotate(0)
     }
@@ -27577,7 +27577,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 0
 }
 
-</style><style>.semi-dy-open-badge {
+.semi-dy-open-badge {
     position: relative;
     display: inline-block
 }
@@ -27733,7 +27733,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-banner {
+.semi-dy-open-banner {
     padding: 12px 12px
 }
 
@@ -27843,7 +27843,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 12px
 }
 
-</style><style>.semi-dy-open-breadcrumb {
+.semi-dy-open-breadcrumb {
     overflow: hidden
 }
 
@@ -27976,7 +27976,7 @@ p.semi-dy-open-typography-extended,
     display: inline-block
 }
 
-</style><style>.semi-dy-open-calendar-day ul,
+.semi-dy-open-calendar-day ul,
 .semi-dy-open-calendar-day li,
 .semi-dy-open-calendar-week ul,
 .semi-dy-open-calendar-week li,
@@ -28672,7 +28672,7 @@ p.semi-dy-open-typography-extended,
     margin-left: -4px
 }
 
-</style><style>.semi-dy-open-card {
+.semi-dy-open-card {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -28844,7 +28844,7 @@ p.semi-dy-open-typography-extended,
     margin-bottom: -1px
 }
 
-</style><style>.semi-dy-open-skeleton-avatar,
+.semi-dy-open-skeleton-avatar,
 .semi-dy-open-skeleton-image,
 .semi-dy-open-skeleton-title,
 .semi-dy-open-skeleton-button {
@@ -28950,7 +28950,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-space {
+.semi-dy-open-space {
     display: inline-flex
 }
 
@@ -29011,7 +29011,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-carousel {
+.semi-dy-open-carousel {
     position: relative;
     overflow: hidden
 }
@@ -29449,7 +29449,7 @@ p.semi-dy-open-typography-extended,
     z-index: 2
 }
 
-</style><style>.semi-dy-open-cascader {
+.semi-dy-open-cascader {
     box-sizing: border-box;
     border-radius: var(--semi-border-radius-small);
     border: 1px solid rgba(0, 0, 0, 0);
@@ -30101,7 +30101,7 @@ p.semi-dy-open-typography-extended,
     transform: scaleX(-1)
 }
 
-</style><style>.semi-dy-open-checkbox {
+.semi-dy-open-checkbox {
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -30479,7 +30479,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-tag {
+.semi-dy-open-tag {
     box-sizing: border-box;
     border-radius: var(--semi-border-radius-small);
     background-color: rgba(0, 0, 0, 0);
@@ -31020,7 +31020,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 0
 }
 
-</style><style>.semi-dy-open-tagInput {
+.semi-dy-open-tagInput {
     background-color: var(--semi-color-fill-0);
     border: 1px rgba(0, 0, 0, 0) solid;
     border-radius: var(--semi-border-radius-small);
@@ -31348,11 +31348,11 @@ p.semi-dy-open-typography-extended,
     padding-right: 0
 }
 
-</style><style>.semi-dy-open-collapsible-transition {
+.semi-dy-open-collapsible-transition {
     transition: height 250ms cubic-bezier(0.25, 0.1, 0.25, 1) var(--semi-transition_delay-none), opacity 250ms var(--semi-transition_function-easeIn) var(--semi-transition_delay-none)
 }
 
-</style><style>.semi-dy-open-collapse-item {
+.semi-dy-open-collapse-item {
     border-bottom: 1px solid var(--semi-color-border)
 }
 
@@ -31450,7 +31450,7 @@ p.semi-dy-open-typography-extended,
     padding-left: 0
 }
 
-</style><style>.semi-dy-open-scrolllist {
+.semi-dy-open-scrolllist {
     width: 100%;
     height: 100%;
     background: var(--semi-color-bg-3);
@@ -31662,7 +31662,7 @@ p.semi-dy-open-typography-extended,
     padding-left: 18px
 }
 
-</style><style>.semi-dy-open-datepicker {
+.semi-dy-open-datepicker {
     box-sizing: border-box;
     display: inline-block
 }
@@ -33345,7 +33345,7 @@ p.semi-dy-open-typography-extended,
     transform: translateX(-50%)
 }
 
-</style><style>.semi-dy-open-descriptions {
+.semi-dy-open-descriptions {
     line-height: 20px
 }
 
@@ -33594,7 +33594,7 @@ p.semi-dy-open-typography-extended,
     padding-left: 80px
 }
 
-</style><style>.semi-dy-open-divider {
+.semi-dy-open-divider {
     margin: 1px 0px 1px 0px;
     border-bottom: 1px solid var(--semi-color-border);
     color: var(--semi-color-text-0);
@@ -33664,7 +33664,7 @@ p.semi-dy-open-typography-extended,
     border-left: 1px dashed var(--semi-color-border)
 }
 
-</style><style>.semi-dy-open-empty {
+.semi-dy-open-empty {
     display: flex
 }
 
@@ -33722,7 +33722,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 32px
 }
 
-</style><style>.semi-dy-open-modal {
+.semi-dy-open-modal {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px;
@@ -34017,7 +34017,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 12px
 }
 
-</style><style>.semi-dy-open-dropdown {
+.semi-dy-open-dropdown {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px
@@ -34175,7 +34175,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 9px
 }
 
-</style><style>.semi-dy-open-row {
+.semi-dy-open-row {
     display: block;
     box-sizing: border-box;
     position: relative;
@@ -40580,7 +40580,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-layout {
+.semi-dy-open-layout {
     display: flex;
     flex: auto;
     flex-direction: column;
@@ -40631,7 +40631,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-list {
+.semi-dy-open-list {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px
@@ -40783,7 +40783,7 @@ p.semi-dy-open-typography-extended,
     border-left: none
 }
 
-</style><style>.semi-dy-open-input-textarea-wrapper {
+.semi-dy-open-input-textarea-wrapper {
     box-sizing: border-box;
     display: inline-block;
     position: relative;
@@ -41081,7 +41081,7 @@ p.semi-dy-open-typography-extended,
     padding-left: 36px
 }
 
-</style><style>.semi-dy-open-input-number {
+.semi-dy-open-input-number {
     display: inline-flex;
     align-items: center;
     box-sizing: border-box;
@@ -41210,7 +41210,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 0
 }
 
-</style><style>.semi-dy-open-navigation {
+.semi-dy-open-navigation {
     box-sizing: border-box;
     display: inline-flex;
     width: 240px;
@@ -42223,7 +42223,7 @@ p.semi-dy-open-typography-extended,
     padding-left: 0
 }
 
-</style><style>.semi-dy-open-notification-wrapper {
+.semi-dy-open-notification-wrapper {
     position: fixed
 }
 
@@ -42617,7 +42617,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 8px
 }
 
-</style><style>.semi-dy-open-overflow-list {
+.semi-dy-open-overflow-list {
     display: flex;
     flex-wrap: nowrap;
     min-width: 0
@@ -42640,7 +42640,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-page {
+.semi-dy-open-page {
     display: flex;
     list-style: none;
     padding: 0;
@@ -42850,7 +42850,7 @@ p.semi-dy-open-typography-extended,
     transform: scaleX(-1)
 }
 
-</style><style>.semi-dy-open-select-option {
+.semi-dy-open-select-option {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px;
@@ -43518,7 +43518,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 8px
 }
 
-</style><style>.semi-dy-open-popconfirm {
+.semi-dy-open-popconfirm {
     box-sizing: border-box;
     max-width: 400px
 }
@@ -43625,7 +43625,7 @@ p.semi-dy-open-typography-extended,
     padding: 12px 8px 12px 12px
 }
 
-</style><style>.semi-dy-open-progress {
+.semi-dy-open-progress {
     display: flex;
     align-items: center
 }
@@ -43752,7 +43752,7 @@ p.semi-dy-open-typography-extended,
     transform: translate(50%, -50%)
 }
 
-</style><style>.semi-dy-open-radio {
+.semi-dy-open-radio {
     box-sizing: border-box;
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -44160,7 +44160,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-rating {
+.semi-dy-open-rating {
     display: inline-block;
     margin: 0px;
     padding: 0px;
@@ -44274,7 +44274,7 @@ p.semi-dy-open-typography-extended,
     right: 0
 }
 
-</style><style>.semi-dy-open-sidesheet {
+.semi-dy-open-sidesheet {
     font-size: 14px;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px;
@@ -44631,7 +44631,7 @@ p.semi-dy-open-typography-extended,
     text-align: right
 }
 
-</style><style>.semi-dy-open-slider {
+.semi-dy-open-slider {
     padding: 0px 13px;
     margin: 0px
 }
@@ -44872,7 +44872,7 @@ p.semi-dy-open-typography-extended,
     transform: rotate(180deg)
 }
 
-</style><style>.semi-dy-open-steps .semi-dy-open-col {
+.semi-dy-open-steps .semi-dy-open-col {
     flex: 1
 }
 
@@ -45421,7 +45421,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-switch {
+.semi-dy-open-switch {
     box-sizing: border-box;
     display: inline-block;
     border-radius: 12px;
@@ -45784,7 +45784,7 @@ p.semi-dy-open-typography-extended,
     transform: translateX(-9px)
 }
 
-</style><style>.semi-dy-open-table-panel-operation {
+.semi-dy-open-table-panel-operation {
     background-color: var(--semi-color-primary);
     padding-left: 16px;
     padding-right: 16px;
@@ -46538,7 +46538,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-tabs {
+.semi-dy-open-tabs {
     box-sizing: border-box;
     position: relative
 }
@@ -47484,7 +47484,7 @@ p.semi-dy-open-typography-extended,
     margin-left: 8px
 }
 
-</style><style>.semi-dy-open-timeline {
+.semi-dy-open-timeline {
     margin: 0;
     padding: 8px;
     width: 100%;
@@ -47752,7 +47752,7 @@ p.semi-dy-open-typography-extended,
     right: calc(100% - 9px)
 }
 
-</style><style>.semi-dy-open-timepicker {
+.semi-dy-open-timepicker {
     display: inline-block
 }
 
@@ -47885,7 +47885,7 @@ p.semi-dy-open-typography-extended,
     border-left: 2px solid var(--semi-color-border)
 }
 
-</style><style>.semi-dy-open-toast {
+.semi-dy-open-toast {
     pointer-events: none
 }
 
@@ -48042,7 +48042,7 @@ p.semi-dy-open-typography-extended,
     margin-right: 12px
 }
 
-</style><style>.semi-dy-open-tree-search-wrapper {
+.semi-dy-open-tree-search-wrapper {
     padding: 8px 12px
 }
 
@@ -48719,7 +48719,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-tree-select {
+.semi-dy-open-tree-select {
     box-sizing: border-box;
     border-radius: var(--semi-border-radius-small);
     border: 1px solid rgba(0, 0, 0, 0);
@@ -49173,7 +49173,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-upload {
+.semi-dy-open-upload {
     display: flex;
     flex-wrap: wrap
 }
@@ -49843,7 +49843,7 @@ p.semi-dy-open-typography-extended,
     left: 6px
 }
 
-</style><style>.semi-dy-open-transfer {
+.semi-dy-open-transfer {
     background-color: var(--semi-color-bg-1);
     border: 1px solid var(--semi-color-border);
     border-radius: var(--semi-border-radius-medium);
@@ -50087,7 +50087,7 @@ p.semi-dy-open-typography-extended,
     padding-right: 12px
 }
 
-</style><style>.semi-dy-open-form .semi-dy-open-form-field {
+.semi-dy-open-form .semi-dy-open-form-field {
     box-sizing: border-box
 }
 
@@ -50429,7 +50429,7 @@ p.semi-dy-open-typography-extended,
     direction: rtl
 }
 
-</style><style>.semi-dy-open-image {
+.semi-dy-open-image {
     border-radius: var(--semi-border-radius-small);
     position: relative;
     display: inline-block;
@@ -50703,7 +50703,7 @@ img:not([src]) {
     transform: var(--semi-transform_rotate-clockwise180deg)
 }
 
-</style><style>.semi-dy-open-colorPicker-colorChooseArea {
+.semi-dy-open-colorPicker-colorChooseArea {
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .05);
     position: relative;
     flex-grow: 1;
@@ -50796,7 +50796,7 @@ img:not([src]) {
     cursor: pointer
 }
 
-</style><style>.semi-dy-open-pincode-wrapper {
+.semi-dy-open-pincode-wrapper {
     display: flex
 }
 
@@ -50832,7 +50832,7 @@ img:not([src]) {
     text-align: center
 }
 
-</style><style>.semi-dy-open-markdownRender-simple-code {
+.semi-dy-open-markdownRender-simple-code {
     background: var(--semi-color-fill-0);
     color: var(--semi-color-text-1)
 }
@@ -50886,7 +50886,7 @@ img:not([src]) {
     font-weight: 600
 }
 
-</style><style>.semi-dy-open-codeHighlight-defaultTheme pre[class*=language-],
+.semi-dy-open-codeHighlight-defaultTheme pre[class*=language-],
 .semi-dy-open-codeHighlight-defaultTheme code[class*=language-] {
     color: var(--semi-color-text-0);
     font-size: 13px;
@@ -51060,7 +51060,7 @@ img:not([src]) {
     text-align: right
 }
 
-</style><style>.semi-dy-open-chat {
+.semi-dy-open-chat {
     padding-top: 12px;
     padding-bottom: 12px;
     display: flex;
@@ -51660,7 +51660,7 @@ img:not([src]) {
     transform: scaleX(-1)
 }
 
-</style><style>.semi-dy-open-hotKeys {
+.semi-dy-open-hotKeys {
     box-sizing: border-box;
     position: relative;
     user-select: none;
@@ -51692,7 +51692,7 @@ img:not([src]) {
     color: var(--semi-color-text-0)
 }
 
-</style><style>.semi-dy-open-resizable-resizable {
+.semi-dy-open-resizable-resizable {
     position: relative;
     box-sizing: border-box;
     flex-shrink: 0
@@ -51825,7 +51825,7 @@ img:not([src]) {
     position: fixed
 }
 
-</style><style>.semi-dy-open-json-viewer-background {
+.semi-dy-open-json-viewer-background {
     background-color: var(--semi-color-default)
 }
 
@@ -52035,7 +52035,7 @@ img:not([src]) {
     text-underline-position: under
 }
 
-</style><style>.semi-dy-open-cropper {
+.semi-dy-open-cropper {
     position: relative
 }
 
@@ -52146,7 +52146,7 @@ img:not([src]) {
     user-select: none
 }
 
-</style><style>.semi-dy-open-audio-player {
+.semi-dy-open-audio-player {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -52365,7 +52365,7 @@ img:not([src]) {
     transition: opacity .2s
 }
 
-</style><style>.semi-dy-open-userGuide-spotlight {
+.semi-dy-open-userGuide-spotlight {
     position: fixed;
     top: 0;
     left: 0;
@@ -52497,7 +52497,7 @@ img:not([src]) {
     column-gap: 12px
 }
 
-</style><style>.semi-dy-open-videoPlayer {
+.semi-dy-open-videoPlayer {
     position: relative;
     display: inline-block;
     width: 100%;
@@ -52818,7 +52818,7 @@ img:not([src]) {
     top: 15px
 }
 
-</style><style type="text/css">.__react-ellipsis-native.ellipsis {
+.__react-ellipsis-native.ellipsis {
     display: -webkit-box;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -52826,7 +52826,7 @@ img:not([src]) {
     -webkit-box-orient: vertical;
 }
 
-</style><style type="text/css">.index-module_check-box__lbizJ {
+.index-module_check-box__lbizJ {
     align-items: flex-start;
 }
 
@@ -52834,7 +52834,7 @@ img:not([src]) {
     display: inline;
 }
 
-</style><style type="text/css">.index-module_container__pXMWy {
+.index-module_container__pXMWy {
     display: flex;
     flex-direction: column;
 }
@@ -52855,5 +52855,3 @@ img:not([src]) {
     margin-top: 32px;
     margin-bottom: 24px;
 }
-
-</style>
