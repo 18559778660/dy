@@ -57,9 +57,12 @@
                         lineWidth: 2
                     }
                 },
-                // 数据点配置 - hover 显示空心圆点
+                // 数据点配置 - 默认点不可见，hover 显示空心圆点
                 point: {
-                    visible: false,
+                    visible: true,
+                    style: {
+                        size: 0 // 设为 0，相当于默认状态看不到点
+                    },
                     state: {
                         hover: {
                             visible: true,
@@ -67,7 +70,7 @@
                                 fill: '#ffffff',      // 白色填充（空心效果）
                                 stroke: '#1C5CFB',    // 蓝色描边
                                 lineWidth: 2,
-                                size: 6
+                                size: 8               // hover 时稍微大一点更明显
                             }
                         }
                     }
