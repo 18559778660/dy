@@ -29,13 +29,13 @@
 
         // 模拟数据 - 这里可以替换成真实数据
         const data = [
-            { date: '02/01', value: 8500 },
-            { date: '02/02', value: 9200 },
-            { date: '02/03', value: 10640 },
-            { date: '02/04', value: 9800 },
-            { date: '02/05', value: 11200 },
-            { date: '02/06', value: 10640 },
-            { date: '02/07', value: 12000 }
+            { date: '02/01', 'value': '8,500', "medalType": "日访问用户" },
+            { date: '02/02', 'value': '9,200', "medalType": "日访问用户" },
+            { date: '02/03', 'value': '10,640', "medalType": "日访问用户" },
+            { date: '02/04', 'value': '9,800', "medalType": "日访问用户" },
+            { date: '02/05', 'value': '11,200', "medalType": "日访问用户" },
+            { date: '02/06', 'value': '10,640', "medalType": "日访问用户" },
+            { date: '02/07', 'value': '12,000', "medalType": "日访问用户" }
         ];
 
         // 图表标题配置 - 支持多个图表
@@ -55,7 +55,8 @@
                 type: 'line',
                 data: [{ values: data, id: 'data' }],
                 xField: 'date',
-                yField: 'value',
+                yField: 'value',  // ✅ 改成 value，因为数据字段是 value
+                seriesField: 'medalType',  // ✅ 系列字段，tooltip 会显示这个字段的值
                 // 线条样式
                 line: {
                     style: {
@@ -105,7 +106,7 @@
                         grid: {
                             visible: true,
                             style: {
-                                lineDash: [4, 4],
+                                lineDash: [],  // 空数组表示实线
                                 stroke: '#E5E6EB'
                             }
                         },
@@ -126,7 +127,7 @@
                         }
                     }
                 ],
-                // 悬停提示
+                // 悬停提示 - VChart 2.x 使用默认配置，会自动显示 seriesField 名称
                 tooltip: {
                     visible: true
                 },
