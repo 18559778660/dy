@@ -2,17 +2,13 @@
 (function () {
     console.log('开始加载公告数据...');
 
-    // 确保DOM加载完成后再执行
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    // 直接执行，无需等待 DOM 加载（脚本在 body 底部执行）
+    init();
 
     function init() {
-        console.log('DOM已准备就绪，开始初始化公告渲染');
+        console.log('开始初始化公告渲染');
 
-        // 加载JSON数据
+        // 加载 JSON 数据
         const xhr = new XMLHttpRequest();
         xhr.open('GET', './announcements.json', true);
         xhr.onload = function () {

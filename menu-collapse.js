@@ -1,16 +1,12 @@
-// 侧边菜单功能管理（折叠 + 选中状态）
+// 侧边菜单功能管理（折叠功能）
 (function () {
-    console.log('初始化菜单功能...');
+    console.log('初始化菜单折叠功能...');
 
-    // 等待DOM加载完成后初始化
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMenu);
-    } else {
-        initMenu();
-    }
+    // 直接执行，无需等待 DOM 加载（脚本在 body 底部执行）
+    initMenu();
 
     function initMenu() {
-        console.log('DOM已准备就绪，开始初始化菜单');
+        console.log('开始初始化菜单折叠功能');
 
         // 处理可折叠菜单
         const collapsibleMenus = document.querySelectorAll('.semi-dy-open-navigation-sub-wrap');
@@ -66,41 +62,6 @@
             }
         });
 
-        // 处理所有菜单项的选中状态
-        const allMenuItems = document.querySelectorAll('.semi-dy-open-navigation-item');
-
-        allMenuItems.forEach(item => {
-            item.addEventListener('click', function (e) {
-                // 阻止事件冒泡到父级菜单
-                e.stopPropagation();
-
-                // 获取菜单项文本
-                const itemName = this.querySelector('.semi-dy-open-navigation-item-text')?.textContent || '未知';
-
-                // 移除所有其他项的选中状态
-                allMenuItems.forEach(otherItem => {
-                    otherItem.classList.remove('semi-dy-open-navigation-item-selected');
-                });
-
-                // 为当前项添加选中状态
-                this.classList.add('semi-dy-open-navigation-item-selected');
-
-                // 根据选中项控制仪表板内容显示
-                const dashboardContent = document.querySelector('.w-full.h-full');
-                if (itemName === '总览' && dashboardContent) {
-                    // 显示仪表板内容
-                    dashboardContent.style.display = 'block';
-                    console.log('显示仪表板内容');
-                } else if (dashboardContent) {
-                    // 隐藏仪表板内容，显示空白
-                    dashboardContent.style.display = 'none';
-                    console.log('隐藏仪表板内容，当前选中:', itemName);
-                }
-
-                console.log('选中菜单项:', itemName);
-            });
-        });
-
-        console.log(`已初始化 ${collapsibleMenus.length} 个可折叠菜单，${allMenuItems.length} 个菜单项`);
+        console.log(`已初始化 ${collapsibleMenus.length} 个可折叠菜单`);
     }
 })();

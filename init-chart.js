@@ -39,8 +39,11 @@
         ];
 
         try {
-            // VChart v1.2.0 使用 VChart.VChart 作为构造函数
+            // VChart v2.x 使用 VChart.VChart 作为构造函数
             const ChartClass = VChart.VChart || VChart;
+
+            console.log('VChart 对象:', typeof VChart);
+            console.log('ChartClass:', ChartClass);
 
             const vchart = new ChartClass({
                 type: 'line',
@@ -54,21 +57,22 @@
                         lineWidth: 2
                     }
                 },
-                // 数据点：默认隐藏，hover 显示空心点
+                // 数据点配置 - hover 显示空心圆点
                 point: {
                     visible: false,
                     state: {
                         hover: {
                             visible: true,
                             style: {
-                                fill: '#ffffff',
-                                stroke: '#1C5CFB',
-                                lineWidth: 2
+                                fill: '#ffffff',      // 白色填充（空心效果）
+                                stroke: '#1C5CFB',    // 蓝色描边
+                                lineWidth: 2,
+                                size: 6
                             }
                         }
                     }
                 },
-                // 区域渐变填充
+                // 区域渐变填充 - 折线图底下的蓝色渐变
                 area: {
                     visible: true,
                     style: {
@@ -79,8 +83,8 @@
                             x1: 0,
                             y1: 1,
                             stops: [
-                                { offset: 0, color: 'rgba(28, 92, 251, 0.3)' },
-                                { offset: 1, color: 'rgba(28, 92, 251, 0.05)' }
+                                { offset: 0, color: 'rgba(28, 92, 251, 0.3)' },   // 顶部蓝色较深
+                                { offset: 1, color: 'rgba(28, 92, 251, 0.05)' }   // 底部蓝色较浅
                             ]
                         }
                     }
@@ -116,10 +120,23 @@
                 // 悬停提示
                 tooltip: {
                     visible: true
+                },
+                // 十字准星线 - hover 时的虚线背景
+                crosshair: {
+                    x: {
+                        visible: true,
+                        style: {
+                            stroke: '#1C5CFB',
+                            lineDash: [4, 4]
+                        }
+                    },
+                    y: {
+                        visible: false
+                    }
                 }
             }, {
                 dom: chartDom,
-                width: chartDom.offsetWidth || 765,// 动态优先，固定兜底
+                width: chartDom.offsetWidth || 765,
                 height: chartDom.offsetHeight || 305
             });
 
