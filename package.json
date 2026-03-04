@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@visactor/vchart": "^1.2.0"
+  }
+}

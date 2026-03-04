@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>VChart v1.12.0 工作版</title>
+</head>
+
+<body>
+    <div id="chart" style="width: 765px; height: 305px;"></div>
+
+    <!-- 引用本地 UMD 文件 -->
+    <script src="./node_modules/@visactor/vchart/build/index.min.js"></script>
+
+    <script>
+        // 等待页面和库都加载完成
+        window.addEventListener('load', function () {
+            console.log('页面加载完成');
+
+            // 检查 VChart 是否已加载
+            if (typeof VChart === 'undefined') {
+                console.error('❌ VChart 库未加载成功，请检查 node_modules 是否存在');
+                return;
+            }
+
+            console.log('✅ VChart 库已加载');
+            console.log('VChart 对象:', VChart);
+
+            // 创建图表配置
+            const spec = {
+                type: 'bar',
+                data: {
+                    values: [
+                        { category: '一月', value: 28 },
+                        { category: '二月', value: 55 },
+                        { category: '三月', value: 43 },
+                        { category: '四月', value: 91 }
+                    ]
+                },
+                xField: 'category',
+                yField: 'value'
+            };
+
+            // 使用 VChart.VChart 作为构造函数
+            const ChartClass = VChart.VChart || VChart;
+            console.log('使用图表类:', ChartClass);
+
+            const chart = new ChartClass(spec, { dom: 'chart' });
+            chart.renderAsync().then(() => {
+                console.log('✅ 图表渲染成功');
+            }).catch(err => {
+                console.error('❌ 图表渲染失败:', err);
+            });
+        });
+    </script>
+</body>
+
+</html>
