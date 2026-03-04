@@ -38,6 +38,12 @@
             { date: '02/07', value: 12000 }
         ];
 
+        // 图表标题配置 - 支持多个图表
+        const chartConfig = {
+            title: '日访问用户',
+            showTitle: true
+        };
+
         try {
             // VChart v2.x 使用 VChart.VChart 作为构造函数
             const ChartClass = VChart.VChart || VChart;
@@ -148,12 +154,61 @@
             // 渲染图表
             vchart.renderAsync().then(() => {
                 console.log('图表渲染完成');
+
+                // 动态创建标题
+                if (chartConfig.showTitle) {
+                    createChartTitle(chartDom, chartConfig.title);
+                }
             }).catch(err => {
                 console.error('图表渲染失败:', err);
             });
 
         } catch (error) {
             console.error('VChart 初始化失败:', error);
+        }
+    }
+
+    // 动态创建图表标题
+    function createChartTitle(chartContainer, title) {
+        // 查找是否已存在标题
+        let titleElement = chartContainer.parentElement.querySelector('.chart-title');
+
+        if (!titleElement) {
+            // 创建标题元素
+            titleElement = document.createElement('div');
+            titleElement.className = 'chart-title';
+            titleElement.style.cssText = `
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                margin-top: 8px;
+            `;
+
+            // 创建蓝色小方块
+            const square = document.createElement('span');
+            square.style.cssText = `
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                background-color: #1C5CFB;
+                margin-right: 8px;
+                border-radius: 2px;
+            `;
+
+            // 创建标题文字
+            const text = document.createElement('span');
+            text.textContent = title;
+            text.style.color = 'var(--text-2, #8F959E)';
+
+            titleElement.appendChild(square);
+            titleElement.appendChild(text);
+
+            // 插入到图表容器后面
+            chartContainer.parentElement.appendChild(titleElement);
+        } else {
+            // 更新现有标题
+            titleElement.querySelector('span:last-child').textContent = title;
         }
     }
 })();
