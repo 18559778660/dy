@@ -29,13 +29,13 @@
 
         // 模拟数据 - 这里可以替换成真实数据
         const data = [
-            { date: '02/01', 'value': '8,500', "medalType": "日访问用户" },
-            { date: '02/02', 'value': '9,200', "medalType": "日访问用户" },
-            { date: '02/03', 'value': '10,640', "medalType": "日访问用户" },
-            { date: '02/04', 'value': '9,800', "medalType": "日访问用户" },
-            { date: '02/05', 'value': '11,200', "medalType": "日访问用户" },
-            { date: '02/06', 'value': '10,640', "medalType": "日访问用户" },
-            { date: '02/07', 'value': '12,000', "medalType": "日访问用户" }
+            { date: '02/01', 'value': '8500', "medalType": "日访问用户" },
+            { date: '02/02', 'value': '9200', "medalType": "日访问用户" },
+            { date: '02/03', 'value': '10640', "medalType": "日访问用户" },
+            { date: '02/04', 'value': '9800', "medalType": "日访问用户" },
+            { date: '02/05', 'value': '11200', "medalType": "日访问用户" },
+            { date: '02/06', 'value': '10640', "medalType": "日访问用户" },
+            { date: '02/07', 'value': '12000', "medalType": "日访问用户" }
         ];
 
         // 图表标题配置 - 支持多个图表
@@ -52,7 +52,7 @@
             console.log('ChartClass:', ChartClass);
 
             const vchart = new ChartClass({
-                type: 'line',
+                type: 'area',
                 data: [{ values: data, id: 'data' }],
                 xField: 'date',
                 yField: 'value',  // ✅ 改成 value，因为数据字段是 value
@@ -66,26 +66,23 @@
                 },
                 // 数据点配置 - 默认点不可见，hover 显示空心圆点
                 point: {
-                    visible: true,
                     style: {
-                        size: 0 // 设为 0，相当于默认状态看不到点
+                        size: 0  // 默认不显示点
                     },
                     state: {
-                        hover: {
-                            visible: true,
-                            style: {
-                                fill: '#ffffff',      // 白色填充（空心效果）
-                                stroke: '#1C5CFB',    // 蓝色描边
-                                lineWidth: 2,
-                                size: 8               // hover 时稍微大一点更明显
-                            }
+                        dimension_hover: {
+                            size: 10,              // hover 时圆点大小
+                            fill: '#ffffff',      // 白色填充（空心效果）
+                            stroke: '#1C5CFB',    // 蓝色描边
+                            lineWidth: 2          // 描边宽度
                         }
                     }
                 },
                 // 区域渐变填充 - 折线图底下的蓝色渐变
                 area: {
-                    visible: true,
+                    visible: true,  // ✅ 关键：必须设置为 true 才能显示区域
                     style: {
+                        curveType: 'monotone',  // 平滑曲线
                         fill: {
                             gradient: 'linear',
                             x0: 0,
@@ -93,12 +90,21 @@
                             x1: 0,
                             y1: 1,
                             stops: [
-                                { offset: 0, color: 'rgba(28, 92, 251, 0.3)' },   // 顶部蓝色较深
-                                { offset: 1, color: 'rgba(28, 92, 251, 0.05)' }   // 底部蓝色较浅
+                                {
+                                    offset: 0,
+                                    color: '#1C5CFB',
+                                    opacity: 0.3
+                                },
+                                {
+                                    offset: 1,
+                                    color: '#1C5CFB',
+                                    opacity: 0.05
+                                }
                             ]
                         }
                     }
                 },
+
                 // 坐标轴
                 axes: [
                     {
@@ -129,19 +135,51 @@
                 ],
                 // 悬停提示 - VChart 2.x 使用默认配置，会自动显示 seriesField 名称
                 tooltip: {
-                    visible: true
+                    mark: {
+                        content: {
+                            valueFormatter: '{value:,.0f}' // 千位分隔符，无小数位
+                        }
+                    },
+                    dimension: {
+                        content: {
+                            valueFormatter: '{value:,.0f}' // .1f 一位小数 千位分隔符，无小数位
+                        }
+                    }
                 },
                 // 十字准星线 - hover 时的虚线背景
                 crosshair: {
-                    x: {
-                        visible: true,
-                        style: {
-                            stroke: '#1C5CFB',
-                            lineDash: [4, 4]
-                        }
+                    xField: {
+                        visible: true,  // 显示 X 轴方向的准星线
+                        line: {
+                            type: 'line',  // 线条类型：'line' 表示直线，默认为 'rect'（矩形区域）
+                            style: {
+                                lineWidth: 1,        // 线宽：1 像素（更细）
+                                opacity: 0.6,        // 透明度：0.6（颜色更深）
+                                stroke: 'rgb(138, 141, 143)',  // 线条颜色：中灰色
+                                lineDash: [4, 4]     // 虚线样式：[实线长度，空白长度]，4px 实线 + 4px 空白（更稀疏）
+                            }
+                        },
+                        bindingAxesIndex: [1],  // 绑定到第 2 个坐标轴（bottom 轴）
+                        // defaultSelect: {  // ⬅️ 默认选中位置，用于调试，暂时注释掉
+                        //     axisIndex: 1,
+                        //     datum: '回合 6'  // ⬅️ 默认选中的数据点（X 轴的值）
+                        // }
                     },
-                    y: {
-                        visible: false
+                    yField: {
+                        visible: false,  // 不显示 Y 轴方向的准星线（暂时保留配置）
+                        bindingAxesIndex: [0, 2],
+                        defaultSelect: {
+                            axisIndex: 2,
+                            datum: 40
+                        },
+                        line: {
+                            style: {
+                                lineWidth: 1,
+                                opacity: 1,
+                                stroke: '#000',
+                                lineDash: [2, 2]
+                            }
+                        }
                     }
                 }
             }, {
@@ -192,7 +230,7 @@
                 display: inline-block;
                 width: 12px;
                 height: 12px;
-                background-color: #1C5CFB;
+                background-color: #497ffc;
                 margin-right: 8px;
                 border-radius: 2px;
             `;
@@ -200,7 +238,7 @@
             // 创建标题文字
             const text = document.createElement('span');
             text.textContent = title;
-            text.style.color = 'var(--text-2, #8F959E)';
+            text.style.color = 'var(--text-2, #747a85)';
 
             titleElement.appendChild(square);
             titleElement.appendChild(text);
