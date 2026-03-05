@@ -2,10 +2,13 @@
 (function () {
     console.log('开始加载公告数据...');
 
-    // 直接执行，无需等待 DOM 加载（脚本在 body 底部执行）
-    init();
+    // 将初始化函数暴露到全局作用域，供页面切换时重新调用
+    window.renderAnnouncementsInit = renderAnnouncementsInit;
 
-    function init() {
+    // 直接执行，无需等待 DOM 加载（脚本在 body 底部执行）
+    renderAnnouncementsInit();
+
+    function renderAnnouncementsInit() {
         console.log('开始初始化公告渲染');
 
         // 加载 JSON 数据
@@ -17,9 +20,9 @@
                 try {
                     const data = JSON.parse(xhr.responseText);
                     console.log('解析到公告数据:', data.announcements.length, '条');
-                    renderAnnouncements(data.announcements);
+                    renderAnnouncementsData(data.announcements);
                 } catch (e) {
-                    console.error('JSON解析错误:', e);
+                    console.error('JSON 解析错误:', e);
                 }
             } else {
                 console.error('加载公告数据失败，状态码:', xhr.status);
@@ -32,8 +35,8 @@
     }
 
     // 渲染公告函数
-    function renderAnnouncements(announcements) {
-        console.log('开始渲染公告，数量:', announcements.length);
+    function renderAnnouncementsData(announcements) {
+        console.log('开始渲染公告，数量:', announcements ? announcements.length : 0);
 
         // 查找公告容器
         const container = document.querySelector('[data-announcement-container]');
@@ -47,7 +50,13 @@
         // 清空现有内容
         container.innerHTML = '';
 
-        // 生成公告HTML
+        // 如果没有数据，直接返回
+        if (!announcements || announcements.length === 0) {
+            console.log('无公告数据');
+            return;
+        }
+
+        // 生成公告 HTML
         announcements.forEach((item, index) => {
             const announcementHTML = `
                 <div class="flex flex-row justify-between items-center mt-4 cursor-pointer group">

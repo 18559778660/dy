@@ -22,6 +22,11 @@
                     if (typeof initChart === 'function') {
                         setTimeout(() => initChart(), 100);
                     }
+
+                    // 重新渲染公告
+                    if (typeof renderAnnouncementsInit === 'function') {
+                        setTimeout(() => renderAnnouncementsInit(), 100);
+                    }
                 }
             }
         };
