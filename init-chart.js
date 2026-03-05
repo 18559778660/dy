@@ -79,29 +79,22 @@
                     }
                 },
                 // 区域渐变填充 - 折线图底下的蓝色渐变
+                //面积图自带渐变蓝色
                 area: {
-                    visible: true,  // ✅ 关键：必须设置为 true 才能显示区域
+                    visible: true,
                     style: {
-                        curveType: 'monotone',  // 平滑曲线
-                        fill: {
+                        curveType: 'monotone',
+                        // ✅ 关键：不要用 fill 对象，而是用回调函数隔离 color scale
+                        fill: (datum, seriesIndex) => ({
                             gradient: 'linear',
-                            x0: 0,
-                            y0: 0,
-                            x1: 0,
-                            y1: 1,
+                            x0: 0, y0: 0,
+                            x1: 0, y1: 1,
                             stops: [
-                                {
-                                    offset: 0,
-                                    color: '#1C5CFB',
-                                    opacity: 0.3
-                                },
-                                {
-                                    offset: 1,
-                                    color: '#1C5CFB',
-                                    opacity: 0.05
-                                }
+                                { offset: 0, color: 'rgb(73, 127, 252)', opacity: 0.3 },
+                                { offset: 1, color: 'rgb(73, 127, 252)', opacity: 0.05 }
+
                             ]
-                        }
+                        })
                     }
                 },
 
