@@ -16,8 +16,9 @@
             if (!tooltipElement) return;
 
             const tooltipText = tooltipElement.getAttribute('data-tooltip');
+            const metricTitle = tooltipElement.textContent.trim();
 
-            // 给整个卡片添加点击事件处理选中状态
+            // 给整个卡片添加点击事件处理选中状态和切换图表
             card.addEventListener('click', function (e) {
                 e.stopPropagation();
 
@@ -29,7 +30,10 @@
                 // 添加当前卡片的选中状态
                 this.classList.add('omg-metric-card-bordered-checked');
 
-                console.log('选中卡片:', tooltipElement.textContent.trim());
+                console.log('选中卡片:', metricTitle);
+
+                // 切换图表数据
+                switchChartMetric(metricTitle);
             });
 
             // hover 事件仍然绑定在 tooltip 元素上
@@ -102,5 +106,17 @@ function initBannerClose() {
         console.log('✅ Banner 关闭功能已绑定');
     } else {
         console.log('⚠️ 未找到 Banner 关闭按钮');
+    }
+}
+
+// 切换图表指标函数（暴露到全局）
+window.switchChartMetric = switchChartMetric;
+
+function switchChartMetric(metricTitle) {
+    console.log('切换图表指标:', metricTitle);
+
+    // 调用 init-chart.js 中的切换函数
+    if (typeof window.updateChartMetric === 'function') {
+        window.updateChartMetric(metricTitle);
     }
 }

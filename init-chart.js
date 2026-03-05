@@ -8,6 +8,15 @@
     // 图表配置 - 从 JSON 文件加载
     let chartDataConfig = null;
 
+    // 当前选中的指标
+    let currentMetric = '日访问用户';
+
+    // 保存 VChart 实例
+    let vchartInstance = null;
+
+    // 保存图表 DOM 容器
+    let chartDomContainer = null;
+
     // 加载图表数据配置
     function loadChartData() {
         return new Promise((resolve, reject) => {
@@ -35,14 +44,6 @@
             };
             xhr.send();
         });
-    }
-
-    // 获取指定标题的图表数据
-    function getChartDataByTitle(title) {
-        if (!chartDataConfig || !chartDataConfig.overview) {
-            return null;
-        }
-        return chartDataConfig.overview.find(chart => chart.title === title);
     }
 
     // 延迟执行，等待 dashboard-content.html 加载完成
@@ -266,6 +267,10 @@
                 if (chartConfig.showTitle) {
                     createChartTitle(chartDom, chartConfig.title);
                 }
+
+                // 保存 VChart 实例和 DOM 容器
+                vchartInstance = vchart;
+                chartDomContainer = chartDom;
             }).catch(err => {
                 console.error('图表渲染失败:', err);
             });
@@ -316,6 +321,76 @@
         } else {
             // 更新现有标题
             titleElement.querySelector('span:last-child').textContent = title;
+        }
+    }
+
+    // 全局函数：切换图表指标
+    window.updateChartMetric = updateChartMetric;
+
+    function updateChartMetric(metricTitle) {
+        console.log('更新图表指标:', metricTitle);
+
+        if (!chartDataConfig || !chartDataConfig.overview || chartDataConfig.overview.length === 0) {
+            console.warn('没有图表数据配置');
+            return;
+        }
+
+        const chartConfig = chartDataConfig.overview[0];
+        currentMetric = metricTitle;
+
+        // 过滤最近 7 天的数据
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        const filteredData = chartConfig.data.filter(item => {
+            const [month, day] = item.date.split('/').map(Number);
+            const currentYear = new Date().getFullYear();
+            const itemDate = new Date(currentYear, month - 1, day);
+            return itemDate >= sevenDaysAgo && itemDate < today;
+        });
+
+        // 根据指标选择对应的字段
+        let dataField = 'dailyUsers'; // 默认
+        if (metricTitle === '新增用户数') {
+            dataField = 'newUsers';
+        } else if (metricTitle === '人均时长') {
+            dataField = 'avgDuration';
+        } else if (metricTitle === '总用户数') {
+            // 总用户数 = 新增用户数的累计值
+            dataField = 'newUsers';
+        }
+
+        // 转换数据
+        let data = filteredData.map(item => ({
+            date: item.date,
+            value: item[dataField],
+            medalType: metricTitle
+        }));
+
+        // 如果是总用户数，需要计算累计值
+        if (metricTitle === '总用户数') {
+            let cumulative = 0;
+            data = data.map(item => {
+                cumulative += item.value; // 累加新增用户数
+                return {
+                    date: item.date,
+                    value: cumulative,
+                    medalType: '总用户数'
+                };
+            });
+        }
+
+        console.log('✅ 切换到指标:', metricTitle, `(共${data.length}条数据)`);
+
+        // 更新 VChart 数据
+        if (vchartInstance && chartDomContainer) {
+            vchartInstance.updateData('data', data);
+
+            // 更新标题
+            createChartTitle(chartDomContainer, metricTitle);
         }
     }
 })();
