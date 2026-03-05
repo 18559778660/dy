@@ -80,4 +80,27 @@
 
     // 页面加载完成后自动初始化
     initMetricTooltip();
+
+    // Banner 关闭功能
+    initBannerClose();
 })();
+
+// Banner 关闭函数（暴露到全局供页面切换时调用）
+window.initBannerClose = initBannerClose;
+
+function initBannerClose() {
+    console.log('初始化 Banner 关闭功能...');
+    const closeBtn = document.getElementById('close-banner-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+            const banner = this.closest('.semi-dy-open-banner');
+            if (banner) {
+                banner.remove();
+                console.log('Banner 已关闭');
+            }
+        });
+        console.log('✅ Banner 关闭功能已绑定');
+    } else {
+        console.log('⚠️ 未找到 Banner 关闭按钮');
+    }
+}

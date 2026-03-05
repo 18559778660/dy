@@ -32,6 +32,11 @@
                     if (typeof initMetricTooltip === 'function') {
                         setTimeout(() => initMetricTooltip(), 100);
                     }
+
+                    // 重新初始化 banner 关闭功能
+                    if (typeof initBannerClose === 'function') {
+                        setTimeout(() => initBannerClose(), 100);
+                    }
                 }
             }
         };
