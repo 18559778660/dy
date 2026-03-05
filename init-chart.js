@@ -77,11 +77,10 @@
 
         // 从 JSON 配置中获取数据
         let data = [];
-        let chartTitle = '';
+        let chartTitle = '日访问用户'; // 默认标题
 
         if (chartDataConfig && chartDataConfig.overview && chartDataConfig.overview.length > 0) {
-            const chartConfig = chartDataConfig.overview[0]; // 使用第一个图表
-            chartTitle = chartConfig.title;
+            const chartConfig = chartDataConfig.overview[0]; // 使用总览数据
 
             // 过滤最近 7 天的数据（不包括今天）
             const today = new Date();
@@ -91,23 +90,23 @@
             sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); // 7 天前的日期
             sevenDaysAgo.setHours(0, 0, 0, 0); // 设置为当天 0 点
 
-            // 过滤并转换数据
-            data = chartConfig.data
-                .filter(item => {
-                    // 解析日期（格式：MM/DD）
-                    const [month, day] = item.date.split('/').map(Number);
-                    const currentYear = new Date().getFullYear();
-                    const itemDate = new Date(currentYear, month - 1, day);
+            // 过滤并转换数据 - 只使用"日访问用户"指标
+            const filteredData = chartConfig.data.filter(item => {
+                // 解析日期（格式：MM/DD）
+                const [month, day] = item.date.split('/').map(Number);
+                const currentYear = new Date().getFullYear();
+                const itemDate = new Date(currentYear, month - 1, day);
 
-                    // 只保留最近 7 天的数据（不包括今天）
-                    // 条件：itemDate >= 7 天前 且 itemDate < 今天
-                    return itemDate >= sevenDaysAgo && itemDate < today;
-                })
-                .map(item => ({
-                    date: item.date,
-                    value: item.value,
-                    medalType: chartConfig.title
-                }));
+                // 只保留最近 7 天的数据（不包括今天）
+                return itemDate >= sevenDaysAgo && itemDate < today;
+            });
+
+            // 只添加日访问用户数据（默认显示这个指标）
+            data = filteredData.map(item => ({
+                date: item.date,
+                value: item.dailyUsers, // 只使用日访问用户数据
+                medalType: '日访问用户'
+            }));
 
             console.log('✅ 使用 JSON 配置数据:', chartTitle, `(最近 7 天，共${data.length}条数据)`);
         } else {

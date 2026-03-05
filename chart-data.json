@@ -1,113 +1,55 @@
 {
     "overview": [
         {
-            "title": "日访问用户",
+            "title": "总览",
             "data": [
                 {
                     "date": "02/26",
-                    "value": 10
+                    "dailyUsers": 10,
+                    "newUsers": 10,
+                    "avgDuration": 10
                 },
                 {
                     "date": "02/27",
-                    "value": 10
+                    "dailyUsers": 10,
+                    "newUsers": 123,
+                    "avgDuration": 123
                 },
                 {
                     "date": "02/28",
-                    "value": 20
+                    "dailyUsers": 20,
+                    "newUsers": 3321,
+                    "avgDuration": 7777
                 },
                 {
                     "date": "03/01",
-                    "value": 300
+                    "dailyUsers": 300,
+                    "newUsers": 545,
+                    "avgDuration": 8888
                 },
                 {
                     "date": "03/02",
-                    "value": 4400
+                    "dailyUsers": 4400,
+                    "newUsers": 453,
+                    "avgDuration": 7532
                 },
                 {
                     "date": "03/03",
-                    "value": 5555
+                    "dailyUsers": 5555,
+                    "newUsers": 11200,
+                    "avgDuration": 1234
                 },
                 {
                     "date": "03/04",
-                    "value": 6666
+                    "dailyUsers": 6666,
+                    "newUsers": 751,
+                    "avgDuration": 8456
                 },
                 {
                     "date": "03/05",
-                    "value": 7777
-                }
-            ]
-        },
-        {
-            "title": "新增用户数",
-            "data": [
-                {
-                    "date": "02/26",
-                    "value": 10
-                },
-                {
-                    "date": "02/27",
-                    "value": 123
-                },
-                {
-                    "date": "02/28",
-                    "value": 3321
-                },
-                {
-                    "date": "03/01",
-                    "value": 545
-                },
-                {
-                    "date": "03/02",
-                    "value": 453
-                },
-                {
-                    "date": "03/03",
-                    "value": 11200
-                },
-                {
-                    "date": "03/04",
-                    "value": 751
-                },
-                {
-                    "date": "03/05",
-                    "value": 852
-                }
-            ]
-        },
-        {
-            "title": "人均时长",
-            "data": [
-                {
-                    "date": "02/26",
-                    "value": 10
-                },
-                {
-                    "date": "02/27",
-                    "value": 123
-                },
-                {
-                    "date": "02/28",
-                    "value": 7777
-                },
-                {
-                    "date": "03/01",
-                    "value": 8888
-                },
-                {
-                    "date": "03/02",
-                    "value": 7532
-                },
-                {
-                    "date": "03/03",
-                    "value": 1234
-                },
-                {
-                    "date": "03/04",
-                    "value": 8456
-                },
-                {
-                    "date": "03/05",
-                    "value": 9999
+                    "dailyUsers": 7777,
+                    "newUsers": 852,
+                    "avgDuration": 9999
                 }
             ]
         }
