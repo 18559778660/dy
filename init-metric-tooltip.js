@@ -1,0 +1,83 @@
+// 指标卡片 Tooltip 交互功能
+(function () {
+    console.log('开始初始化指标卡片 tooltip...');
+
+    // 将初始化函数暴露到全局作用域，供页面切换时重新调用
+    window.initMetricTooltip = initMetricTooltip;
+
+    function initMetricTooltip() {
+        // 查找所有指标卡片
+        const cards = document.querySelectorAll('.omg-metric-card.omg-metric-card-checkable');
+        console.log('找到指标卡片数量:', cards.length);
+
+        cards.forEach(card => {
+            // 查找卡片内的 tooltip 触发元素
+            const tooltipElement = card.querySelector('.omg-metric-card-solid-title-tooltip[data-tooltip]');
+            if (!tooltipElement) return;
+
+            const tooltipText = tooltipElement.getAttribute('data-tooltip');
+
+            // 给整个卡片添加点击事件处理选中状态
+            card.addEventListener('click', function (e) {
+                e.stopPropagation();
+
+                // 移除其他卡片的选中状态
+                document.querySelectorAll('.omg-metric-card.omg-metric-card-bordered-checked').forEach(c => {
+                    c.classList.remove('omg-metric-card-bordered-checked');
+                });
+
+                // 添加当前卡片的选中状态
+                this.classList.add('omg-metric-card-bordered-checked');
+
+                console.log('选中卡片:', tooltipElement.textContent.trim());
+            });
+
+            // hover 事件仍然绑定在 tooltip 元素上
+            tooltipElement.addEventListener('mouseenter', function (e) {
+                if (!tooltipText) return;
+
+                // 先移除旧的 tooltip
+                const oldTooltip = document.getElementById('metric-tooltip');
+                if (oldTooltip) {
+                    oldTooltip.remove();
+                }
+
+                // 创建 tooltip 元素
+                const tooltip = document.createElement('div');
+                tooltip.className = 'semi-dy-open-portal';
+                tooltip.style.zIndex = '1060';
+                tooltip.id = 'metric-tooltip';
+
+                const rect = this.getBoundingClientRect();
+
+                tooltip.innerHTML = `
+                    <div class="semi-dy-open-portal-inner" 
+                        style="left: ${rect.left + rect.width / 2}px; top: ${rect.top}px; transform: translateX(-50%) translateY(-100%);">
+                        <div class="semi-dy-open-tooltip-wrapper semi-dy-open-tooltip-wrapper-show semi-dy-open-tooltip-with-arrow" 
+                            role="tooltip" x-placement="top">
+                            <div class="semi-dy-open-tooltip-content">${tooltipText}</div>
+                            <svg aria-hidden="true" class="semi-dy-open-tooltip-icon-arrow" width="24" height="7" viewBox="0 0 24 7" 
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="fill: currentcolor;">
+                                <path d="M12 7L0 0h24L12 7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(tooltip);
+                console.log('显示 tooltip:', tooltipText);
+            });
+
+            tooltipElement.addEventListener('mouseleave', function () {
+                const tooltip = document.getElementById('metric-tooltip');
+                if (tooltip) {
+                    tooltip.remove();
+                    console.log('移除 tooltip');
+                }
+            });
+        });
+    }
+
+    // 页面加载完成后自动初始化
+    initMetricTooltip();
+})();

@@ -27,6 +27,11 @@
                     if (typeof renderAnnouncementsInit === 'function') {
                         setTimeout(() => renderAnnouncementsInit(), 100);
                     }
+
+                    // 重新初始化 tooltip
+                    if (typeof initMetricTooltip === 'function') {
+                        setTimeout(() => initMetricTooltip(), 100);
+                    }
                 }
             }
         };
