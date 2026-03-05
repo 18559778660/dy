@@ -106,6 +106,7 @@
             data = filteredData.map(item => ({
                 date: item.date,
                 value: item.dailyUsers, // 只使用日访问用户数据
+                displayValue: item.dailyUsers.toLocaleString('zh-CN'), // 千位分隔符格式化
                 medalType: '日访问用户'
             }));
 
@@ -206,12 +207,12 @@
                 tooltip: {
                     mark: {
                         content: {
-                            valueFormatter: '{value:,.0f}' // 千位分隔符，无小数位
+                            valueFormatter: '{displayValue}'
                         }
                     },
                     dimension: {
                         content: {
-                            valueFormatter: '{value:,.0f}' // .1f 一位小数 千位分隔符，无小数位
+                            valueFormatter: '{displayValue}'
                         }
                     }
                 },
@@ -364,11 +365,32 @@
         }
 
         // 转换数据
-        let data = filteredData.map(item => ({
-            date: item.date,
-            value: item[dataField],
-            medalType: metricTitle
-        }));
+        let data = filteredData.map(item => {
+            let value = item[dataField];
+            let displayValue = value; // 用于 tooltip 显示的值
+
+            // 如果是人均时长，将秒数转换为 "HH:MM:SS" 格式字符串用于显示
+            if (metricTitle === '人均时长' && typeof value === 'number') {
+                const hours = Math.floor(value / 3600);
+                const minutes = Math.floor((value % 3600) / 60);
+                const seconds = value % 60;
+                displayValue = [
+                    String(hours).padStart(2, '0'),
+                    String(minutes).padStart(2, '0'),
+                    String(seconds).padStart(2, '0')
+                ].join(':');
+            } else if (typeof value === 'number') {
+                // 其他数字指标使用千位分隔符
+                displayValue = value.toLocaleString('zh-CN');
+            }
+
+            return {
+                date: item.date,
+                value: value,           // 数值类型，用于图表渲染
+                displayValue: displayValue, // 格式化后的值，用于 tooltip 显示
+                medalType: metricTitle
+            };
+        });
 
         // 如果是总用户数，需要计算累计值
         if (metricTitle === '总用户数') {
@@ -378,6 +400,7 @@
                 return {
                     date: item.date,
                     value: cumulative,
+                    displayValue: cumulative.toLocaleString('zh-CN'), // 千位分隔符格式化
                     medalType: '总用户数'
                 };
             });
