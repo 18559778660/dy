@@ -2,6 +2,9 @@
 (function () {
     console.log('开始初始化图表...');
 
+    // 将 initChart 函数暴露到全局作用域，供页面切换时重新调用
+    window.initChart = initChart;
+
     // 延迟执行，等待 dashboard-content.html 加载完成
     setTimeout(() => {
         // 检查 VChart 是否已加载
