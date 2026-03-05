@@ -5,6 +5,46 @@
     // 将 initChart 函数暴露到全局作用域，供页面切换时重新调用
     window.initChart = initChart;
 
+    // 图表配置 - 从 JSON 文件加载
+    let chartDataConfig = null;
+
+    // 加载图表数据配置
+    function loadChartData() {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', './chart-data.json', true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    try {
+                        chartDataConfig = JSON.parse(xhr.responseText);
+                        console.log('✅ 图表数据配置加载成功');
+                        console.log(chartDataConfig);
+                        resolve(chartDataConfig);
+                    } catch (e) {
+                        console.error('❌ JSON 解析失败:', e);
+                        reject(e);
+                    }
+                } else {
+                    console.error('❌ 加载图表数据失败:', xhr.status);
+                    reject(new Error('加载失败'));
+                }
+            };
+            xhr.onerror = function () {
+                console.error('❌ 网络错误');
+                reject(new Error('网络错误'));
+            };
+            xhr.send();
+        });
+    }
+
+    // 获取指定标题的图表数据
+    function getChartDataByTitle(title) {
+        if (!chartDataConfig || !chartDataConfig.overview) {
+            return null;
+        }
+        return chartDataConfig.overview.find(chart => chart.title === title);
+    }
+
     // 延迟执行，等待 dashboard-content.html 加载完成
     setTimeout(() => {
         // 检查 VChart 是否已加载
@@ -13,7 +53,12 @@
             return;
         }
 
-        initChart();
+        // 加载数据并初始化图表
+        loadChartData().then(() => {
+            initChart();
+        }).catch(err => {
+            console.error('加载图表数据失败:', err);
+        });
     }, 500); // 延迟 500ms 执行
 
     function initChart() {
@@ -30,20 +75,48 @@
         // 不需要手动创建 canvas，VChart 会自己创建
         const chartDom = document.getElementById('visactor_window');
 
-        // 模拟数据 - 这里可以替换成真实数据
-        const data = [
-            { date: '02/01', 'value': '8500', "medalType": "日访问用户" },
-            { date: '02/02', 'value': '9200', "medalType": "日访问用户" },
-            { date: '02/03', 'value': '10640', "medalType": "日访问用户" },
-            { date: '02/04', 'value': '9800', "medalType": "日访问用户" },
-            { date: '02/05', 'value': '11200', "medalType": "日访问用户" },
-            { date: '02/06', 'value': '10640', "medalType": "日访问用户" },
-            { date: '02/07', 'value': '12000', "medalType": "日访问用户" }
-        ];
+        // 从 JSON 配置中获取数据
+        let data = [];
+        let chartTitle = '';
+
+        if (chartDataConfig && chartDataConfig.overview && chartDataConfig.overview.length > 0) {
+            const chartConfig = chartDataConfig.overview[0]; // 使用第一个图表
+            chartTitle = chartConfig.title;
+
+            // 过滤最近 7 天的数据（不包括今天）
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // 设置为今天 0 点
+
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); // 7 天前的日期
+            sevenDaysAgo.setHours(0, 0, 0, 0); // 设置为当天 0 点
+
+            // 过滤并转换数据
+            data = chartConfig.data
+                .filter(item => {
+                    // 解析日期（格式：MM/DD）
+                    const [month, day] = item.date.split('/').map(Number);
+                    const currentYear = new Date().getFullYear();
+                    const itemDate = new Date(currentYear, month - 1, day);
+
+                    // 只保留最近 7 天的数据（不包括今天）
+                    // 条件：itemDate >= 7 天前 且 itemDate < 今天
+                    return itemDate >= sevenDaysAgo && itemDate < today;
+                })
+                .map(item => ({
+                    date: item.date,
+                    value: item.value,
+                    medalType: chartConfig.title
+                }));
+
+            console.log('✅ 使用 JSON 配置数据:', chartTitle, `(最近 7 天，共${data.length}条数据)`);
+        } else {
+            console.log('⚠️ 未找到图表数据配置');
+        }
 
         // 图表标题配置 - 支持多个图表
         const chartConfig = {
-            title: '日访问用户',
+            title: chartTitle,
             showTitle: true
         };
 
