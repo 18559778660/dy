@@ -47,6 +47,11 @@
                     if (typeof initRadioButtons === 'function') {
                         setTimeout(() => initRadioButtons(), 100);
                     }
+
+                    // 重新渲染版本数据
+                    if (typeof renderVersionData === 'function') {
+                        setTimeout(() => renderVersionData(), 100);
+                    }
                 }
             }
         };
@@ -65,6 +70,13 @@
                     container.innerHTML = xhr.responseText;
                     console.log('版本管理内容加载完成');
                     currentPage = 'version';
+
+                    // 延迟执行确保 DOM 完全渲染
+                    setTimeout(() => {
+                        if (typeof renderVersionData === 'function') {
+                            renderVersionData();
+                        }
+                    }, 100);
                 }
             }
         };

@@ -1,0 +1,24 @@
+{
+    "online": {
+        "version": "888",
+        "coverageApp": "6666",
+        "publishTime": "7777",
+        "remark": "5555"
+    },
+    "audit": [
+        {
+            "version": "fff",
+            "coverageApp": "hhhh",
+            "publishTime": "tdfgf",
+            "remark": "zxx"
+        }
+    ],
+    "test": [
+        {
+            "version": "1",
+            "submitUser": "2",
+            "submitTime": "3",
+            "remark": "4"
+        }
+    ]
+}
