@@ -87,10 +87,50 @@
 
     // Banner 关闭功能
     initBannerClose();
+
+    // 单选按钮切换功能
+    initRadioButtons();
 })();
 
 // Banner 关闭函数（暴露到全局供页面切换时调用）
 window.initBannerClose = initBannerClose;
+
+// 单选按钮切换函数（暴露到全局供页面切换时调用）
+window.initRadioButtons = initRadioButtons;
+
+// 初始化单选按钮切换功能
+function initRadioButtons() {
+    console.log('初始化单选按钮切换...');
+
+    // 获取两个单选按钮
+    const onlineBtn = document.getElementById('addon-rsawkrs');
+    const grayBtn = document.getElementById('addon-a1167zc');
+
+    if (!onlineBtn || !grayBtn) {
+        console.warn('未找到单选按钮元素');
+        return;
+    }
+
+    // 点击“线上版本”
+    onlineBtn.addEventListener('click', function () {
+        // 移除另一个按钮的选中状态
+        grayBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
+        // 添加当前按钮的选中状态
+        onlineBtn.classList.add('semi-dy-open-radio-addon-buttonRadio-checked');
+        console.log('选中：线上版本');
+    });
+
+    // 点击“灰度版本”
+    grayBtn.addEventListener('click', function () {
+        // 移除另一个按钮的选中状态
+        onlineBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
+        // 添加当前按钮的选中状态
+        grayBtn.classList.add('semi-dy-open-radio-addon-buttonRadio-checked');
+        console.log('选中：灰度版本');
+    });
+
+    console.log('✅ 单选按钮切换初始化完成');
+}
 
 function initBannerClose() {
     console.log('初始化 Banner 关闭功能...');

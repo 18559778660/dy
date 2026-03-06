@@ -42,6 +42,11 @@
                     if (typeof initBannerClose === 'function') {
                         setTimeout(() => initBannerClose(), 100);
                     }
+
+                    // 重新初始化单选按钮切换
+                    if (typeof initRadioButtons === 'function') {
+                        setTimeout(() => initRadioButtons(), 100);
+                    }
                 }
             }
         };
