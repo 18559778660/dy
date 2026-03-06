@@ -23,6 +23,11 @@
                         setTimeout(() => initChart(), 100);
                     }
 
+                    // 重新初始化卡片数据
+                    if (typeof initMetricCards === 'function') {
+                        setTimeout(() => initMetricCards(), 100);
+                    }
+
                     // 重新渲染公告
                     if (typeof renderAnnouncementsInit === 'function') {
                         setTimeout(() => renderAnnouncementsInit(), 100);

@@ -4,6 +4,9 @@
 
     // 将 initChart 函数暴露到全局作用域，供页面切换时重新调用
     window.initChart = initChart;
+    
+    // 将 initMetricCards 函数暴露到全局作用域，供页面切换时重新调用
+    window.initMetricCards = initMetricCards;
 
     // 图表配置 - 从 JSON 文件加载
     let chartDataConfig = null;
