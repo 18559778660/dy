@@ -35,15 +35,15 @@
                 },
                 {
                     "date": "03/03",
-                    "dailyUsers": 5555,
-                    "newUsers": 11200,
-                    "avgDuration": 1234
+                    "dailyUsers": 100,
+                    "newUsers": 100,
+                    "avgDuration": 100
                 },
                 {
                     "date": "03/04",
-                    "dailyUsers": 6666,
-                    "newUsers": 751,
-                    "avgDuration": 8456
+                    "dailyUsers": 200,
+                    "newUsers": 200,
+                    "avgDuration": 200
                 },
                 {
                     "date": "03/05",
