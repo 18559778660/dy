@@ -28,6 +28,10 @@
                         chartDataConfig = JSON.parse(xhr.responseText);
                         console.log('✅ 图表数据配置加载成功');
                         console.log(chartDataConfig);
+
+                        // 加载成功后立即组装总用户数数据
+                        buildTotalUsersData();
+
                         resolve(chartDataConfig);
                     } catch (e) {
                         console.error('❌ JSON 解析失败:', e);
@@ -44,6 +48,43 @@
             };
             xhr.send();
         });
+    }
+
+    // 组装总用户数图表数据
+    function buildTotalUsersData() {
+        if (!chartDataConfig || !chartDataConfig.overview || !chartDataConfig.overview[0]) {
+            console.error('❌ 图表数据配置为空');
+            return;
+        }
+
+        const chartConfig = chartDataConfig.overview[0];
+
+        // 过滤最近 7 天的数据（不包括今天）
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        // 累加 newUsers 并添加到每个数据项中
+        let cumulative = 0;
+        chartConfig.data.forEach(item => {
+            const [month, day] = item.date.split('/').map(Number);
+            const currentYear = new Date().getFullYear();
+            const itemDate = new Date(currentYear, month - 1, day);
+
+            // 只统计最近 7 天（不包括今天）的数据
+            if (itemDate >= sevenDaysAgo && itemDate < today) {
+                cumulative += item.newUsers;
+                // 添加 totalUser 字段到数据对象中
+                item.totalUser = cumulative;
+            }
+        });
+
+        console.log('\n=== 已添加 totalUser 字段的图表数据 ===');
+        console.log(JSON.stringify(chartConfig.data, null, 2));
+        console.log('====================================\n');
     }
 
     // 延迟执行，等待 dashboard-content.html 加载完成
@@ -498,41 +539,24 @@
         }
 
         if (totalUsersEl) {
-            // 总用户数 = 最近 7 天的累计新增用户数（不包括今天）
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            sevenDaysAgo.setHours(0, 0, 0, 0);
-
-            // 累加最近 7 天的新增用户（不包括今天）
-            let total = 0;
-            for (const item of chartConfig.data) {
-                const [month, day] = item.date.split('/').map(Number);
-                const itemDate = new Date(2026, month - 1, day);
-
-                if (itemDate >= sevenDaysAgo && itemDate < today) {
-                    total += item.newUsers;
-                }
-            }
-            totalUsersEl.textContent = total.toLocaleString('zh-CN');
+            // 总用户数直接从 yesterdayData.totalUser 获取
+            totalUsersEl.textContent = yesterdayData.totalUser.toLocaleString('zh-CN');
+            console.log('总用户数:', yesterdayData.totalUser);
         }
 
         // 更新涨幅数据
         if (dayBeforeData) {
-            updateCompareValues(dailyUsersCompareEl, yesterdayData.dailyUsers, dayBeforeData.dailyUsers, 'dailyUsers');
-            updateCompareValues(newUsersCompareEl, yesterdayData.newUsers, dayBeforeData.newUsers, 'newUsers');
-            updateCompareValues(avgDurationCompareEl, yesterdayData.avgDuration, dayBeforeData.avgDuration, 'avgDuration', true);
-            // 总用户数的涨幅需要重新计算
-            updateTotalUsersCompare(dayBeforeStr, totalUsersCompareEl);
+            updateCompareValues(dailyUsersCompareEl, yesterdayData.dailyUsers, dayBeforeData.dailyUsers);
+            updateCompareValues(newUsersCompareEl, yesterdayData.newUsers, dayBeforeData.newUsers);
+            updateCompareValues(avgDurationCompareEl, yesterdayData.avgDuration, dayBeforeData.avgDuration);
+            updateCompareValues(totalUsersCompareEl, yesterdayData.totalUser, dayBeforeData.totalUser);
         }
 
         console.log('✅ 卡片数据已更新');
     }
 
     // 更新涨幅显示
-    function updateCompareValues(element, yesterdayValue, dayBeforeValue, metricType, isTime = false) {
+    function updateCompareValues(element, yesterdayValue, dayBeforeValue) {
         if (!element) return;
 
         // 计算涨幅百分比
@@ -555,49 +579,5 @@
             element.classList.remove('omg-compares-number-type-up');
             element.classList.add('omg-compares-number-type-down');
         }
-    }
-
-    // 更新总用户数涨幅（需要重新计算前天的累计值）
-    function updateTotalUsersCompare(dayBeforeStr, totalUsersCompareEl) {
-        if (!totalUsersCompareEl || !chartDataConfig || !chartDataConfig.overview[0]) return;
-
-        const chartConfig = chartDataConfig.overview[0];
-
-        // 计算昨天的累计值
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        yesterday.setHours(0, 0, 0, 0);
-
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
-
-        let yesterdayTotal = 0;
-        for (const item of chartConfig.data) {
-            const [month, day] = item.date.split('/').map(Number);
-            const itemDate = new Date(2026, month - 1, day);
-
-            if (itemDate >= sevenDaysAgo && itemDate < yesterday) {
-                yesterdayTotal += item.newUsers;
-            }
-        }
-
-        // 计算前天的累计值
-        const dayBefore = new Date();
-        dayBefore.setDate(dayBefore.getDate() - 2);
-        dayBefore.setHours(0, 0, 0, 0);
-
-        let dayBeforeTotal = 0;
-        for (const item of chartConfig.data) {
-            const [month, day] = item.date.split('/').map(Number);
-            const itemDate = new Date(2026, month - 1, day);
-
-            if (itemDate >= sevenDaysAgo && itemDate < dayBefore) {
-                dayBeforeTotal += item.newUsers;
-            }
-        }
-
-        // 更新涨幅
-        updateCompareValues(totalUsersCompareEl, yesterdayTotal, dayBeforeTotal, 'totalUsers');
     }
 })();
