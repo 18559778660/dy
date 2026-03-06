@@ -56,6 +56,10 @@
 
         // 加载数据并初始化图表
         loadChartData().then(() => {
+            // 初始化卡片数据
+            initMetricCards();
+
+            // 初始化图表
             initChart();
         }).catch(err => {
             console.error('加载图表数据失败:', err);
@@ -415,5 +419,185 @@
             // 更新标题
             createChartTitle(chartDomContainer, metricTitle);
         }
+    }
+
+    // 初始化卡片数据（显示昨天数据）
+    function initMetricCards() {
+        console.log('开始初始化卡片数据...');
+
+        if (!chartDataConfig || !chartDataConfig.overview || !chartDataConfig.overview[0]) {
+            console.error('未找到图表数据配置');
+            return;
+        }
+
+        // 获取昨天的日期（MM/DD 格式）
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+        const day = String(yesterday.getDate()).padStart(2, '0');
+        const yesterdayStr = `${month}/${day}`;
+
+        console.log('加载昨天数据:', yesterdayStr);
+
+        const chartConfig = chartDataConfig.overview[0];
+
+        // 找到昨天的数据
+        const yesterdayData = chartConfig.data.find(item => item.date === yesterdayStr);
+
+        if (!yesterdayData) {
+            console.warn('未找到昨天的数据:', yesterdayStr);
+            return;
+        }
+
+        console.log('昨天数据:', yesterdayData);
+
+        // 找到前天的数据
+        const dayBeforeYesterday = new Date();
+        dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
+        const dbyMonth = String(dayBeforeYesterday.getMonth() + 1).padStart(2, '0');
+        const dbyDay = String(dayBeforeYesterday.getDate()).padStart(2, '0');
+        const dayBeforeStr = `${dbyMonth}/${dbyDay}`;
+
+        const dayBeforeData = chartConfig.data.find(item => item.date === dayBeforeStr);
+
+        if (dayBeforeData) {
+            console.log('前天数据:', dayBeforeData);
+        }
+
+        // 更新四个卡片的数值
+        const dailyUsersEl = document.querySelector('[data-metric="dailyUsers"]');
+        const newUsersEl = document.querySelector('[data-metric="newUsers"]');
+        const avgDurationEl = document.querySelector('[data-metric="avgDuration"]');
+        const totalUsersEl = document.querySelector('[data-metric="totalUsers"]');
+
+        // 获取涨幅元素
+        const dailyUsersCompareEl = document.querySelector('[data-compare="dailyUsers"]');
+        const newUsersCompareEl = document.querySelector('[data-compare="newUsers"]');
+        const avgDurationCompareEl = document.querySelector('[data-compare="avgDuration"]');
+        const totalUsersCompareEl = document.querySelector('[data-compare="totalUsers"]');
+
+        if (dailyUsersEl) {
+            dailyUsersEl.textContent = yesterdayData.dailyUsers.toLocaleString('zh-CN');
+        }
+
+        if (newUsersEl) {
+            newUsersEl.textContent = yesterdayData.newUsers.toLocaleString('zh-CN');
+        }
+
+        if (avgDurationEl) {
+            // 将秒数转换为 HH:MM:SS 格式
+            const seconds = yesterdayData.avgDuration;
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            avgDurationEl.textContent = [
+                String(hours).padStart(2, '0'),
+                String(minutes).padStart(2, '0'),
+                String(secs).padStart(2, '0')
+            ].join(':');
+        }
+
+        if (totalUsersEl) {
+            // 总用户数 = 最近 7 天的累计新增用户数（不包括今天）
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            sevenDaysAgo.setHours(0, 0, 0, 0);
+
+            // 累加最近 7 天的新增用户（不包括今天）
+            let total = 0;
+            for (const item of chartConfig.data) {
+                const [month, day] = item.date.split('/').map(Number);
+                const itemDate = new Date(2026, month - 1, day);
+
+                if (itemDate >= sevenDaysAgo && itemDate < today) {
+                    total += item.newUsers;
+                }
+            }
+            totalUsersEl.textContent = total.toLocaleString('zh-CN');
+        }
+
+        // 更新涨幅数据
+        if (dayBeforeData) {
+            updateCompareValues(dailyUsersCompareEl, yesterdayData.dailyUsers, dayBeforeData.dailyUsers, 'dailyUsers');
+            updateCompareValues(newUsersCompareEl, yesterdayData.newUsers, dayBeforeData.newUsers, 'newUsers');
+            updateCompareValues(avgDurationCompareEl, yesterdayData.avgDuration, dayBeforeData.avgDuration, 'avgDuration', true);
+            // 总用户数的涨幅需要重新计算
+            updateTotalUsersCompare(dayBeforeStr, totalUsersCompareEl);
+        }
+
+        console.log('✅ 卡片数据已更新');
+    }
+
+    // 更新涨幅显示
+    function updateCompareValues(element, yesterdayValue, dayBeforeValue, metricType, isTime = false) {
+        if (!element) return;
+
+        // 计算涨幅百分比
+        let comparePercent = 0;
+        if (dayBeforeValue > 0) {
+            comparePercent = ((yesterdayValue - dayBeforeValue) / dayBeforeValue) * 100;
+        }
+
+        // 格式化涨幅
+        const sign = comparePercent >= 0 ? '+' : '';
+        const percentStr = sign + comparePercent.toFixed(2) + '%';
+
+        element.textContent = percentStr;
+
+        // 设置样式（上涨/下跌）
+        if (comparePercent >= 0) {
+            element.classList.remove('omg-compares-number-type-down');
+            element.classList.add('omg-compares-number-type-up');
+        } else {
+            element.classList.remove('omg-compares-number-type-up');
+            element.classList.add('omg-compares-number-type-down');
+        }
+    }
+
+    // 更新总用户数涨幅（需要重新计算前天的累计值）
+    function updateTotalUsersCompare(dayBeforeStr, totalUsersCompareEl) {
+        if (!totalUsersCompareEl || !chartDataConfig || !chartDataConfig.overview[0]) return;
+
+        const chartConfig = chartDataConfig.overview[0];
+
+        // 计算昨天的累计值
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        yesterday.setHours(0, 0, 0, 0);
+
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        let yesterdayTotal = 0;
+        for (const item of chartConfig.data) {
+            const [month, day] = item.date.split('/').map(Number);
+            const itemDate = new Date(2026, month - 1, day);
+
+            if (itemDate >= sevenDaysAgo && itemDate < yesterday) {
+                yesterdayTotal += item.newUsers;
+            }
+        }
+
+        // 计算前天的累计值
+        const dayBefore = new Date();
+        dayBefore.setDate(dayBefore.getDate() - 2);
+        dayBefore.setHours(0, 0, 0, 0);
+
+        let dayBeforeTotal = 0;
+        for (const item of chartConfig.data) {
+            const [month, day] = item.date.split('/').map(Number);
+            const itemDate = new Date(2026, month - 1, day);
+
+            if (itemDate >= sevenDaysAgo && itemDate < dayBefore) {
+                dayBeforeTotal += item.newUsers;
+            }
+        }
+
+        // 更新涨幅
+        updateCompareValues(totalUsersCompareEl, yesterdayTotal, dayBeforeTotal, 'totalUsers');
     }
 })();

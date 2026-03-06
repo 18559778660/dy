@@ -12,43 +12,43 @@
                 {
                     "date": "02/27",
                     "dailyUsers": 10,
-                    "newUsers": 123,
+                    "newUsers": 10,
                     "avgDuration": 123
                 },
                 {
                     "date": "02/28",
                     "dailyUsers": 20,
-                    "newUsers": 3321,
+                    "newUsers": 10,
                     "avgDuration": 7777
                 },
                 {
                     "date": "03/01",
                     "dailyUsers": 300,
-                    "newUsers": 545,
+                    "newUsers": 10,
                     "avgDuration": 8888
                 },
                 {
                     "date": "03/02",
                     "dailyUsers": 4400,
-                    "newUsers": 453,
+                    "newUsers": 10,
                     "avgDuration": 7532
                 },
                 {
                     "date": "03/03",
                     "dailyUsers": 100,
-                    "newUsers": 100,
+                    "newUsers": 10,
                     "avgDuration": 100
                 },
                 {
                     "date": "03/04",
-                    "dailyUsers": 200,
-                    "newUsers": 200,
+                    "dailyUsers": 60,
+                    "newUsers": 10,
                     "avgDuration": 200
                 },
                 {
                     "date": "03/05",
-                    "dailyUsers": 7777,
-                    "newUsers": 852,
+                    "dailyUsers": 70,
+                    "newUsers": 10,
                     "avgDuration": 9999
                 }
             ]
