@@ -70,13 +70,31 @@
                     container.innerHTML = xhr.responseText;
                     console.log('版本管理内容加载完成');
                     currentPage = 'version';
-
+                        
                     // 延迟执行确保 DOM 完全渲染
                     setTimeout(() => {
                         if (typeof renderVersionData === 'function') {
                             renderVersionData();
                         }
                     }, 100);
+                }
+            }
+        };
+        xhr.send();
+    }
+    
+    // 加载用户分析内容
+    function loadUserAnalysis() {
+        console.log('加载用户分析内容...');
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', './user_analysis.html', true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const container = document.querySelector('.content-Ick90x');
+                if (container) {
+                    container.innerHTML = xhr.responseText;
+                    console.log('用户分析内容加载完成');
+                    currentPage = 'user_analysis';
                 }
             }
         };
@@ -138,6 +156,22 @@
 
                         // 加载版本管理内容
                         loadVersion();
+                    });
+                }
+
+                // 用户分析菜单
+                else if (text === '用户分析') {
+                    item.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        console.log('点击用户分析菜单');
+
+                        // 移除其他菜单的选中状态
+                        menuItems.forEach(mi => mi.classList.remove('semi-dy-open-navigation-item-selected'));
+                        // 添加当前菜单选中状态
+                        this.classList.add('semi-dy-open-navigation-item-selected');
+
+                        // 加载用户分析内容
+                        loadUserAnalysis();
                     });
                 }
 
