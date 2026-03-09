@@ -140,7 +140,9 @@ function generateOnlineVersionHTML(data) {
                                             class="semi-dy-open-typography semi-dy-open-typography-tertiary semi-dy-open-typography-normal">:</span><span
                                             class="semi-dy-open-typography semi-dy-open-typography-ellipsis semi-dy-open-typography-ellipsis-single-line semi-dy-open-typography-ellipsis-overflow-ellipsis semi-dy-open-typography-ellipsis-overflow-ellipsis-text semi-dy-open-typography-primary semi-dy-open-typography-normal"
                                             tabindex="0" aria-describedby="g070e6c" data-popupid="g070e6c"
-                                            style="word-break: break-all; width: 75%; margin-left: 12px;"><span
+                                            style="word-break: break-all; width: 75%; margin-left: 12px; position: relative;" 
+                                            onmouseenter="showCoverageTooltip(this, '${data.coverageApp}')" 
+                                            onmouseleave="hideCoverageTooltip()"><span
                                                 class="version-app-text">${data.coverageApp}</span></span>
                                     </div>
                                     <div style="padding-top: 24px;">
@@ -463,5 +465,66 @@ function closeVersionDetail() {
     const modal = document.getElementById('version-detail-modal');
     if (modal) {
         modal.style.display = 'none';
+    }
+}
+
+// 显示覆盖 APP 的 tooltip
+function showCoverageTooltip_(element, content) {
+    // 创建 tooltip 元素
+    const tooltip = document.createElement('div');
+    tooltip.id = 'coverage-tooltip';
+    tooltip.className = 'semi-dy-open-portal-inner';
+
+    // 获取元素的位置信息
+    const rect = element.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+    // 先创建一个临时的 tooltip 来测量实际宽度
+    const tempDiv = document.createElement('div');
+    tempDiv.style.cssText = `
+        position: fixed;
+        visibility: hidden;
+        white-space: nowrap;
+        font-size: 14px;
+        padding: 8px 12px;
+    `;
+    tempDiv.textContent = content;
+    document.body.appendChild(tempDiv);
+    const contentWidth = tempDiv.offsetWidth;
+    document.body.removeChild(tempDiv);
+
+    // 使用 fixed 定位，相对于视口，确保在元素上方
+    tooltip.style.cssText = `
+        position: fixed;
+        left: ${rect.left + scrollLeft}px;
+        top: ${rect.top + scrollTop - 8}px;
+        transform: translateY(-100%);
+        z-index: 99999;
+        pointer-events: none;
+        max-width: ${Math.max(contentWidth + 24, 400)}px;
+        min-width: ${contentWidth + 24}px;
+    `;
+
+    tooltip.innerHTML = `
+        <div class="semi-dy-open-tooltip-wrapper semi-dy-open-tooltip-wrapper-show semi-dy-open-tooltip-with-arrow" 
+            role="tooltip" x-placement="top"
+            style="display: inline-block; background-color: rgba(0, 0, 0, 0.75); padding: 8px 12px; border-radius: 4px;">
+            <div class="semi-dy-open-tooltip-content" style="color: #fff; white-space: nowrap;">${content}</div>
+            <svg aria-hidden="true" class="semi-dy-open-tooltip-icon-arrow" width="24" height="7" viewBox="0 0 24 7" 
+                fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="fill: currentcolor;">
+                <path d="M12 7L0 0h24L12 7z"/>
+            </svg>
+        </div>
+    `;
+
+    document.body.appendChild(tooltip);
+}
+
+// 隐藏覆盖 APP 的 tooltip
+function hideCoverageTooltip_() {
+    const tooltip = document.getElementById('coverage-tooltip');
+    if (tooltip) {
+        tooltip.remove();
     }
 }
