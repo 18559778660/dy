@@ -52,6 +52,11 @@
                     if (typeof renderVersionData === 'function') {
                         setTimeout(() => renderVersionData(), 100);
                     }
+
+                    // 重新用户分析数据
+                    if (typeof initDatepickerIconInteraction === 'function') {
+                        setTimeout(() => initDatepickerIconInteraction(), 100);
+                    }
                 }
             }
         };
@@ -95,6 +100,11 @@
                     container.innerHTML = xhr.responseText;
                     console.log('用户分析内容加载完成');
                     currentPage = 'user_analysis';
+                    
+                    // 初始化日期选择器图标交互
+                    if (typeof initDatepickerIconInteraction === 'function') {
+                        setTimeout(() => initDatepickerIconInteraction(), 100);
+                    }
                 }
             }
         };
