@@ -50,6 +50,24 @@
                     "dailyUsers": 70,
                     "newUsers": 10,
                     "avgDuration": 9999
+                },
+                {
+                    "date": "03/06",
+                    "dailyUsers": 70,
+                    "newUsers": 10,
+                    "avgDuration": 9999
+                },
+                {
+                    "date": "03/07",
+                    "dailyUsers": 70,
+                    "newUsers": 10,
+                    "avgDuration": 9999
+                },
+                {
+                    "date": "03/08",
+                    "dailyUsers": 70,
+                    "newUsers": 10,
+                    "avgDuration": 9999
                 }
             ]
         }
