@@ -19,6 +19,12 @@ function renderVersionData() {
                 const data = JSON.parse(xhr.responseText);
                 console.log('获取到版本数据:', data);
 
+                // 存储到全局变量
+                versionData.online = data.online;
+                versionData.audit = data.audit;
+                versionData.test = data.test;
+                console.log('全局变量已赋值:', versionData);
+
                 // 分别渲染三个版本
                 renderVersion('online', data.online);
                 renderVersion('audit', data.audit);
@@ -147,7 +153,7 @@ function generateOnlineVersionHTML(data) {
                                                         class="semi-dy-open-button-content"
                                                         x-semi-prop="children">版本回退</span></button></span><button
                                                 class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-light"
-                                                type="button" aria-disabled="false"><span
+                                                type="button" aria-disabled="false" onclick="showVersionDetail('online')"><span
                                                     class="semi-dy-open-button-content"
                                                     x-semi-prop="children">版本详情</span></button></div>
                                     </div>
@@ -307,7 +313,7 @@ function generateTestVersionHTML(data) {
                                                                 class="semi-dy-open-button-content"
                                                                 x-semi-prop="children">删除版本</span></button><button
                                                             class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-light"
-                                                            type="button" aria-disabled="false"><span
+                                                            type="button" aria-disabled="false" onclick="showVersionDetail('test')"><span
                                                                 class="semi-dy-open-button-content"
                                                                 x-semi-prop="children">版本详情</span></button></div>
                                                 </div>
@@ -358,3 +364,104 @@ function generateTestVersionHTML(data) {
 
 // 页面加载完成后执行
 document.addEventListener('DOMContentLoaded', renderVersionData);
+
+// 存储版本数据的全局变量
+let versionData = {
+    online: null,
+    audit: null,
+    test: null
+};
+
+// 显示版本详情弹窗
+function showVersionDetail(type) {
+    console.log('显示版本详情:', type);
+
+    // 直接从全局变量获取数据
+    const data = versionData[type];
+
+    if (Object.keys(data).length === 0) {
+        console.log('没有版本数据');
+        return;
+    }
+
+    // 调用自定义的弹窗函数
+    openVersionDetailModal(type, data);
+}
+
+// 打开模态框的函数 
+function openVersionDetailModal(type, data) {
+    // 根据版本类型判断是否显示覆盖 APP
+    const showCoverageApp = type === 'online';
+
+    const modalContent = document.querySelector('.version-detail-content');
+    modalContent.innerHTML = `<div class="semi-dy-open-portal" style="z-index: 1000;"> 
+    <div class="">
+    <div class="semi-dy-open-modal-mask"></div>
+    <div role="none" class="semi-dy-open-modal-wrap semi-dy-open-modal-wrap-center">
+    <div class="semi-dy-open-modal semi-dy-open-modal-centered semi-dy-open-modal-small" id="dialog-12" style="width: 686px; height: 257px;">
+    <div role="dialog" aria-modal="true" aria-labelledby="semi-dy-open-modal-title" aria-describedby="semi-dy-open-modal-body" class="semi-dy-open-modal-content  undefined">
+    <div class="semi-dy-open-modal-header">
+    <h5 class="semi-dy-open-typography semi-dy-open-modal-title semi-dy-open-typography-primary semi-dy-open-typography-normal semi-dy-open-typography-h5" id="semi-dy-open-modal-title" x-semi-prop="title">版本详情</h5>
+    <button aria-label="close" class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-size-small semi-dy-open-button-borderless semi-dy-open-modal-close semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only" type="button" aria-disabled="false" onclick="closeVersionDetail()">
+    <span class="semi-dy-open-button-content">
+    <span role="img" aria-label="close" class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-close" x-semi-prop="closeIcon">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" focusable="false" aria-hidden="true">
+    <path d="M17.6568 19.7782C18.2426 20.3639 19.1924 20.3639 19.7782 19.7782C20.3639 19.1924 20.3639 18.2426 19.7782 17.6568L14.1213 12L19.7782 6.34313C20.3639 5.75734 20.3639 4.8076 19.7782 4.22181C19.1924 3.63602 18.2426 3.63602 17.6568 4.22181L12 9.87866L6.34313 4.22181C5.75734 3.63602 4.8076 3.63602 4.22181 4.22181C3.63602 4.8076 3.63602 5.75734 4.22181 6.34313L9.87866 12L4.22181 17.6568C3.63602 18.2426 3.63602 19.1924 4.22181 19.7782C4.8076 20.3639 5.75734 20.3639 6.34313 19.7782L12 14.1213L17.6568 19.7782Z" fill="currentColor">
+    </path>
+    </svg>
+    </span>
+    </span>
+    </button>
+    </div>
+    <div class="semi-dy-open-modal-body" id="semi-dy-open-modal-body" x-semi-prop="children">
+    <div class="flex flex-col -mt-2 mb-6">
+    <div class="inline-flex items-start mt-2">
+    <p class="flex flex-shrink-0 text-text-2 w-[56px]">版本号</p>
+    <p class="flex flex-wrap ml-6 text-text-0">${data.version}</p>
+    </div>
+    <div class="inline-flex items-start mt-2">
+    <p class="flex flex-shrink-0 text-text-2 w-[56px]">提交用户</p>
+    <p class="flex flex-wrap ml-6 text-text-0">${data.user || '-'}</p>
+    </div>
+    <div class="inline-flex items-start mt-2">
+    <p class="flex flex-shrink-0 text-text-2 w-[56px]">提交时间</p>
+    <p class="flex flex-wrap ml-6 text-text-0">${data.date}</p>
+    </div>
+    <div class="inline-flex items-start mt-2">
+    <p class="flex flex-shrink-0 text-text-2 w-[56px]">项目备注</p>
+    <p class="flex flex-wrap ml-6 text-text-0">${data.remark}</p>
+    </div>
+    ${showCoverageApp ? `
+    <div class="inline-flex items-start mt-2">
+    <p class="flex flex-shrink-0 text-text-2 w-[56px]">覆盖APP</p>
+    <p class="flex flex-wrap ml-6 text-text-0">${data.coverageApp}</p>
+    </div>
+    ` : ''}
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>`;
+
+    // 显示弹窗
+    const modal = document.getElementById('version-detail-modal');
+    if (modal) {
+        modal.style.display = 'block';
+        // 点击任意位置关闭弹窗
+        modal.onclick = function () {
+            closeVersionDetail();
+        };
+    }
+
+    console.log('准备填充模态框 - 类型:', type, '数据:', data);
+}
+
+// 关闭版本详情弹窗
+function closeVersionDetail() {
+    const modal = document.getElementById('version-detail-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
