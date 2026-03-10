@@ -184,6 +184,9 @@
             // 渲染图表
             vchart.renderAsync().then(() => {
                 console.log('✅ [用户分析图表] 渲染完成');
+
+                // 动态创建图表标题
+                createChartTitle(container, chartTitle);
             }).catch(err => {
                 console.error('❌ [用户分析图表] 渲染失败:', err);
             });
@@ -193,6 +196,50 @@
 
         } catch (error) {
             console.error('❌ 图表创建失败:', error);
+        }
+    }
+
+    // 动态创建图表标题（与首页保持一致）
+    function createChartTitle(chartContainer, title) {
+        // 查找是否已存在标题
+        let titleElement = chartContainer.parentElement.querySelector('.chart-title');
+
+        if (!titleElement) {
+            // 创建标题元素
+            titleElement = document.createElement('div');
+            titleElement.className = 'chart-title';
+            titleElement.style.cssText = `
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               font-size: 12px;
+               margin-top: 8px;
+           `;
+
+            // 创建蓝色小方块
+            const square = document.createElement('span');
+            square.style.cssText = `
+               display: inline-block;
+               width: 12px;
+               height: 12px;
+               background-color: #497ffc;
+               margin-right: 8px;
+               border-radius: 2px;
+           `;
+
+            // 创建标题文字
+            const text = document.createElement('span');
+            text.textContent = title;
+            text.style.color = 'var(--text-2, #747a85)';
+
+            titleElement.appendChild(square);
+            titleElement.appendChild(text);
+
+            // 插入到图表容器后面
+            chartContainer.parentElement.appendChild(titleElement);
+        } else {
+            // 更新现有标题
+            titleElement.querySelector('span:last-child').textContent = title;
         }
     }
 })();
