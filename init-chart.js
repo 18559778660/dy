@@ -8,8 +8,9 @@
     // 将 initMetricCards 函数暴露到全局作用域，供页面切换时重新调用
     window.initMetricCards = initMetricCards;
 
-    // 图表配置 - 从 JSON 文件加载
+    // 图表配置 - 从 JSON 文件加载（暴露到全局供其他模块使用）
     let chartDataConfig = null;
+    window.chartDataConfig = chartDataConfig;
 
     // 当前选中的指标
     let currentMetric = '日访问用户';
@@ -29,6 +30,7 @@
                 if (xhr.status === 200) {
                     try {
                         chartDataConfig = JSON.parse(xhr.responseText);
+                        window.chartDataConfig = chartDataConfig; // 更新全局变量
                         console.log('✅ 图表数据配置加载成功');
                         console.log(chartDataConfig);
 

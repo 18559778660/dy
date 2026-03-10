@@ -47,16 +47,6 @@
                     if (typeof initRadioButtons === 'function') {
                         setTimeout(() => initRadioButtons(), 100);
                     }
-
-                    // 重新渲染版本数据
-                    if (typeof renderVersionData === 'function') {
-                        setTimeout(() => renderVersionData(), 100);
-                    }
-
-                    // 重新用户分析数据
-                    if (typeof initDatepickerIconInteraction === 'function') {
-                        setTimeout(() => initDatepickerIconInteraction(), 100);
-                    }
                 }
             }
         };
@@ -75,7 +65,7 @@
                     container.innerHTML = xhr.responseText;
                     console.log('版本管理内容加载完成');
                     currentPage = 'version';
-                        
+
                     // 延迟执行确保 DOM 完全渲染
                     setTimeout(() => {
                         if (typeof renderVersionData === 'function') {
@@ -87,7 +77,7 @@
         };
         xhr.send();
     }
-    
+
     // 加载用户分析内容
     function loadUserAnalysis() {
         console.log('加载用户分析内容...');
@@ -100,10 +90,15 @@
                     container.innerHTML = xhr.responseText;
                     console.log('用户分析内容加载完成');
                     currentPage = 'user_analysis';
-                    
+
                     // 初始化日期选择器图标交互
                     if (typeof initDatepickerIconInteraction === 'function') {
                         setTimeout(() => initDatepickerIconInteraction(), 100);
+                    }
+
+                    // 初始化图表
+                    if (typeof initUserAnalysisChart === 'function') {
+                        setTimeout(() => initUserAnalysisChart(), 100);
                     }
                 }
             }
