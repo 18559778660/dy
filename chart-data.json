@@ -7,67 +7,157 @@
                     "date": "02/26",
                     "dailyUsers": 10,
                     "newUsers": 10,
-                    "avgDuration": 10
+                    "avgDuration": 10,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "02/27",
                     "dailyUsers": 10,
                     "newUsers": 10,
-                    "avgDuration": 123
+                    "avgDuration": 123,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "02/28",
                     "dailyUsers": 20,
                     "newUsers": 10,
-                    "avgDuration": 7777
+                    "avgDuration": 7777,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "03/01",
                     "dailyUsers": 300,
                     "newUsers": 10,
-                    "avgDuration": 8888
+                    "avgDuration": 8888,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "03/02",
                     "dailyUsers": 4400,
                     "newUsers": 10,
-                    "avgDuration": 7532
+                    "avgDuration": 7532,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "03/03",
                     "dailyUsers": 100,
                     "newUsers": 10,
-                    "avgDuration": 100
+                    "avgDuration": 100,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "03/04",
                     "dailyUsers": 60,
                     "newUsers": 10,
-                    "avgDuration": 200
+                    "avgDuration": 200,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "03/05",
                     "dailyUsers": 70,
                     "newUsers": 10,
-                    "avgDuration": 9999
+                    "avgDuration": 9999,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "03/06",
                     "dailyUsers": 70,
                     "newUsers": 10,
-                    "avgDuration": 9999
+                    "avgDuration": 9999,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "03/07",
                     "dailyUsers": 70,
                     "newUsers": 10,
-                    "avgDuration": 9999
+                    "avgDuration": 9999,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 },
                 {
                     "date": "03/08",
                     "dailyUsers": 70,
                     "newUsers": 10,
-                    "avgDuration": 9999
+                    "avgDuration": 9999,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
+                },
+                {
+                    "date": "03/09",
+                    "dailyUsers": 70,
+                    "newUsers": 10,
+                    "avgDuration": 9999,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgStartup": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777
                 }
             ]
         }
