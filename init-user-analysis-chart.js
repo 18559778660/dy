@@ -91,15 +91,15 @@
                     visible: true,
                     style: {
                         curveType: 'monotone',
-                        fill: (datum, seriesIndex) => ({
+                        fill: {
                             gradient: 'linear',
-                            x0: 0, y0: 0,
-                            x1: 0, y1: 1,
+                            x0: 0, y0: 0,      // 起点：顶部
+                            x1: 0, y1: 1,     // 终点：底部（从上到下的渐变）
                             stops: [
                                 { offset: 0, color: 'rgb(73, 127, 252)', opacity: 0.3 },
                                 { offset: 1, color: 'rgb(73, 127, 252)', opacity: 0.05 }
                             ]
-                        })
+                        }
                     }
                 },
                 // 坐标轴

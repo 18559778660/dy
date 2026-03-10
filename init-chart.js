@@ -4,7 +4,7 @@
 
     // 将 initChart 函数暴露到全局作用域，供页面切换时重新调用
     window.initChart = initChart;
-    
+
     // 将 initMetricCards 函数暴露到全局作用域，供页面切换时重新调用
     window.initMetricCards = initMetricCards;
 
@@ -212,7 +212,7 @@
                     style: {
                         curveType: 'monotone',
                         // ✅ 关键：不要用 fill 对象，而是用回调函数隔离 color scale
-                        fill: (datum, seriesIndex) => ({
+                        fill: {
                             gradient: 'linear',
                             x0: 0, y0: 0,
                             x1: 0, y1: 1,
@@ -221,7 +221,7 @@
                                 { offset: 1, color: 'rgb(73, 127, 252)', opacity: 0.05 }
 
                             ]
-                        })
+                        }
                     }
                 },
 
