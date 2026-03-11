@@ -8,6 +8,10 @@
     // 将初始化卡片数据函数暴露到全局作用域
     window.initUserAnalysisCards = initUserAnalysisCards;
 
+    // 图表实例和容器
+    let userAnalysisChartInstance = null;
+    let userAnalysisChartContainer = null;
+
     function initUserAnalysisChart() {
         const container = document.getElementById('visactor_window_user');
         if (!container) {
@@ -195,7 +199,8 @@
             });
 
             // 保存实例到全局变量，用于后续更新
-            window.userAnalysisChart = vchart;
+            userAnalysisChartInstance = vchart;
+            userAnalysisChartContainer = container;
 
         } catch (error) {
             console.error('❌ 图表创建失败:', error);
@@ -448,9 +453,90 @@
     window.updateUserAnalysisChartMetric = updateUserAnalysisChartMetric;
 
     function updateUserAnalysisChartMetric(metricTitle) {
-        console.log('[用户分析] 切换图表指标:', metricTitle);
+        console.log('[用户分析] 更新图表指标:', metricTitle);
 
-        // TODO: 实现图表切换逻辑
-        // 这里可以复用首页的 switchChartMetric 逻辑，或者根据需求单独实现
+        if (!window.chartDataConfig || !window.chartDataConfig.overview || window.chartDataConfig.overview.length === 0) {
+            console.warn('没有图表数据配置');
+            return;
+        }
+
+        const chartConfig = window.chartDataConfig.overview[0];
+
+        // 过滤最近 7 天的数据（不包括今天）
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        const filteredData = chartConfig.data.filter(item => {
+            const [month, day] = item.date.split('/').map(Number);
+            const currentYear = new Date().getFullYear();
+            const itemDate = new Date(currentYear, month - 1, day);
+            return itemDate >= sevenDaysAgo && itemDate < today;
+        });
+
+        // 根据指标选择对应的字段
+        let dataField = 'dailyUsers'; // 默认活跃用户数
+        if (metricTitle === '新增用户数') {
+            dataField = 'newUsers';
+        } else if (metricTitle === '人均游戏时长') {
+            dataField = 'avgDuration';
+        } else if (metricTitle === '次均游戏时长') {
+            dataField = 'singleAvgDuration';
+        } else if (metricTitle === '累计用户数') {
+            // 总用户数需要从原始数据重新计算累计值
+            dataField = 'totalUser';
+        } else if (metricTitle === '分享次数') {
+            dataField = 'sharing';
+        } else if (metricTitle === '启动次数') {
+            dataField = 'startup';
+        } else if (metricTitle === '人均启动次数') {
+            dataField = 'avgStartup';
+        } else if (metricTitle === '分享成功次数') {
+            dataField = 'shareSuccess';
+        } else if (metricTitle === '分享新增用户数') {
+            dataField = 'shareNewUsers';
+        } else if (metricTitle === '分享成功用户数') {
+            dataField = 'shareSuccessUsers';
+        }
+
+        // 转换数据
+        let data = filteredData.map(item => {
+            let value = item[dataField];
+            let displayValue = value; // 用于 tooltip 显示的值
+
+            // 如果是人均游戏时长或次均游戏时长，将秒数转换为 "HH:MM:SS" 格式字符串用于显示
+            if ((metricTitle === '人均游戏时长' || metricTitle === '次均游戏时长') && typeof value === 'number') {
+                const hours = Math.floor(value / 3600);
+                const minutes = Math.floor((value % 3600) / 60);
+                const seconds = value % 60;
+                displayValue = [
+                    String(hours).padStart(2, '0'),
+                    String(minutes).padStart(2, '0'),
+                    String(seconds).padStart(2, '0')
+                ].join(':');
+            } else if (typeof value === 'number') {
+                // 其他数字指标使用千位分隔符
+                displayValue = value.toLocaleString('zh-CN');
+            }
+
+            return {
+                date: item.date,
+                value: value,           // 数值类型，用于图表渲染
+                displayValue: displayValue, // 格式化后的值，用于 tooltip 显示
+                medalType: metricTitle
+            };
+        });
+
+        console.log('✅ [用户分析] 切换到指标:', metricTitle, `(共${data.length}条数据)`);
+
+        // 更新 VChart 数据
+        if (userAnalysisChartInstance && userAnalysisChartContainer) {
+            userAnalysisChartInstance.updateData('data', data);
+
+            // 更新标题
+            createChartTitle(userAnalysisChartContainer, metricTitle);
+        }
     }
 })();

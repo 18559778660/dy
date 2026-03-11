@@ -155,12 +155,16 @@ window.switchChartMetric = switchChartMetric;
 function switchChartMetric(metricTitle) {
     console.log('切换图表指标:', metricTitle);
 
-    // 根据页面调用不同的更新函数
-    if (typeof window.updateUserAnalysisChartMetric === 'function') {
-        // 用户分析页
+    // 根据当前页面的 DOM 元素判断是哪个页面
+    const userAnalysisContainer = document.getElementById('visactor_window_user');
+
+    if (userAnalysisContainer && typeof window.updateUserAnalysisChartMetric === 'function') {
+        // 用户分析页 - 存在 visactor_window_user 容器
+        console.log('[用户分析页] 切换图表');
         window.updateUserAnalysisChartMetric(metricTitle);
     } else if (typeof window.updateChartMetric === 'function') {
-        // 首页
+        // 首页 - 使用默认的 updateChartMetric
+        console.log('[首页] 切换图表');
         window.updateChartMetric(metricTitle);
     }
 }
