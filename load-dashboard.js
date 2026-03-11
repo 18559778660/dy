@@ -100,6 +100,11 @@
                     if (typeof initUserAnalysisChart === 'function') {
                         setTimeout(() => initUserAnalysisChart(), 100);
                     }
+
+                    // 初始化卡片数据
+                    if (typeof initUserAnalysisCards === 'function') {
+                        setTimeout(() => initUserAnalysisCards(), 100);
+                    }
                 }
             }
         };

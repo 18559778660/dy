@@ -5,6 +5,12 @@
     // 将初始化函数暴露到全局作用域，供页面切换时重新调用
     window.initUserAnalysisChart = initUserAnalysisChart;
 
+    // 将初始化卡片数据函数暴露到全局作用域
+    window.initUserAnalysisCards = initUserAnalysisCards;
+
+    // 图表配置 - 从 JSON 文件加载
+    let chartDataConfig = null;
+
     function initUserAnalysisChart() {
         const container = document.getElementById('visactor_window_user');
         if (!container) {
@@ -240,6 +246,92 @@
         } else {
             // 更新现有标题
             titleElement.querySelector('span:last-child').textContent = title;
+        }
+    }
+
+    // 初始化卡片数据（显示昨天数据）
+    function initUserAnalysisCards() {
+        console.log('开始初始化用户分析卡片数据...');
+
+        if (!window.chartDataConfig || !window.chartDataConfig.overview || !window.chartDataConfig.overview[0]) {
+            console.error('未找到图表数据配置');
+            return;
+        }
+
+        // 获取昨天的日期（MM/DD 格式）
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+        const day = String(yesterday.getDate()).padStart(2, '0');
+        const yesterdayStr = `${month}/${day}`;
+
+        console.log('加载昨天数据:', yesterdayStr);
+
+        const chartConfig = window.chartDataConfig.overview[0];
+
+        // 找到昨天的数据
+        const yesterdayData = chartConfig.data.find(item => item.date === yesterdayStr);
+
+        if (!yesterdayData) {
+            console.warn('未找到昨天的数据:', yesterdayStr);
+            return;
+        }
+
+        console.log('昨天数据:', yesterdayData);
+
+        // 找到前天的数据
+        const dayBeforeYesterday = new Date();
+        dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
+        const dbyMonth = String(dayBeforeYesterday.getMonth() + 1).padStart(2, '0');
+        const dbyDay = String(dayBeforeYesterday.getDate()).padStart(2, '0');
+        const dayBeforeStr = `${dbyMonth}/${dbyDay}`;
+
+        const dayBeforeData = chartConfig.data.find(item => item.date === dayBeforeStr);
+
+        if (dayBeforeData) {
+            console.log('前天数据:', dayBeforeData);
+        }
+
+        // 更新活跃用户数卡片
+        const activeUsersEl = document.querySelector('[data-metric="activeUsers"]');
+        const activeUsersCompareEl = document.querySelector('[data-compare="activeUsers"]');
+
+        if (activeUsersEl) {
+            activeUsersEl.textContent = yesterdayData.dailyUsers.toLocaleString('zh-CN');
+            console.log('活跃用户数:', yesterdayData.dailyUsers);
+        }
+
+        // 更新涨幅数据
+        if (dayBeforeData && activeUsersCompareEl) {
+            updateCompareValues(activeUsersCompareEl, yesterdayData.dailyUsers, dayBeforeData.dailyUsers);
+        }
+
+        console.log('✅ 用户分析卡片数据已更新');
+    }
+
+    // 更新涨幅显示
+    function updateCompareValues(element, yesterdayValue, dayBeforeValue) {
+        if (!element) return;
+
+        // 计算涨幅百分比
+        let comparePercent = 0;
+        if (dayBeforeValue > 0) {
+            comparePercent = ((yesterdayValue - dayBeforeValue) / dayBeforeValue) * 100;
+        }
+
+        // 格式化涨幅
+        const sign = comparePercent >= 0 ? '+' : '';
+        const percentStr = sign + comparePercent.toFixed(2) + '%';
+
+        element.textContent = percentStr;
+
+        // 设置样式（上涨/下跌）
+        if (comparePercent >= 0) {
+            element.classList.remove('omg-compares-number-type-down');
+            element.classList.add('omg-compares-number-type-up');
+        } else {
+            element.classList.remove('omg-compares-number-type-up');
+            element.classList.add('omg-compares-number-type-down');
         }
     }
 })();
