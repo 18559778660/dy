@@ -102,16 +102,16 @@ window.initRadioButtons = initRadioButtons;
 function initRadioButtons() {
     console.log('初始化单选按钮切换...');
 
-    // 获取两个单选按钮
-    const onlineBtn = document.getElementById('addon-rsawkrs');
-    const grayBtn = document.getElementById('addon-a1167zc');
+    // 使用 class 选择器获取两个单选按钮
+    const onlineBtn = document.querySelector('.version-online');
+    const grayBtn = document.querySelector('.version-gray');
 
     if (!onlineBtn || !grayBtn) {
         console.warn('未找到单选按钮元素');
         return;
     }
 
-    // 点击“线上版本”
+    // 点击"线上版本"
     onlineBtn.addEventListener('click', function () {
         // 移除另一个按钮的选中状态
         grayBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
@@ -120,7 +120,18 @@ function initRadioButtons() {
         console.log('选中：线上版本');
     });
 
-    // 点击“灰度版本”
+    // hover 效果 - 线上版本
+    onlineBtn.addEventListener('mouseenter', function () {
+        if (!this.classList.contains('semi-dy-open-radio-addon-buttonRadio-checked')) {
+            this.classList.add('semi-dy-open-radio-addon-buttonRadio-hover');
+        }
+    });
+
+    onlineBtn.addEventListener('mouseleave', function () {
+        this.classList.remove('semi-dy-open-radio-addon-buttonRadio-hover');
+    });
+
+    // 点击"灰度版本"
     grayBtn.addEventListener('click', function () {
         // 移除另一个按钮的选中状态
         onlineBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
@@ -129,8 +140,64 @@ function initRadioButtons() {
         console.log('选中：灰度版本');
     });
 
+    // hover 效果 - 灰度版本
+    grayBtn.addEventListener('mouseenter', function () {
+        if (!this.classList.contains('semi-dy-open-radio-addon-buttonRadio-checked')) {
+            this.classList.add('semi-dy-open-radio-addon-buttonRadio-hover');
+        }
+    });
+
+    grayBtn.addEventListener('mouseleave', function () {
+        this.classList.remove('semi-dy-open-radio-addon-buttonRadio-hover');
+    });
+
     console.log('✅ 单选按钮切换初始化完成');
 }
+
+// 初始化时间范围单选按钮
+function initTimeRangeButtons() {
+    console.log('初始化时间范围单选按钮...');
+
+    // 使用 class 选择器获取三个时间按钮
+    const yesterdayBtn = document.querySelector('.time-range-yesterday');
+    const sevenDaysBtn = document.querySelector('.time-range-7days');
+    const thirtyDaysBtn = document.querySelector('.time-range-30days');
+
+    if (!yesterdayBtn || !sevenDaysBtn || !thirtyDaysBtn) {
+        console.warn('未找到时间范围按钮元素');
+        return;
+    }
+
+    // 为每个按钮添加点击和 hover 事件
+    [yesterdayBtn, sevenDaysBtn, thirtyDaysBtn].forEach(btn => {
+        btn.addEventListener('click', function () {
+            // 移除所有按钮的选中状态
+            yesterdayBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
+            sevenDaysBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
+            thirtyDaysBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
+
+            // 添加当前按钮的选中状态
+            this.classList.add('semi-dy-open-radio-addon-buttonRadio-checked');
+            console.log('选中时间范围:', this.textContent.trim());
+        });
+
+        // hover 效果
+        btn.addEventListener('mouseenter', function () {
+            if (!this.classList.contains('semi-dy-open-radio-addon-buttonRadio-checked')) {
+                this.classList.add('semi-dy-open-radio-addon-buttonRadio-hover');
+            }
+        });
+
+        btn.addEventListener('mouseleave', function () {
+            this.classList.remove('semi-dy-open-radio-addon-buttonRadio-hover');
+        });
+    });
+
+    console.log('✅ 时间范围单选按钮初始化完成');
+}
+
+// 暴露到全局
+window.initTimeRangeButtons = initTimeRangeButtons;
 
 function initBannerClose() {
     console.log('初始化 Banner 关闭功能...');

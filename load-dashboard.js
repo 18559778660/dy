@@ -111,6 +111,16 @@
                         setTimeout(() => window.initMetricTooltip(), 100);
                     }
 
+                    // 初始化单选按钮切换
+                    if (typeof window.initRadioButtons === 'function') {
+                        setTimeout(() => window.initRadioButtons(), 100);
+                    }
+
+                    // 初始化时间范围单选按钮
+                    if (typeof window.initTimeRangeButtons === 'function') {
+                        setTimeout(() => window.initTimeRangeButtons(), 100);
+                    }
+
                 }
             }
         };
