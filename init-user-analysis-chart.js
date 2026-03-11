@@ -8,9 +8,6 @@
     // 将初始化卡片数据函数暴露到全局作用域
     window.initUserAnalysisCards = initUserAnalysisCards;
 
-    // 图表配置 - 从 JSON 文件加载
-    let chartDataConfig = null;
-
     function initUserAnalysisChart() {
         const container = document.getElementById('visactor_window_user');
         if (!container) {
@@ -27,8 +24,8 @@
         let data = [];
         let chartTitle = '活跃用户数'; // 标题改为"活跃用户数"
 
-        if (chartDataConfig && chartDataConfig.overview && chartDataConfig.overview.length > 0) {
-            const chartConfig = chartDataConfig.overview[0]; // 使用总览数据
+        if (window.chartDataConfig && window.chartDataConfig.overview && window.chartDataConfig.overview.length > 0) {
+            const chartConfig = window.chartDataConfig.overview[0]; // 使用总览数据
             // 过滤最近 7 天的数据（不包括今天）
             const today = new Date();
             today.setHours(0, 0, 0, 0); // 设置为今天 0 点
@@ -292,18 +289,134 @@
             console.log('前天数据:', dayBeforeData);
         }
 
-        // 更新活跃用户数卡片
+        // 获取所有卡片元素
         const activeUsersEl = document.querySelector('[data-metric="activeUsers"]');
-        const activeUsersCompareEl = document.querySelector('[data-compare="activeUsers"]');
+        const newUsersEl = document.querySelector('[data-metric="newUsers"]');
+        const totalUsersEl = document.querySelector('[data-metric="totalUsers"]');
+        const sharingEl = document.querySelector('[data-metric="sharing"]');
+        const startupEl = document.querySelector('[data-metric="startup"]');
+        const avgStartupEl = document.querySelector('[data-metric="avgStartup"]');
+        const avgDurationEl = document.querySelector('[data-metric="avgDuration"]');
+        const singleAvgDurationEl = document.querySelector('[data-metric="singleAvgDuration"]');
+        const shareSuccessEl = document.querySelector('[data-metric="shareSuccess"]');
+        const shareNewUsersEl = document.querySelector('[data-metric="shareNewUsers"]');
+        const shareSuccessUsersEl = document.querySelector('[data-metric="shareSuccessUsers"]');
 
+        // 获取所有涨幅元素
+        const activeUsersCompareEl = document.querySelector('[data-compare="activeUsers"]');
+        const newUsersCompareEl = document.querySelector('[data-compare="newUsers"]');
+        const totalUsersCompareEl = document.querySelector('[data-compare="totalUsers"]');
+        const sharingCompareEl = document.querySelector('[data-compare="sharing"]');
+        const startupCompareEl = document.querySelector('[data-compare="startup"]');
+        const avgStartupCompareEl = document.querySelector('[data-compare="avgStartup"]');
+        const avgDurationCompareEl = document.querySelector('[data-compare="avgDuration"]');
+        const singleAvgDurationCompareEl = document.querySelector('[data-compare="singleAvgDuration"]');
+        const shareSuccessCompareEl = document.querySelector('[data-compare="shareSuccess"]');
+        const shareNewUsersCompareEl = document.querySelector('[data-compare="shareNewUsers"]');
+        const shareSuccessUsersCompareEl = document.querySelector('[data-compare="shareSuccessUsers"]');
+
+        // 更新活跃用户数
         if (activeUsersEl) {
             activeUsersEl.textContent = yesterdayData.dailyUsers.toLocaleString('zh-CN');
             console.log('活跃用户数:', yesterdayData.dailyUsers);
         }
 
+        // 更新新增用户数
+        if (newUsersEl) {
+            newUsersEl.textContent = yesterdayData.newUsers.toLocaleString('zh-CN');
+            console.log('新增用户数:', yesterdayData.newUsers);
+        }
+
+        // 更新累计用户数（需要累加历史数据）
+        if (totalUsersEl) {
+            // 计算截至昨天的累计用户数（递增累加）
+            const todayIndex = chartConfig.data.findIndex(item => item.date === yesterdayStr);
+            let totalUsers = 0;
+            for (let i = 0; i <= todayIndex; i++) {
+                totalUsers += chartConfig.data[i].newUsers;
+            }
+            totalUsersEl.textContent = totalUsers.toLocaleString('zh-CN');
+            console.log('累计用户数:', totalUsers);
+        }
+
+        // 更新分享次数
+        if (sharingEl) {
+            sharingEl.textContent = yesterdayData.sharing.toLocaleString('zh-CN');
+            console.log('分享次数:', yesterdayData.sharing);
+        }
+
+        // 更新启动次数
+        if (startupEl) {
+            startupEl.textContent = yesterdayData.startup.toLocaleString('zh-CN');
+            console.log('启动次数:', yesterdayData.startup);
+        }
+
+        // 更新人均启动次数
+        if (avgStartupEl) {
+            avgStartupEl.textContent = yesterdayData.avgStartup.toFixed(3);
+            console.log('人均启动次数:', yesterdayData.avgStartup);
+        }
+
+        // 更新人均游戏时长（秒转换为 HH:MM:SS 格式）
+        if (avgDurationEl) {
+            const durationStr = formatDuration(yesterdayData.avgDuration);
+            avgDurationEl.textContent = durationStr;
+            console.log('人均游戏时长:', durationStr);
+        }
+
+        // 更新次均游戏时长（秒转换为 HH:MM:SS 格式）
+        if (singleAvgDurationEl) {
+            const singleAvgDurationStr = formatDuration(yesterdayData.singleAvgStartup);
+            singleAvgDurationEl.textContent = singleAvgDurationStr;
+            console.log('次均游戏时长:', singleAvgDurationStr);
+        }
+
+        // 更新分享成功
+        if (shareSuccessEl) {
+            shareSuccessEl.textContent = yesterdayData.shareSuccess.toLocaleString('zh-CN');
+            console.log('分享成功:', yesterdayData.shareSuccess);
+        }
+
+        // 更新分享新增用户
+        if (shareNewUsersEl) {
+            shareNewUsersEl.textContent = yesterdayData.shareNewUsers.toLocaleString('zh-CN');
+            console.log('分享新增用户:', yesterdayData.shareNewUsers);
+        }
+
+        // 更新分享成功用户
+        if (shareSuccessUsersEl) {
+            shareSuccessUsersEl.textContent = yesterdayData.shareSuccessUsers.toLocaleString('zh-CN');
+            console.log('分享成功用户:', yesterdayData.shareSuccessUsers);
+        }
+
         // 更新涨幅数据
-        if (dayBeforeData && activeUsersCompareEl) {
+        if (dayBeforeData) {
             updateCompareValues(activeUsersCompareEl, yesterdayData.dailyUsers, dayBeforeData.dailyUsers);
+            updateCompareValues(newUsersCompareEl, yesterdayData.newUsers, dayBeforeData.newUsers);
+
+            // 累计用户数涨幅
+            if (totalUsersCompareEl) {
+                const todayIndex = chartConfig.data.findIndex(item => item.date === yesterdayStr);
+                let totalUsers = 0;
+                for (let i = 0; i <= todayIndex; i++) {
+                    totalUsers += chartConfig.data[i].newUsers;
+                }
+                const dayBeforeIndex = chartConfig.data.findIndex(item => item.date === dayBeforeStr);
+                let dayBeforeTotal = 0;
+                for (let i = 0; i <= dayBeforeIndex; i++) {
+                    dayBeforeTotal += chartConfig.data[i].newUsers;
+                }
+                updateCompareValues(totalUsersCompareEl, totalUsers, dayBeforeTotal);
+            }
+
+            updateCompareValues(sharingCompareEl, yesterdayData.sharing, dayBeforeData.sharing);
+            updateCompareValues(startupCompareEl, yesterdayData.startup, dayBeforeData.startup);
+            updateCompareValues(avgStartupCompareEl, yesterdayData.avgStartup, dayBeforeData.avgStartup);
+            updateCompareValues(avgDurationCompareEl, yesterdayData.avgDuration, dayBeforeData.avgDuration);
+            updateCompareValues(singleAvgDurationCompareEl, yesterdayData.singleAvgStartup, dayBeforeData.singleAvgStartup);
+            updateCompareValues(shareSuccessCompareEl, yesterdayData.shareSuccess, dayBeforeData.shareSuccess);
+            updateCompareValues(shareNewUsersCompareEl, yesterdayData.shareNewUsers, dayBeforeData.shareNewUsers);
+            updateCompareValues(shareSuccessUsersCompareEl, yesterdayData.shareSuccessUsers, dayBeforeData.shareSuccessUsers);
         }
 
         console.log('✅ 用户分析卡片数据已更新');
@@ -333,5 +446,18 @@
             element.classList.remove('omg-compares-number-type-up');
             element.classList.add('omg-compares-number-type-down');
         }
+    }
+
+    // 格式化时长（秒转为 HH:MM:SS）
+    function formatDuration(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        return [
+            String(hours).padStart(2, '0'),
+            String(minutes).padStart(2, '0'),
+            String(secs).padStart(2, '0')
+        ].join(':');
     }
 })();
