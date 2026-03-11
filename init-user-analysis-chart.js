@@ -327,16 +327,11 @@
             console.log('新增用户数:', yesterdayData.newUsers);
         }
 
-        // 更新累计用户数（需要累加历史数据）
+        // 更新累计用户数
         if (totalUsersEl) {
-            // 计算截至昨天的累计用户数（递增累加）
-            const todayIndex = chartConfig.data.findIndex(item => item.date === yesterdayStr);
-            let totalUsers = 0;
-            for (let i = 0; i <= todayIndex; i++) {
-                totalUsers += chartConfig.data[i].newUsers;
-            }
-            totalUsersEl.textContent = totalUsers.toLocaleString('zh-CN');
-            console.log('累计用户数:', totalUsers);
+            // 直接从预组装的 yesterdayData.totalUser 获取
+            totalUsersEl.textContent = yesterdayData.totalUser.toLocaleString('zh-CN');
+            console.log('累计用户数:', yesterdayData.totalUser);
         }
 
         // 更新分享次数
@@ -366,7 +361,7 @@
 
         // 更新次均游戏时长（秒转换为 HH:MM:SS 格式）
         if (singleAvgDurationEl) {
-            const singleAvgDurationStr = formatDuration(yesterdayData.singleAvgStartup);
+            const singleAvgDurationStr = formatDuration(yesterdayData.singleAvgDuration);
             singleAvgDurationEl.textContent = singleAvgDurationStr;
             console.log('次均游戏时长:', singleAvgDurationStr);
         }
@@ -394,26 +389,14 @@
             updateCompareValues(activeUsersCompareEl, yesterdayData.dailyUsers, dayBeforeData.dailyUsers);
             updateCompareValues(newUsersCompareEl, yesterdayData.newUsers, dayBeforeData.newUsers);
 
-            // 累计用户数涨幅
-            if (totalUsersCompareEl) {
-                const todayIndex = chartConfig.data.findIndex(item => item.date === yesterdayStr);
-                let totalUsers = 0;
-                for (let i = 0; i <= todayIndex; i++) {
-                    totalUsers += chartConfig.data[i].newUsers;
-                }
-                const dayBeforeIndex = chartConfig.data.findIndex(item => item.date === dayBeforeStr);
-                let dayBeforeTotal = 0;
-                for (let i = 0; i <= dayBeforeIndex; i++) {
-                    dayBeforeTotal += chartConfig.data[i].newUsers;
-                }
-                updateCompareValues(totalUsersCompareEl, totalUsers, dayBeforeTotal);
-            }
+            // 总用户数涨幅（使用预组装的 totalUser 字段）
+            updateCompareValues(totalUsersCompareEl, yesterdayData.totalUser, dayBeforeData.totalUser);
 
             updateCompareValues(sharingCompareEl, yesterdayData.sharing, dayBeforeData.sharing);
             updateCompareValues(startupCompareEl, yesterdayData.startup, dayBeforeData.startup);
             updateCompareValues(avgStartupCompareEl, yesterdayData.avgStartup, dayBeforeData.avgStartup);
             updateCompareValues(avgDurationCompareEl, yesterdayData.avgDuration, dayBeforeData.avgDuration);
-            updateCompareValues(singleAvgDurationCompareEl, yesterdayData.singleAvgStartup, dayBeforeData.singleAvgStartup);
+            updateCompareValues(singleAvgDurationCompareEl, yesterdayData.singleAvgDuration, dayBeforeData.singleAvgDuration);
             updateCompareValues(shareSuccessCompareEl, yesterdayData.shareSuccess, dayBeforeData.shareSuccess);
             updateCompareValues(shareNewUsersCompareEl, yesterdayData.shareNewUsers, dayBeforeData.shareNewUsers);
             updateCompareValues(shareSuccessUsersCompareEl, yesterdayData.shareSuccessUsers, dayBeforeData.shareSuccessUsers);
