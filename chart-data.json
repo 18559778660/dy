@@ -154,7 +154,7 @@
                     "sharing": 111,
                     "startup": 222,
                     "avgStartup": 333,
-                    "singleAvgDuration": 444,
+                    "singleAvgDuration": 100,
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777
@@ -167,7 +167,7 @@
                     "sharing": 111,
                     "startup": 222,
                     "avgStartup": 333,
-                    "singleAvgDuration": 444,
+                    "singleAvgDuration": 200,
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777
@@ -193,7 +193,7 @@
                     "sharing": 111,
                     "startup": 222,
                     "avgStartup": 333,
-                    "singleAvgDuration": 444,
+                    "singleAvgDuration": 100,
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777
@@ -206,7 +206,7 @@
                     "sharing": 111,
                     "startup": 222,
                     "avgStartup": 333,
-                    "singleAvgDuration": 444,
+                    "singleAvgDuration": 200,
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777
