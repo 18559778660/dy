@@ -121,6 +121,11 @@
                         setTimeout(() => window.initTimeRangeButtons(), 100);
                     }
 
+                    // 初始化下拉筛选框
+                    if (typeof window.initDropdownFilters === 'function') {
+                        setTimeout(() => window.initDropdownFilters(), 100);
+                    }
+
                 }
             }
         };
