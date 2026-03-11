@@ -148,7 +148,7 @@
                 },
                 {
                     "date": "03/09",
-                    "dailyUsers": 70,
+                    "dailyUsers": 700,
                     "newUsers": 10,
                     "avgDuration": 9999,
                     "sharing": 111,
@@ -161,7 +161,7 @@
                 },
                 {
                     "date": "03/10",
-                    "dailyUsers": 70,
+                    "dailyUsers": 800,
                     "newUsers": 10,
                     "avgDuration": 9999,
                     "sharing": 111,

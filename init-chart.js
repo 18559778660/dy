@@ -64,30 +64,15 @@
 
         const chartConfig = chartDataConfig.overview[0];
 
-        // 过滤最近 7 天的数据（不包括今天）
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
-
-        // 累加 newUsers 并添加到每个数据项中
+        // 累加 newUsers 并添加到每个数据项中（全部历史数据）
         let cumulative = 0;
         chartConfig.data.forEach(item => {
-            const [month, day] = item.date.split('/').map(Number);
-            const currentYear = new Date().getFullYear();
-            const itemDate = new Date(currentYear, month - 1, day);
-
-            // 只统计最近 7 天（不包括今天）的数据
-            if (itemDate >= sevenDaysAgo && itemDate < today) {
-                cumulative += item.newUsers;
-                // 添加 totalUser 字段到数据对象中
-                item.totalUser = cumulative;
-            }
+            cumulative += item.newUsers;
+            // 添加 totalUser 字段到数据对象中
+            item.totalUser = cumulative;
         });
 
-        console.log('\n=== 已添加 totalUser 字段的图表数据 ===');
+        console.log('\n=== 已添加 totalUser 字段的图表数据（全部历史累计）===');
         console.log(JSON.stringify(chartConfig.data, null, 2));
         console.log('====================================\n');
     }
@@ -410,8 +395,8 @@
         } else if (metricTitle === '人均时长') {
             dataField = 'avgDuration';
         } else if (metricTitle === '总用户数') {
-            // 总用户数 = 新增用户数的累计值
-            dataField = 'newUsers';
+            // 总用户数直接使用预组装的 totalUser 字段
+            dataField = 'totalUser';
         }
 
         // 转换数据
@@ -441,20 +426,6 @@
                 medalType: metricTitle
             };
         });
-
-        // 如果是总用户数，需要计算累计值
-        if (metricTitle === '总用户数') {
-            let cumulative = 0;
-            data = data.map(item => {
-                cumulative += item.value; // 累加新增用户数
-                return {
-                    date: item.date,
-                    value: cumulative,
-                    displayValue: cumulative.toLocaleString('zh-CN'), // 千位分隔符格式化
-                    medalType: '总用户数'
-                };
-            });
-        }
 
         console.log('✅ 切换到指标:', metricTitle, `(共${data.length}条数据)`);
 
@@ -544,7 +515,7 @@
         }
 
         if (totalUsersEl) {
-            // 总用户数直接从 yesterdayData.totalUser 获取
+            // 总用户数直接从预组装的 yesterdayData.totalUser 获取
             totalUsersEl.textContent = yesterdayData.totalUser.toLocaleString('zh-CN');
             console.log('总用户数:', yesterdayData.totalUser);
         }
@@ -554,6 +525,7 @@
             updateCompareValues(dailyUsersCompareEl, yesterdayData.dailyUsers, dayBeforeData.dailyUsers);
             updateCompareValues(newUsersCompareEl, yesterdayData.newUsers, dayBeforeData.newUsers);
             updateCompareValues(avgDurationCompareEl, yesterdayData.avgDuration, dayBeforeData.avgDuration);
+            // 总用户数涨幅（使用预组装的 totalUser 字段）
             updateCompareValues(totalUsersCompareEl, yesterdayData.totalUser, dayBeforeData.totalUser);
         }
 
