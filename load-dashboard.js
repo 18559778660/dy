@@ -105,6 +105,12 @@
                     if (typeof initUserAnalysisCards === 'function') {
                         setTimeout(() => initUserAnalysisCards(), 100);
                     }
+
+                    // 重新初始化 tooltip
+                    if (typeof window.initMetricTooltip === 'function') {
+                        setTimeout(() => window.initMetricTooltip(), 100);
+                    }
+
                 }
             }
         };

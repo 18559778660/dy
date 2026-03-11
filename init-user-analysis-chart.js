@@ -443,4 +443,14 @@
             String(secs).padStart(2, '0')
         ].join(':');
     }
+
+    // 切换图表指标（供 init-metric-tooltip.js 调用）
+    window.updateUserAnalysisChartMetric = updateUserAnalysisChartMetric;
+
+    function updateUserAnalysisChartMetric(metricTitle) {
+        console.log('[用户分析] 切换图表指标:', metricTitle);
+
+        // TODO: 实现图表切换逻辑
+        // 这里可以复用首页的 switchChartMetric 逻辑，或者根据需求单独实现
+    }
 })();

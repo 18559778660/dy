@@ -155,8 +155,12 @@ window.switchChartMetric = switchChartMetric;
 function switchChartMetric(metricTitle) {
     console.log('切换图表指标:', metricTitle);
 
-    // 调用 init-chart.js 中的切换函数
-    if (typeof window.updateChartMetric === 'function') {
+    // 根据页面调用不同的更新函数
+    if (typeof window.updateUserAnalysisChartMetric === 'function') {
+        // 用户分析页
+        window.updateUserAnalysisChartMetric(metricTitle);
+    } else if (typeof window.updateChartMetric === 'function') {
+        // 首页
         window.updateChartMetric(metricTitle);
     }
 }
