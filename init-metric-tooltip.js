@@ -299,14 +299,23 @@ function initDropdownFilters() {
     });
 
     // 点击其他地方关闭所有下拉菜单
-    document.addEventListener('click', function () {
+    document.addEventListener('click', function (e) {
+        // 如果点击的是筛选框或时间按钮，不关闭
+        if (e.target.closest('.filter-app') ||
+            e.target.closest('.filter-os') ||
+            e.target.closest('.time-range-yesterday') ||
+            e.target.closest('.time-range-7days') ||
+            e.target.closest('.time-range-30days')) {
+            return;
+        }
+
         document.querySelectorAll('[aria-expanded="true"]').forEach(open => {
             open.setAttribute('aria-expanded', 'false');
             const controlsId = open.getAttribute('aria-controls');
             if (controlsId) {
-                const dropdown = document.getElementById(controlsId);
-                if (dropdown) {
-                    dropdown.style.display = 'none';
+                const wrapper = document.getElementById(`${controlsId}-wrapper`);
+                if (wrapper) {
+                    wrapper.style.display = 'none';
                 }
             }
         });
