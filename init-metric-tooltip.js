@@ -93,6 +93,9 @@
 
     // 用户分析页日期范围选择器
     initUserAnalysisDatePicker();
+
+    // 页面标签切换
+    initPageTabs();
 })();
 
 // Banner 关闭函数（暴露到全局供页面切换时调用）
@@ -616,6 +619,42 @@ function initUserAnalysisDatePicker() {
     });
 
     console.log('✅ 用户分析页日期范围选择器初始化完成');
+}
+
+// 初始化页面标签切换（行为分析、实时分析等）
+window.initPageTabs = initPageTabs;
+
+function initPageTabs() {
+    console.log('初始化页面标签切换...');
+
+    // 获取所有标签页
+    const tabs = document.querySelectorAll('[role="tab"]');
+
+    if (!tabs || tabs.length === 0) {
+        console.warn('未找到标签页元素');
+        return;
+    }
+
+    // 为每个标签添加点击事件
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            // 移除所有标签的选中状态
+            tabs.forEach(t => {
+                t.classList.remove('semi-dy-open-tabs-tab-active');
+                t.setAttribute('aria-selected', 'false');
+                t.setAttribute('tabindex', '-1');
+            });
+
+            // 添加当前标签的选中状态
+            this.classList.add('semi-dy-open-tabs-tab-active');
+            this.setAttribute('aria-selected', 'true');
+            this.setAttribute('tabindex', '0');
+
+            console.log('选中标签:', this.textContent.trim());
+        });
+    });
+
+    console.log('✅ 页面标签切换初始化完成');
 }
 
 function initBannerClose() {

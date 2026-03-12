@@ -126,6 +126,11 @@
                         setTimeout(() => window.initDropdownFilters(), 100);
                     }
 
+                    // 初始化页面标签切换
+                    if (typeof window.initPageTabs === 'function') {
+                        setTimeout(() => window.initPageTabs(), 100);
+                    }
+
                 }
             }
         };
