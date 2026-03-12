@@ -90,6 +90,9 @@
 
     // 单选按钮切换功能
     initRadioButtons();
+
+    // 用户分析页日期范围选择器
+    initUserAnalysisDatePicker();
 })();
 
 // Banner 关闭函数（暴露到全局供页面切换时调用）
@@ -447,6 +450,172 @@ function bindDropdownEvents(triggerElement, dropdownId) {
             this.classList.remove('semi-dy-open-select-option-focused');
         });
     });
+}
+
+// 用户分析页日期范围选择器（暴露到全局，供页面切换时重新调用）
+window.initUserAnalysisDatePicker = initUserAnalysisDatePicker;
+
+function initUserAnalysisDatePicker() {
+    console.log('初始化用户分析页日期范围选择器...');
+
+    const trigger = document.querySelector('.semi-dy-open-datepicker-input');
+    if (!trigger) {
+        console.warn('未找到日期范围触发元素 .semi-dy-open-datepicker-input');
+        return;
+    }
+
+    if (trigger._datePickerInited) {
+        console.log('日期范围选择器已初始化，跳过重复绑定');
+        return;
+    }
+    trigger._datePickerInited = true;
+
+    // 你在 user_analysis.html 里需要自己添加一个 portal：
+    // <div id="user-date-range-portal" class="semi-dy-open-portal" style="z-index:1030; display:none">
+    //   <!-- 把 text.html 里那整块 dateRange 日历 HTML 粘过来 -->
+    // </div>
+    const portal = document.getElementById('user-date-range-portal');
+    if (!portal) {
+        console.warn('未找到日期弹层容器 #user-date-range-portal，请在 HTML 中自行复制 text.html 里的日历 DOM。');
+        return;
+    }
+
+    const portalInner = portal.querySelector('.semi-dy-open-portal-inner') || portal;
+
+    // 触发器中的显示文本 span（例如 "2026-03-05 ~ 2026-03-05"）
+    const triggerContent = trigger.querySelector('.datePicker-tigger-content-LsTspS');
+    const dateTextSpan = triggerContent ? triggerContent.querySelector('span') : null;
+
+    function setDateText(startStr, endStr) {
+        if (!dateTextSpan) return;
+        if (!startStr) return;
+        const text = endStr && endStr !== startStr ? `${startStr} ~ ${endStr}` : startStr;
+        dateTextSpan.textContent = text;
+    }
+
+    function openPortal() {
+        const rect = trigger.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+        portalInner.style.position = 'absolute';
+        portalInner.style.left = `${rect.left + scrollLeft}px`;
+        portalInner.style.top = `${rect.bottom + scrollTop + 4}px`;
+        portalInner.style.transform = 'translateX(0%) translateY(0%)';
+
+        portal.style.display = 'block';
+        trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closePortal() {
+        portal.style.display = 'none';
+        trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    trigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+        if (isExpanded) {
+            closePortal();
+        } else {
+            openPortal();
+        }
+    });
+
+    trigger.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closePortal();
+            } else {
+                openPortal();
+            }
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        if (e.target.closest('.semi-dy-open-datepicker') || e.target.closest('#user-date-range-portal')) {
+            return;
+        }
+        closePortal();
+    });
+
+    // 处理日期选中逻辑（基于 aria-label="YYYY-MM-DD"）
+    let rangeStart = null;
+    let rangeEnd = null;
+
+    function parseDate(str) {
+        // 兼容 YYYY-MM-DD
+        const [y, m, d] = str.split('-').map(Number);
+        return new Date(y, m - 1, d).getTime();
+    }
+
+    function resetDaySelection() {
+        portal.querySelectorAll('.semi-dy-open-datepicker-day').forEach(day => {
+            day.classList.remove(
+                'semi-dy-open-datepicker-day-selected-start',
+                'semi-dy-open-datepicker-day-selected-end'
+            );
+        });
+    }
+
+    function applyDaySelection() {
+        if (!rangeStart) return;
+
+        const startTime = parseDate(rangeStart);
+        const endTime = rangeEnd ? parseDate(rangeEnd) : startTime;
+
+        resetDaySelection();
+
+        portal.querySelectorAll('.semi-dy-open-datepicker-day[aria-disabled="false"]').forEach(day => {
+            const label = day.getAttribute('aria-label');
+            if (!label) return;
+            const time = parseDate(label);
+
+            if (time === startTime) {
+                day.classList.add('semi-dy-open-datepicker-day-selected-start');
+            }
+            if (time === endTime) {
+                day.classList.add('semi-dy-open-datepicker-day-selected-end');
+            }
+        });
+    }
+
+    const dayCells = portal.querySelectorAll('.semi-dy-open-datepicker-day[aria-disabled="false"]');
+    dayCells.forEach(day => {
+        day.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const label = this.getAttribute('aria-label');
+            if (!label) return;
+
+            if (!rangeStart || (rangeStart && rangeEnd)) {
+                rangeStart = label;
+                rangeEnd = null;
+            } else {
+                const startTime = parseDate(rangeStart);
+                const currentTime = parseDate(label);
+                if (currentTime < startTime) {
+                    rangeEnd = rangeStart;
+                    rangeStart = label;
+                } else {
+                    rangeEnd = label;
+                }
+            }
+
+            applyDaySelection();
+
+            // 目前按“选好一个范围就关闭面板”处理；如果只想单选，可以只用 rangeStart
+            if (rangeStart && rangeEnd) {
+                setDateText(rangeStart, rangeEnd);
+                closePortal();
+            } else {
+                setDateText(rangeStart, rangeStart);
+            }
+        });
+    });
+
+    console.log('✅ 用户分析页日期范围选择器初始化完成');
 }
 
 function initBannerClose() {

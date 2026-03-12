@@ -1,58 +1,766 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <title>VChart v1.12.0 工作版</title>
-</head>
-
-<body>
-    <div id="chart" style="width: 765px; height: 305px;"></div>
-
-    <!-- 引用本地 UMD 文件 -->
-    <script src="./node_modules/@visactor/vchart/build/index.min.js"></script>
-
-    <script>
-        // 等待页面和库都加载完成
-        window.addEventListener('load', function () {
-            console.log('页面加载完成');
-
-            // 检查 VChart 是否已加载
-            if (typeof VChart === 'undefined') {
-                console.error('❌ VChart 库未加载成功，请检查 node_modules 是否存在');
-                return;
-            }
-
-            console.log('✅ VChart 库已加载');
-            console.log('VChart 对象:', VChart);
-
-            // 创建图表配置
-            const spec = {
-                type: 'bar',
-                data: {
-                    values: [
-                        { category: '一月', value: 28 },
-                        { category: '二月', value: 55 },
-                        { category: '三月', value: 43 },
-                        { category: '四月', value: 91 }
-                    ]
-                },
-                xField: 'category',
-                yField: 'value'
-            };
-
-            // 使用 VChart.VChart 作为构造函数
-            const ChartClass = VChart.VChart || VChart;
-            console.log('使用图表类:', ChartClass);
-
-            const chart = new ChartClass(spec, { dom: 'chart' });
-            chart.renderAsync().then(() => {
-                console.log('✅ 图表渲染成功');
-            }).catch(err => {
-                console.error('❌ 图表渲染失败:', err);
-            });
-        });
-    </script>
-</body>
-
-</html>
+<div class="semi-dy-open-portal" style="z-index: 1030;">
+    <div tabindex="-1" class="semi-dy-open-portal-inner"
+        style="left: 587px; top: 268px; transform: translateX(0%) translateY(0%);">
+        <div class="semi-dy-open-popover-wrapper semi-dy-open-popover-wrapper-show" role="dialog"
+            x-placement="bottomLeft" id="a1e8n7l" style="transform-origin: 100px 0%; animation-fill-mode: forwards;">
+            <div class="semi-dy-open-tooltip-content">
+                <div class="semi-dy-open-popover">
+                    <div class="semi-dy-open-popover-content">
+                        <div class="semi-dy-open-datepicker" x-type="dateRange">
+                            <div class="semi-dy-open-datepicker-container">
+                                <div>
+                                    <div style="display: flex;">
+                                        <div>
+                                            <div class="semi-dy-open-datepicker-month-grid" x-type="dateRange"
+                                                x-panel-yearandmonth-open-type="none" x-insetinput="false"
+                                                x-preset-position="bottom">
+                                                <div class="semi-dy-open-datepicker-month-grid-left" x-open-type="date">
+                                                    <div>
+                                                        <div class="semi-dy-open-datepicker-navigation"><button
+                                                                aria-label="Previous year"
+                                                                class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only"
+                                                                type="button" aria-disabled="false"
+                                                                style="padding-left: 0px; padding-right: 0px;"><span
+                                                                    class="semi-dy-open-button-content"><span role="img"
+                                                                        aria-label="double_chevron_left"
+                                                                        class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-double_chevron_left"
+                                                                        aria-hidden="true"><svg viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="1em" height="1em" focusable="false"
+                                                                            aria-hidden="true">
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M12.6185 4.39653C13.1272 4.92524 13.1272 5.78245 12.6185 6.31116L7.14483 12L12.6185 17.6888C13.1272 18.2176 13.1272 19.0748 12.6185 19.6035C12.1098 20.1322 11.285 20.1322 10.7763 19.6035L4.38153 12.9573C3.87282 12.4286 3.87282 11.5714 4.38153 11.0427L10.7763 4.39653C11.285 3.86782 12.1098 3.86782 12.6185 4.39653Z"
+                                                                                fill="currentColor"></path>
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M19.6185 4.39653C20.1272 4.92524 20.1272 5.78245 19.6185 6.31116L14.1448 12L19.6185 17.6888C20.1272 18.2176 20.1272 19.0748 19.6185 19.6035C19.1098 20.1322 18.285 20.1322 17.7763 19.6035L11.3815 12.9573C10.8728 12.4286 10.8728 11.5714 11.3815 11.0427L17.7763 4.39653C18.285 3.86782 19.1098 3.86782 19.6185 4.39653Z"
+                                                                                fill="currentColor"></path>
+                                                                        </svg></span></span></button><button
+                                                                aria-label="Previous month"
+                                                                class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only"
+                                                                type="button" aria-disabled="false"
+                                                                style="padding-left: 0px; padding-right: 0px;"><span
+                                                                    class="semi-dy-open-button-content"><span role="img"
+                                                                        aria-label="chevron_left"
+                                                                        class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-chevron_left"
+                                                                        aria-hidden="true"><svg viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="1em" height="1em" focusable="false"
+                                                                            aria-hidden="true">
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M16.2782 4.23933C16.864 4.82511 16.864 5.77486 16.2782 6.36065L10.6213 12.0175L16.2782 17.6744C16.864 18.2601 16.864 19.2099 16.2782 19.7957C15.6924 20.3815 14.7426 20.3815 14.1569 19.7957L7.43934 13.0782C6.85355 12.4924 6.85355 11.5426 7.43934 10.9568L14.1569 4.23933C14.7426 3.65354 15.6924 3.65354 16.2782 4.23933Z"
+                                                                                fill="currentColor"></path>
+                                                                        </svg></span></span></button>
+                                                            <div class="semi-dy-open-datepicker-navigation-month">
+                                                                <button
+                                                                    class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless"
+                                                                    type="button" aria-disabled="false"><span
+                                                                        class="semi-dy-open-button-content"
+                                                                        x-semi-prop="children"><span>2026年
+                                                                            3月</span></span></button></div><button
+                                                                aria-label="Next month"
+                                                                class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only"
+                                                                type="button" aria-disabled="false"
+                                                                style="padding-left: 0px; padding-right: 0px;"><span
+                                                                    class="semi-dy-open-button-content"><span role="img"
+                                                                        aria-label="chevron_right"
+                                                                        class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-chevron_right"
+                                                                        aria-hidden="true"><svg viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="1em" height="1em" focusable="false"
+                                                                            aria-hidden="true">
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M7.43934 19.7957C6.85355 19.2099 6.85355 18.2601 7.43934 17.6744L13.0962 12.0175L7.43934 6.36065C6.85355 5.77486 6.85355 4.82511 7.43934 4.23933C8.02513 3.65354 8.97487 3.65354 9.56066 4.23933L16.2782 10.9568C16.864 11.5426 16.864 12.4924 16.2782 13.0782L9.56066 19.7957C8.97487 20.3815 8.02513 20.3815 7.43934 19.7957Z"
+                                                                                fill="currentColor"></path>
+                                                                        </svg></span></span></button><button
+                                                                aria-label="Next year"
+                                                                class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only"
+                                                                type="button" aria-disabled="false"
+                                                                style="padding-left: 0px; padding-right: 0px;"><span
+                                                                    class="semi-dy-open-button-content"><span role="img"
+                                                                        aria-label="double_chevron_right"
+                                                                        class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-double_chevron_right"
+                                                                        aria-hidden="true"><svg viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="1em" height="1em" focusable="false"
+                                                                            aria-hidden="true">
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M4.38153 4.39653C4.89024 3.86782 5.71502 3.86782 6.22373 4.39653L12.6185 11.0427C13.1272 11.5714 13.1272 12.4286 12.6185 12.9573L6.22373 19.6035C5.71502 20.1322 4.89024 20.1322 4.38153 19.6035C3.87282 19.0748 3.87282 18.2176 4.38153 17.6888L9.85517 12L4.38153 6.31116C3.87282 5.78245 3.87282 4.92524 4.38153 4.39653Z"
+                                                                                fill="currentColor"></path>
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M11.3815 4.39653C11.8902 3.86782 12.715 3.86782 13.2237 4.39653L19.6185 11.0427C20.1272 11.5714 20.1272 12.4286 19.6185 12.9573L13.2237 19.6035C12.715 20.1322 11.8902 20.1322 11.3815 19.6035C10.8728 19.0748 10.8728 18.2176 11.3815 17.6888L16.8552 12L11.3815 6.31116C10.8728 5.78245 10.8728 4.92524 11.3815 4.39653Z"
+                                                                                fill="currentColor"></path>
+                                                                        </svg></span></span></button>
+                                                        </div>
+                                                        <div role="grid" aria-multiselectable="false"
+                                                            class="semi-dy-open-datepicker-month">
+                                                            <div role="row" class="semi-dy-open-datepicker-weekday">
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">日</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">一</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">二</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">三</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">四</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">五</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">六</div>
+                                                            </div>
+                                                            <div class="semi-dy-open-datepicker-weeks">
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-01"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-01">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>1</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-02"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-02">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>2</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-03"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-03">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>3</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-04"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-04">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>4</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-05"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-05">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>5</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-06"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-06">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>6</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-07"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-07">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>7</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-08"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-08">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>8</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-09"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-09">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>9</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-10"
+                                                                        class="semi-dy-open-datepicker-day"
+                                                                        title="2026-03-10">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>10</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="0"
+                                                                        aria-disabled="false" aria-selected="false"
+                                                                        aria-label="2026-03-11"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-selected-start semi-dy-open-datepicker-day-selected-end"
+                                                                        title="2026-03-11">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>11</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-12"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-today semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-12">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>12</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-13"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-13">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>13</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-14"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-14">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>14</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-15"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-15">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>15</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-16"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-16">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>16</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-17"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-17">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>17</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-18"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-18">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>18</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-19"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-19">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>19</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-20"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-20">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>20</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-21"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-21">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>21</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-22"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-22">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>22</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-23"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-23">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>23</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-24"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-24">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>24</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-25"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-25">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>25</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-26"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-26">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>26</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-27"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-27">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>27</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-28"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-28">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>28</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-29"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-29">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>29</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-30"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-30">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>30</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-03-31"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-03-31">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>31</span></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="semi-dy-open-datepicker-month-grid-right"
+                                                    x-open-type="date">
+                                                    <div>
+                                                        <div class="semi-dy-open-datepicker-navigation"><button
+                                                                aria-label="Previous year"
+                                                                class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only"
+                                                                type="button" aria-disabled="false"
+                                                                style="padding-left: 0px; padding-right: 0px;"><span
+                                                                    class="semi-dy-open-button-content"><span role="img"
+                                                                        aria-label="double_chevron_left"
+                                                                        class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-double_chevron_left"
+                                                                        aria-hidden="true"><svg viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="1em" height="1em" focusable="false"
+                                                                            aria-hidden="true">
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M12.6185 4.39653C13.1272 4.92524 13.1272 5.78245 12.6185 6.31116L7.14483 12L12.6185 17.6888C13.1272 18.2176 13.1272 19.0748 12.6185 19.6035C12.1098 20.1322 11.285 20.1322 10.7763 19.6035L4.38153 12.9573C3.87282 12.4286 3.87282 11.5714 4.38153 11.0427L10.7763 4.39653C11.285 3.86782 12.1098 3.86782 12.6185 4.39653Z"
+                                                                                fill="currentColor"></path>
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M19.6185 4.39653C20.1272 4.92524 20.1272 5.78245 19.6185 6.31116L14.1448 12L19.6185 17.6888C20.1272 18.2176 20.1272 19.0748 19.6185 19.6035C19.1098 20.1322 18.285 20.1322 17.7763 19.6035L11.3815 12.9573C10.8728 12.4286 10.8728 11.5714 11.3815 11.0427L17.7763 4.39653C18.285 3.86782 19.1098 3.86782 19.6185 4.39653Z"
+                                                                                fill="currentColor"></path>
+                                                                        </svg></span></span></button><button
+                                                                aria-label="Previous month"
+                                                                class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only"
+                                                                type="button" aria-disabled="false"
+                                                                style="padding-left: 0px; padding-right: 0px;"><span
+                                                                    class="semi-dy-open-button-content"><span role="img"
+                                                                        aria-label="chevron_left"
+                                                                        class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-chevron_left"
+                                                                        aria-hidden="true"><svg viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="1em" height="1em" focusable="false"
+                                                                            aria-hidden="true">
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M16.2782 4.23933C16.864 4.82511 16.864 5.77486 16.2782 6.36065L10.6213 12.0175L16.2782 17.6744C16.864 18.2601 16.864 19.2099 16.2782 19.7957C15.6924 20.3815 14.7426 20.3815 14.1569 19.7957L7.43934 13.0782C6.85355 12.4924 6.85355 11.5426 7.43934 10.9568L14.1569 4.23933C14.7426 3.65354 15.6924 3.65354 16.2782 4.23933Z"
+                                                                                fill="currentColor"></path>
+                                                                        </svg></span></span></button>
+                                                            <div class="semi-dy-open-datepicker-navigation-month">
+                                                                <button
+                                                                    class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless"
+                                                                    type="button" aria-disabled="false"><span
+                                                                        class="semi-dy-open-button-content"
+                                                                        x-semi-prop="children"><span>2026年
+                                                                            4月</span></span></button></div><button
+                                                                aria-label="Next month"
+                                                                class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only"
+                                                                type="button" aria-disabled="false"
+                                                                style="padding-left: 0px; padding-right: 0px;"><span
+                                                                    class="semi-dy-open-button-content"><span role="img"
+                                                                        aria-label="chevron_right"
+                                                                        class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-chevron_right"
+                                                                        aria-hidden="true"><svg viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="1em" height="1em" focusable="false"
+                                                                            aria-hidden="true">
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M7.43934 19.7957C6.85355 19.2099 6.85355 18.2601 7.43934 17.6744L13.0962 12.0175L7.43934 6.36065C6.85355 5.77486 6.85355 4.82511 7.43934 4.23933C8.02513 3.65354 8.97487 3.65354 9.56066 4.23933L16.2782 10.9568C16.864 11.5426 16.864 12.4924 16.2782 13.0782L9.56066 19.7957C8.97487 20.3815 8.02513 20.3815 7.43934 19.7957Z"
+                                                                                fill="currentColor"></path>
+                                                                        </svg></span></span></button><button
+                                                                aria-label="Next year"
+                                                                class="semi-dy-open-button semi-dy-open-button-primary semi-dy-open-button-borderless semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only"
+                                                                type="button" aria-disabled="false"
+                                                                style="padding-left: 0px; padding-right: 0px;"><span
+                                                                    class="semi-dy-open-button-content"><span role="img"
+                                                                        aria-label="double_chevron_right"
+                                                                        class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-double_chevron_right"
+                                                                        aria-hidden="true"><svg viewBox="0 0 24 24"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                            width="1em" height="1em" focusable="false"
+                                                                            aria-hidden="true">
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M4.38153 4.39653C4.89024 3.86782 5.71502 3.86782 6.22373 4.39653L12.6185 11.0427C13.1272 11.5714 13.1272 12.4286 12.6185 12.9573L6.22373 19.6035C5.71502 20.1322 4.89024 20.1322 4.38153 19.6035C3.87282 19.0748 3.87282 18.2176 4.38153 17.6888L9.85517 12L4.38153 6.31116C3.87282 5.78245 3.87282 4.92524 4.38153 4.39653Z"
+                                                                                fill="currentColor"></path>
+                                                                            <path fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M11.3815 4.39653C11.8902 3.86782 12.715 3.86782 13.2237 4.39653L19.6185 11.0427C20.1272 11.5714 20.1272 12.4286 19.6185 12.9573L13.2237 19.6035C12.715 20.1322 11.8902 20.1322 11.3815 19.6035C10.8728 19.0748 10.8728 18.2176 11.3815 17.6888L16.8552 12L11.3815 6.31116C10.8728 5.78245 10.8728 4.92524 11.3815 4.39653Z"
+                                                                                fill="currentColor"></path>
+                                                                        </svg></span></span></button>
+                                                        </div>
+                                                        <div role="grid" aria-multiselectable="false"
+                                                            class="semi-dy-open-datepicker-month">
+                                                            <div role="row" class="semi-dy-open-datepicker-weekday">
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">日</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">一</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">二</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">三</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">四</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">五</div>
+                                                                <div role="columnheader"
+                                                                    class="semi-dy-open-datepicker-weekday-item">六</div>
+                                                            </div>
+                                                            <div class="semi-dy-open-datepicker-weeks">
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        class="semi-dy-open-datepicker-day">
+                                                                        <span></span></div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        class="semi-dy-open-datepicker-day">
+                                                                        <span></span></div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        class="semi-dy-open-datepicker-day">
+                                                                        <span></span></div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-01"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-01">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>1</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-02"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-02">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>2</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-03"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-03">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>3</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-04"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-04">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>4</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-05"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-05">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>5</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-06"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-06">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>6</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-07"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-07">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>7</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-08"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-08">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>8</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-09"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-09">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>9</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-10"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-10">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>10</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-11"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-11">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>11</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-12"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-12">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>12</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-13"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-13">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>13</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-14"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-14">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>14</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-15"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-15">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>15</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-16"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-16">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>16</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-17"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-17">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>17</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-18"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-18">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>18</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-19"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-19">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>19</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-20"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-20">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>20</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-21"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-21">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>21</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-22"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-22">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>22</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-23"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-23">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>23</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-24"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-24">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>24</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-25"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-25">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>25</span></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div role="row" class="semi-dy-open-datepicker-week">
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-26"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-26">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>26</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-27"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-27">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>27</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-28"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-28">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>28</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-29"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-29">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>29</span></div>
+                                                                    </div>
+                                                                    <div role="gridcell" tabindex="-1"
+                                                                        aria-disabled="true" aria-selected="false"
+                                                                        aria-label="2026-04-30"
+                                                                        class="semi-dy-open-datepicker-day semi-dy-open-datepicker-day-disabled"
+                                                                        title="2026-04-30">
+                                                                        <div class="semi-dy-open-datepicker-day-main">
+                                                                            <span>30</span></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
