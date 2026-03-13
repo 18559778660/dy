@@ -650,6 +650,23 @@ function initPageTabs() {
             this.setAttribute('aria-selected', 'true');
             this.setAttribute('tabindex', '0');
 
+            // 获取对应的内容面板 ID
+            const panelId = this.getAttribute('aria-controls');
+
+            // 隐藏所有内容面板
+            document.querySelectorAll('[role="tabpanel"]').forEach(panel => {
+                panel.style.display = 'none';
+                panel.setAttribute('aria-hidden', 'true');
+            });
+
+            // 显示当前选中的面板
+            const activePanel = document.getElementById(panelId);
+            if (activePanel) {
+                activePanel.style.display = 'block';
+                activePanel.setAttribute('aria-hidden', 'false');
+                console.log('显示面板:', panelId);
+            }
+
             console.log('选中标签:', this.textContent.trim());
         });
     });
