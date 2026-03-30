@@ -13,7 +13,7 @@
 
         // 加载 JSON 数据
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', './announcements.json', true);
+        xhr.open('GET', './conf/announcements.json', true);
         xhr.onload = function () {
             console.log('公告数据请求完成，状态码:', xhr.status);
             if (xhr.status === 200) {

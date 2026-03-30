@@ -4,7 +4,7 @@
             "title": "总览",
             "data": [
                 {
-                    "date": "02/26",
+                    "date": "03/15",
                     "dailyUsers": 10,
                     "newUsers": 10,
                     "avgDuration": 10,
@@ -17,7 +17,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "02/27",
+                    "date": "03/16",
                     "dailyUsers": 10,
                     "newUsers": 10,
                     "avgDuration": 123,
@@ -30,7 +30,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "02/28",
+                    "date": "03/17",
                     "dailyUsers": 20,
                     "newUsers": 10,
                     "avgDuration": 7777,
@@ -43,7 +43,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/01",
+                    "date": "03/18",
                     "dailyUsers": 300,
                     "newUsers": 10,
                     "avgDuration": 8888,
@@ -56,7 +56,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/02",
+                    "date": "03/19",
                     "dailyUsers": 4400,
                     "newUsers": 10,
                     "avgDuration": 7532,
@@ -69,7 +69,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/03",
+                    "date": "03/20",
                     "dailyUsers": 100,
                     "newUsers": 10,
                     "avgDuration": 100,
@@ -82,7 +82,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/04",
+                    "date": "03/21",
                     "dailyUsers": 60,
                     "newUsers": 10,
                     "avgDuration": 200,
@@ -95,7 +95,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/05",
+                    "date": "03/22",
                     "dailyUsers": 70,
                     "newUsers": 10,
                     "avgDuration": 9999,
@@ -108,7 +108,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/06",
+                    "date": "03/23",
                     "dailyUsers": 70,
                     "newUsers": 10,
                     "avgDuration": 9999,
@@ -121,7 +121,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/07",
+                    "date": "03/24",
                     "dailyUsers": 70,
                     "newUsers": 10,
                     "avgDuration": 9999,
@@ -134,7 +134,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/08",
+                    "date": "03/25",
                     "dailyUsers": 70,
                     "newUsers": 10,
                     "avgDuration": 9999,
@@ -147,7 +147,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/09",
+                    "date": "03/26",
                     "dailyUsers": 700,
                     "newUsers": 10,
                     "avgDuration": 9999,
@@ -160,7 +160,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/10",
+                    "date": "03/27",
                     "dailyUsers": 800,
                     "newUsers": 10,
                     "avgDuration": 9999,
@@ -173,7 +173,7 @@
                     "shareSuccessUsers": 777
                 },
                 {
-                    "date": "03/11",
+                    "date": "03/28",
                     "dailyUsers": 70,
                     "newUsers": 10,
                     "avgDuration": 9999,
@@ -183,10 +183,10 @@
                     "singleAvgDuration": 444,
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
-                    "shareSuccessUsers": 777
+                    "shareSuccessUsers": 25
                 },
                 {
-                    "date": "03/12",
+                    "date": "03/29",
                     "dailyUsers": 70,
                     "newUsers": 10,
                     "avgDuration": 9999,
@@ -196,10 +196,10 @@
                     "singleAvgDuration": 100,
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
-                    "shareSuccessUsers": 777
+                    "shareSuccessUsers": 50
                 },
                 {
-                    "date": "03/13",
+                    "date": "03/30",
                     "dailyUsers": 70,
                     "newUsers": 10,
                     "avgDuration": 9999,
@@ -209,7 +209,20 @@
                     "singleAvgDuration": 200,
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
-                    "shareSuccessUsers": 777
+                    "shareSuccessUsers": 100
+                },
+                {
+                    "date": "03/31",
+                    "dailyUsers": 70,
+                    "newUsers": 10,
+                    "avgDuration": 9999,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgDuration": 200,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 200
                 }
             ]
         }

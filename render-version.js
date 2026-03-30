@@ -12,7 +12,7 @@ function renderVersionData() {
     console.log('开始加载版本数据...');
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', './version.json', true);
+    xhr.open('GET', './conf/version.json', true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             try {

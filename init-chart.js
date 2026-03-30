@@ -25,7 +25,7 @@
     function loadChartData() {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', './chart-data.json', true);
+            xhr.open('GET', './conf/chart-data.json', true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     try {
