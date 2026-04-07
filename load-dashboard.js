@@ -131,6 +131,11 @@
                         setTimeout(() => window.initPageTabs(), 100);
                     }
 
+                    // 初始化用户分析表格
+                    if (typeof window.initUserAnalysisTable === 'function') {
+                        setTimeout(() => window.initUserAnalysisTable(), 100);
+                    }
+
                 }
             }
         };
