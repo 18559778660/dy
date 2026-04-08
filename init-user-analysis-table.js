@@ -298,6 +298,102 @@
     }
 
     /**
+     * 导出数据为 CSV 文件
+     */
+    function exportToCSV() {
+        if (!allHourlyData || allHourlyData.length === 0) {
+            console.warn('没有可导出的数据');
+            return;
+        }
+
+        // CSV 表头
+        const headers = [
+            '时间',
+            '活跃用户数',
+            '新增用户数',
+            '累计用户数',
+            '分享次数',
+            '分享成功用户数',
+            '分享新增用户数',
+            '分享成功次数',
+            '启动次数',
+            '人均启动次数',
+            '人均游戏时长',
+            '次均游戏时长'
+        ];
+
+        // 构建 CSV 内容
+        const csvRows = [];
+
+        // 添加表头
+        csvRows.push(headers.join(','));
+
+        // 添加数据行
+        allHourlyData.forEach(row => {
+            const values = [
+                row.time,
+                row.activeUsers,
+                row.newUsers,
+                row.totalUsers,
+                row.shares,
+                row.shareSuccessUsers,
+                row.shareNewUsers,
+                row.shareSuccess,
+                row.startup,
+                row.avgStartup.toFixed(3),
+                formatTime(row.avgDuration),
+                formatTime(row.singleAvgDuration)
+            ];
+            csvRows.push(values.join(','));
+        });
+
+        // 生成 CSV 字符串
+        const csvContent = csvRows.join('\n');
+
+        // 创建 Blob 对象
+        const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+
+        // 创建下载链接
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+
+        // 生成文件名（包含昨天的日期）
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const dateStr = `${yesterday.getFullYear()}${String(yesterday.getMonth() + 1).padStart(2, '0')}${String(yesterday.getDate()).padStart(2, '0')}`;
+        const fileName = `用户分析数据_${dateStr}.csv`;
+
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.visibility = 'hidden';
+
+        // 触发下载
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        console.log(`✅ 数据已导出: ${fileName}`);
+    }
+
+    /**
+     * 绑定导出按钮事件
+     */
+    function bindExportButton() {
+        // 通过类名获取导出按钮
+        const exportBtn = document.querySelector('.export-table-btn');
+
+        if (exportBtn) {
+            exportBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                exportToCSV();
+            });
+            console.log('✅ 导出按钮事件已绑定');
+        } else {
+            console.warn('未找到导出按钮（.export-table-btn）');
+        }
+    }
+
+    /**
      * 主初始化函数
      */
     function initUserAnalysisTable() {
@@ -315,6 +411,8 @@
             renderTable(hourlyData, 1);
             // 绑定分页事件
             bindPaginationEvents();
+            // 绑定导出按钮
+            bindExportButton();
         }
     }
 })();
