@@ -422,6 +422,22 @@
 
         console.log(`导出实时数据：00:00 - ${String(currentHour).padStart(2, '0')}:00`);
 
+        // 计算动态权重：取 0 点到当前小时的权重，然后归一化
+        const dynamicWeights = {};
+        let weightSum = 0;
+
+        // 累加 0 点到当前小时的权重
+        for (let hour = 0; hour <= currentHour; hour++) {
+            const hourKey = String(hour).padStart(2, '0');
+            dynamicWeights[hourKey] = HOURLY_WEIGHTS[hourKey];
+            weightSum += HOURLY_WEIGHTS[hourKey];
+        }
+
+        // 归一化：让这几个小时的权重总和 = 1
+        Object.keys(dynamicWeights).forEach(hourKey => {
+            dynamicWeights[hourKey] = dynamicWeights[hourKey] / weightSum;
+        });
+
         // 构建 CSV 内容
         const csvRows = [];
 
@@ -432,9 +448,9 @@
         for (let hour = 0; hour <= currentHour; hour++) {
             const hourKey = String(hour).padStart(2, '0');
             const timeStr = `${hourKey}:00:00`;
-            const weight = HOURLY_WEIGHTS[hourKey];
+            const weight = dynamicWeights[hourKey];
 
-            // 按权重计算当前小时的数据
+            // 按动态权重计算当前小时的数据
             const visitors = Math.max(1, Math.round(realTimeData.visitors * weight));
             const visits = Math.max(1, Math.round(realTimeData.visits * weight));
 
