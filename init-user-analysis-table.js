@@ -5,21 +5,15 @@
     // 将初始化函数暴露到全局作用域
     window.initUserAnalysisTable = initUserAnalysisTable;
 
-    // 24小时权重配置（基于典型用户行为分布，总和严格=1.0）
-    const HOURLY_WEIGHTS = {
-        // 凌晨低谷期 (00:00 - 05:00)
-        '00': 0.0247, '01': 0.0178, '02': 0.0118, '03': 0.0099, '04': 0.0118, '05': 0.0178,
-        // 早上升温期 (06:00 - 09:00)
-        '06': 0.0276, '07': 0.0375, '08': 0.0473, '09': 0.0572,
-        // 上午高峰期 (10:00 - 12:00)
-        '10': 0.0542, '11': 0.0513, '12': 0.0473,
-        // 下午平稳期 (13:00 - 17:00)
-        '13': 0.0444, '14': 0.0493, '15': 0.0513, '16': 0.0493, '17': 0.0473,
-        // 晚间高峰期 (18:00 - 22:00)
-        '18': 0.0513, '19': 0.0611, '20': 0.0710, '21': 0.0671, '22': 0.0542,
-        // 夜间下降期 (23:00)
-        '23': 0.0375
-    };
+    // 24小时权重配置（从配置文件加载）
+    let HOURLY_WEIGHTS = {};
+
+    // 加载权重配置文件
+    async function loadHourlyWeights() {
+        const response = await fetch('./conf/hourly-weights.json');
+        const config = await response.json();
+        HOURLY_WEIGHTS = config.hourlyWeights;
+    }
 
     // 验证权重总和是否接近 1
     const weightSum = Object.values(HOURLY_WEIGHTS).reduce((sum, w) => sum + w, 0);
@@ -361,7 +355,8 @@
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const dateStr = `${yesterday.getFullYear()}${String(yesterday.getMonth() + 1).padStart(2, '0')}${String(yesterday.getDate()).padStart(2, '0')}`;
-        const fileName = `用户分析数据_${dateStr}.csv`;
+        // const fileName = `用户分析数据_${dateStr}.csv`;
+        const fileName = `行为数据.csv`;
 
         link.setAttribute('href', url);
         link.setAttribute('download', fileName);
@@ -394,10 +389,110 @@
     }
 
     /**
+     * 渲染实时分析卡片
+     */
+    function renderRealTimeCards() {
+        const chartData = window.chartDataConfig;
+        const realTimeData = chartData.realTime[0];
+
+        // 查找访问人数和访问次数的卡片
+        const cards = document.querySelectorAll('#semiTabPanelRealTime .omg-metric-card-number');
+
+        if (cards.length >= 2) {
+            // 第一个卡片：访问人数
+            cards[0].textContent = formatNumber(realTimeData.visitors);
+            // 第二个卡片：访问次数
+            cards[1].textContent = formatNumber(realTimeData.visits);
+            console.log('✓ 实时分析卡片已更新');
+        } else {
+            console.warn('未找到实时分析卡片元素');
+        }
+    }
+
+    /**
+     * 导出实时分析数据（0点到当前小时）
+     */
+    function exportRealTimeData() {
+        const chartData = window.chartDataConfig;
+        const realTimeData = chartData.realTime[0];
+
+        // 获取当前小时
+        const now = new Date();
+        const currentHour = now.getHours();
+
+        console.log(`导出实时数据：00:00 - ${String(currentHour).padStart(2, '0')}:00`);
+
+        // 构建 CSV 内容
+        const csvRows = [];
+
+        // 添加表头
+        csvRows.push('日期,访问人数,访问次数');
+
+        // 生成 0 点到当前小时的数据
+        for (let hour = 0; hour <= currentHour; hour++) {
+            const hourKey = String(hour).padStart(2, '0');
+            const timeStr = `${hourKey}:00:00`;
+            const weight = HOURLY_WEIGHTS[hourKey];
+
+            // 按权重计算当前小时的数据
+            const visitors = Math.max(1, Math.round(realTimeData.visitors * weight));
+            const visits = Math.max(1, Math.round(realTimeData.visits * weight));
+
+            csvRows.push(`${timeStr},${visitors},${visits}`);
+        }
+
+        // 生成 CSV 字符串
+        const csvContent = csvRows.join('\n');
+
+        // 创建 Blob 对象
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+
+        // 创建下载链接
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+
+        // 生成文件名（实时数据_日期.csv）
+        const dateStr = now.getFullYear() +
+            String(now.getMonth() + 1).padStart(2, '0') +
+            String(now.getDate()).padStart(2, '0');
+        // const fileName = `实时数据_${dateStr}.csv`;
+        const fileName = `行为数据.csv`;
+
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        console.log(`✅ 实时数据已导出: ${fileName}`);
+    }
+
+    /**
+     * 绑定实时分析导出按钮事件
+     */
+    function bindRealTimeExportButton() {
+        const exportBtn = document.querySelector('.export-realtime-btn');
+
+        if (exportBtn) {
+            exportBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                exportRealTimeData();
+            });
+            console.log('✅ 实时分析导出按钮事件已绑定');
+        } else {
+            console.warn('未找到实时分析导出按钮（.export-realtime-btn）');
+        }
+    }
+
+    /**
      * 主初始化函数
      */
-    function initUserAnalysisTable() {
+    async function initUserAnalysisTable() {
         console.log('初始化用户分析表格...');
+
+        // 首先加载权重配置
+        await loadHourlyWeights();
 
         // 从全局获取图表数据（由 init-chart.js 加载）
         const chartData = window.chartDataConfig;
@@ -414,5 +509,10 @@
             // 绑定导出按钮
             bindExportButton();
         }
+
+        // 渲染实时分析卡片
+        renderRealTimeCards();
+        // 绑定实时分析导出按钮
+        bindRealTimeExportButton();
     }
 })();
