@@ -211,40 +211,54 @@ window.initDropdownFilters = initDropdownFilters;
 function initDropdownFilters() {
     console.log('初始化下拉筛选框...');
 
-    // 获取所有下拉筛选框（使用固定 class）
-    const appFilter = document.querySelector('.filter-app');
+    // 获取所有 APP 下拉筛选框（可能有多个）
+    const appFilters = document.querySelectorAll('.filter-app');
     const osFilter = document.querySelector('.filter-os');
 
-    if (!appFilter || !osFilter) {
-        console.warn('未找到筛选框元素');
+    if (appFilters.length === 0) {
+        console.warn('未找到 APP 筛选框元素');
         return;
     }
 
-    // 为 APP 筛选框创建下拉内容
-    createDropdownContent(appFilter, 'semi-dy-open-select-i3zfxt5', [
-        { value: 'all', label: '全部' },
-        { value: 'dy', label: '抖音' },
-        { value: 'dy_lite', label: '抖音lite' },
-        { value: 'fq', label: '番茄小说' },
-        { value: 'toutiao', label: '今日头条' },
-        { value: 'toutiao_lite', label: '今日头条lite' },
-        { value: 'dyhs', label: '抖音火山 - 新版' },
-        { value: 'ppx', label: '皮皮虾' },
-        { value: 'mmy', label: '摸摸鱼' },
-        { value: 'dyhs_old', label: '抖音火山 - 旧版' },
-        { value: 'hgdj', label: '红果短剧' },
-        { value: 'dypc', label: '抖音PC' }
-    ]);
+    console.log(`找到 ${appFilters.length} 个 APP 筛选框`);
 
-    // 为操作系统筛选框创建下拉内容
-    createDropdownContent(osFilter, 'semi-dy-open-select-be2rm31', [
-        { value: 'all', label: '全部' },
-        { value: 'ios', label: 'ios' },
-        { value: 'android', label: 'android' }
-    ]);
+    // 为每个 APP 筛选框创建下拉内容
+    appFilters.forEach((appFilter, index) => {
+        // 为每个筛选框生成唯一的 dropdownId
+        const dropdownId = `semi-dy-open-select-app-${index}`;
+
+        createDropdownContent(appFilter, dropdownId, [
+            { value: 'all', label: '全部' },
+            { value: 'dy', label: '抖音' },
+            { value: 'dy_lite', label: '抖音lite' },
+            { value: 'fq', label: '番茄小说' },
+            { value: 'toutiao', label: '今日头条' },
+            { value: 'toutiao_lite', label: '今日头条lite' },
+            { value: 'dyhs', label: '抖音火山 - 新版' },
+            { value: 'ppx', label: '皮皮虾' },
+            { value: 'mmy', label: '摸摸鱼' },
+            { value: 'dyhs_old', label: '抖音火山 - 旧版' },
+            { value: 'hgdj', label: '红果短剧' },
+            { value: 'dypc', label: '抖音PC' }
+        ]);
+    });
+
+    // 为操作系统筛选框创建下拉内容（如果存在）
+    if (osFilter) {
+        createDropdownContent(osFilter, 'semi-dy-open-select-be2rm31', [
+            { value: 'all', label: '全部' },
+            { value: 'ios', label: 'ios' },
+            { value: 'android', label: 'android' }
+        ]);
+    }
 
     // 为每个筛选框添加点击事件
-    [appFilter, osFilter].forEach(filter => {
+    const allFilters = [...appFilters];
+    if (osFilter) {
+        allFilters.push(osFilter);
+    }
+
+    allFilters.forEach(filter => {
         filter.addEventListener('click', function (e) {
             e.stopPropagation();
 
@@ -431,6 +445,19 @@ function bindDropdownEvents(triggerElement, dropdownId) {
             const selectionText = triggerElement.querySelector('.semi-dy-open-select-selection-text');
             if (selectionText) {
                 selectionText.textContent = label;
+            }
+
+            // 根据 data-tab 标识，触发不同的更新逻辑
+            const tabType = triggerElement.getAttribute('data-tab');
+            if (tabType) {
+                console.log(`[${tabType}] APP 筛选变更:`, value, label);
+                
+                // TODO: 根据 tabType 和 value 更新对应的表格/图表
+                // if (tabType === 'behavior') {
+                //     updateBehaviorTable(value);
+                // } else if (tabType === 'realtime') {
+                //     updateRealTimeTable(value);
+                // }
             }
 
             // 关闭下拉菜单

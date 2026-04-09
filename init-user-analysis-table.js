@@ -389,6 +389,42 @@
     }
 
     /**
+     * 初始化实时分析卡片点击事件
+     */
+    function initRealTimeCards() {
+        const cards = document.querySelectorAll('#semiTabPanelRealTime .omg-metric-card.omg-metric-card-checkable');
+        console.log('找到实时分析卡片数量:', cards.length);
+
+        cards.forEach(card => {
+            // 查找卡片标题
+            const titleElement = card.querySelector('.omg-metric-card-solid-title-tooltip');
+            if (!titleElement) return;
+
+            const metricTitle = titleElement.textContent.trim();
+
+            // 给整个卡片添加点击事件
+            card.addEventListener('click', function (e) {
+                e.stopPropagation();
+
+                // 移除其他卡片的选中状态
+                document.querySelectorAll('#semiTabPanelRealTime .omg-metric-card-bordered-checked').forEach(c => {
+                    c.classList.remove('omg-metric-card-bordered-checked');
+                });
+
+                // 添加当前卡片的选中状态
+                this.classList.add('omg-metric-card-bordered-checked');
+
+                console.log('选中实时分析卡片:', metricTitle);
+
+                // 切换图表数据
+                if (typeof window.updateRealTimeChartMetric === 'function') {
+                    window.updateRealTimeChartMetric(metricTitle);
+                }
+            });
+        });
+    }
+
+    /**
      * 渲染实时分析卡片（累计到当前小时）
      */
     function renderRealTimeCards() {
@@ -516,6 +552,8 @@
 
         // 渲染实时分析卡片
         renderRealTimeCards();
+        // 初始化实时分析卡片点击事件
+        initRealTimeCards();
         // 绑定实时分析导出按钮
         bindRealTimeExportButton();
     }

@@ -248,6 +248,51 @@
         renderChart('real_time_window_user', data, chartTitle);
     }
 
+    /**
+     * 更新实时分析图表指标（切换访问人数/访问次数）
+     */
+    function updateRealTimeChartMetric(metricTitle) {
+        console.log('[实时分析] 切换图表指标:', metricTitle);
+
+        const container = document.getElementById('real_time_window_user');
+        if (!container) {
+            console.error('❌ [实时分析] 未找到图表容器');
+            return;
+        }
+
+        if (!window.chartDataConfig || !window.chartDataConfig.realTime || !window.chartDataConfig.realTime.hourlyData) {
+            console.error('❌ [实时分析] 未找到数据配置');
+            return;
+        }
+
+        const hourlyData = window.chartDataConfig.realTime.hourlyData;
+        const currentHour = new Date().getHours();
+
+        // 根据指标类型选择数据字段
+        let dataField = 'visitors'; // 默认访问人数
+        if (metricTitle === '访问次数') {
+            dataField = 'visits';
+        }
+
+        // 准备数据
+        const data = hourlyData
+            .slice(0, currentHour + 1)
+            .map(item => ({
+                date: item.hour,
+                value: item[dataField],
+                displayValue: item[dataField].toLocaleString('zh-CN'),
+                medalType: metricTitle
+            }));
+
+        console.log(`✅ [实时分析] 切换到 ${metricTitle}，共${data.length}条数据`);
+
+        // 重新渲染图表
+        renderChart('real_time_window_user', data, metricTitle);
+    }
+
+    // 将更新函数暴露到全局
+    window.updateRealTimeChartMetric = updateRealTimeChartMetric;
+
     // 动态创建图表标题（与首页保持一致）
     function createChartTitle(chartContainer, title) {
         // 查找是否已存在标题
