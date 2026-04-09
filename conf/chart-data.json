@@ -240,6 +240,20 @@
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
                     "totalShares": 15000
+                },
+                {
+                    "date": "04/08",
+                    "dailyUsers": 70,
+                    "newUsers": 10,
+                    "avgDuration": 9999,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgDuration": 200,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 200,
+                    "totalShares": 15000
                 }
             ]
         }
