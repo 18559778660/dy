@@ -136,6 +136,11 @@
                         setTimeout(() => window.initUserAnalysisTable(), 100);
                     }
 
+                    // 初始化实时分析图表
+                    if (typeof window.initRealTimeChart === 'function') {
+                        setTimeout(() => window.initRealTimeChart(), 100);
+                    }
+
                 }
             }
         };

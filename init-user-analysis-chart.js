@@ -4,6 +4,7 @@
 
     // 将初始化函数暴露到全局作用域，供页面切换时重新调用
     window.initUserAnalysisChart = initUserAnalysisChart;
+    window.initRealTimeChart = initRealTimeChart;
 
     // 将初始化卡片数据函数暴露到全局作用域
     window.initUserAnalysisCards = initUserAnalysisCards;
@@ -12,177 +13,148 @@
     let userAnalysisChartInstance = null;
     let userAnalysisChartContainer = null;
 
-    function initUserAnalysisChart() {
-        const container = document.getElementById('visactor_window_user');
+    /**
+     * 创建图表配置（公共配置）
+     */
+    function createChartConfig(data) {
+        return {
+            type: 'area',
+            data: [{ values: data, id: 'data' }],
+            xField: 'date',
+            yField: 'value',
+            seriesField: 'medalType',
+            // 线条样式
+            line: {
+                style: {
+                    stroke: '#1C5CFB',
+                    lineWidth: 2
+                }
+            },
+            // 数据点配置 - 默认点不可见，hover 显示空心圆点
+            point: {
+                style: {
+                    size: 0  // 默认不显示点
+                },
+                state: {
+                    dimension_hover: {
+                        size: 10,              // hover 时圆点大小
+                        fill: '#ffffff',      // 白色填充（空心效果）
+                        stroke: '#1C5CFB',    // 蓝色描边
+                        lineWidth: 2          // 描边宽度
+                    }
+                }
+            },
+            // 区域渐变填充
+            area: {
+                visible: true,
+                style: {
+                    curveType: 'monotone',
+                    fill: {
+                        gradient: 'linear',
+                        x0: 0, y0: 0,      // 起点：顶部
+                        x1: 0, y1: 1,     // 终点：底部（从上到下的渐变）
+                        stops: [
+                            { offset: 0, color: 'rgb(73, 127, 252)', opacity: 0.3 },
+                            { offset: 1, color: 'rgb(73, 127, 252)', opacity: 0.05 }
+                        ]
+                    }
+                }
+            },
+            // 坐标轴
+            axes: [
+                {
+                    orient: 'left',
+                    grid: {
+                        visible: true,
+                        style: {
+                            lineDash: [],
+                            stroke: '#E5E6EB'
+                        }
+                    },
+                    label: {
+                        visible: true,
+                        style: {
+                            fill: '#8F959E'
+                        }
+                    }
+                },
+                {
+                    orient: 'bottom',
+                    label: {
+                        visible: true,
+                        style: {
+                            fill: '#8F959E'
+                        }
+                    }
+                }
+            ],
+            // 悬停提示
+            tooltip: {
+                mark: {
+                    content: {
+                        valueFormatter: '{displayValue}'
+                    }
+                },
+                dimension: {
+                    content: {
+                        valueFormatter: '{displayValue}'
+                    }
+                }
+            },
+            // 十字准星线 - hover 时的虚线背景
+            crosshair: {
+                xField: {
+                    visible: true,
+                    line: {
+                        type: 'line',
+                        style: {
+                            lineWidth: 1,
+                            opacity: 0.6,
+                            stroke: 'rgb(138, 141, 143)',
+                            lineDash: [4, 4]
+                        }
+                    },
+                    bindingAxesIndex: [1]
+                },
+                yField: {
+                    visible: false,
+                    bindingAxesIndex: [0, 2],
+                    defaultSelect: {
+                        axisIndex: 2,
+                        datum: 40
+                    },
+                    line: {
+                        style: {
+                            lineWidth: 1,
+                            opacity: 1,
+                            stroke: '#000',
+                            lineDash: [2, 2]
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * 渲染图表（公共渲染函数）
+     */
+    function renderChart(containerId, data, chartTitle) {
+        const container = document.getElementById(containerId);
         if (!container) {
-            console.error('❌ [用户分析图表] 未找到图表容器 visactor_window_user');
-            return;
+            console.error(`❌ 未找到图表容器 ${containerId}`);
+            return null;
         }
 
         // 清空容器，避免重复渲染
         container.innerHTML = '';
-
-        console.log('✅ 找到图表容器');
-
-        // 从 JSON 配置中获取数据
-        let data = [];
-        let chartTitle = '活跃用户数'; // 标题改为"活跃用户数"
-
-        if (window.chartDataConfig && window.chartDataConfig.overview && window.chartDataConfig.overview.length > 0) {
-            const chartConfig = window.chartDataConfig.overview[0]; // 使用总览数据
-            // 过滤最近 7 天的数据（不包括今天）
-            const today = new Date();
-            today.setHours(0, 0, 0, 0); // 设置为今天 0 点
-
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); // 7 天前的日期
-            sevenDaysAgo.setHours(0, 0, 0, 0); // 设置为当天 0 点
-
-            // 过滤并转换数据 - 只使用"日访问"指标（但显示为"活跃用户数"）
-            const filteredData = chartConfig.data.filter(item => {
-                // 解析日期（格式：MM/DD）
-                const [month, day] = item.date.split('/').map(Number);
-                const currentYear = new Date().getFullYear();
-                const itemDate = new Date(currentYear, month - 1, day);
-
-                // 只保留最近 7 天的数据（不包括今天）
-                return itemDate >= sevenDaysAgo && itemDate < today;
-            });
-
-            // 只添加日访问用户数据（使用 dailyUsers 字段）
-            data = filteredData.map(item => ({
-                date: item.date,
-                value: item.dailyUsers, // 数据字段仍然是 dailyUsers
-                displayValue: item.dailyUsers.toLocaleString('zh-CN'), // 千位分隔符格式化
-                medalType: '活跃用户数' // 系列名称显示为"活跃用户数"
-            }));
-
-            console.log('✅ [用户分析图表] 使用 JSON 配置数据:', chartTitle, `(最近 7 天，共${data.length}条数据)`);
-        } else {
-            console.log('⚠️ 未找到图表数据配置');
-        }
+        console.log(`✅ 找到图表容器: ${containerId}`);
 
         try {
-            // VChart v2.x 使用 VChart.VChart 作为构造函数
             const ChartClass = VChart.VChart || VChart;
+            const config = createChartConfig(data);
 
-            const vchart = new ChartClass({
-                type: 'area',
-                data: [{ values: data, id: 'data' }],
-                xField: 'date',
-                yField: 'value',
-                seriesField: 'medalType',
-                // 线条样式
-                line: {
-                    style: {
-                        stroke: '#1C5CFB',
-                        lineWidth: 2
-                    }
-                },
-                // 数据点配置 - 默认点不可见，hover 显示空心圆点
-                point: {
-                    style: {
-                        size: 0  // 默认不显示点
-                    },
-                    state: {
-                        dimension_hover: {
-                            size: 10,              // hover 时圆点大小
-                            fill: '#ffffff',      // 白色填充（空心效果）
-                            stroke: '#1C5CFB',    // 蓝色描边
-                            lineWidth: 2          // 描边宽度
-                        }
-                    }
-                },
-                // 区域渐变填充
-                area: {
-                    visible: true,
-                    style: {
-                        curveType: 'monotone',
-                        fill: {
-                            gradient: 'linear',
-                            x0: 0, y0: 0,      // 起点：顶部
-                            x1: 0, y1: 1,     // 终点：底部（从上到下的渐变）
-                            stops: [
-                                { offset: 0, color: 'rgb(73, 127, 252)', opacity: 0.3 },
-                                { offset: 1, color: 'rgb(73, 127, 252)', opacity: 0.05 }
-                            ]
-                        }
-                    }
-                },
-                // 坐标轴
-                axes: [
-                    {
-                        orient: 'left',
-                        grid: {
-                            visible: true,
-                            style: {
-                                lineDash: [],
-                                stroke: '#E5E6EB'
-                            }
-                        },
-                        label: {
-                            visible: true,
-                            style: {
-                                fill: '#8F959E'
-                            }
-                        }
-                    },
-                    {
-                        orient: 'bottom',
-                        label: {
-                            visible: true,
-                            style: {
-                                fill: '#8F959E'
-                            }
-                        }
-                    }
-                ],
-                // 悬停提示
-                tooltip: {
-                    mark: {
-                        content: {
-                            valueFormatter: '{displayValue}'
-                        }
-                    },
-                    dimension: {
-                        content: {
-                            valueFormatter: '{displayValue}'
-                        }
-                    }
-                },
-                // 十字准星线 - hover 时的虚线背景
-                crosshair: {
-                    xField: {
-                        visible: true,
-                        line: {
-                            type: 'line',
-                            style: {
-                                lineWidth: 1,
-                                opacity: 0.6,
-                                stroke: 'rgb(138, 141, 143)',
-                                lineDash: [4, 4]
-                            }
-                        },
-                        bindingAxesIndex: [1]
-                    },
-                    yField: {
-                        visible: false,
-                        bindingAxesIndex: [0, 2],
-                        defaultSelect: {
-                            axisIndex: 2,
-                            datum: 40
-                        },
-                        line: {
-                            style: {
-                                lineWidth: 1,
-                                opacity: 1,
-                                stroke: '#000',
-                                lineDash: [2, 2]
-                            }
-                        }
-                    }
-                }
-            }, {
+            const vchart = new ChartClass(config, {
                 dom: container,
                 width: container.offsetWidth || 765,
                 height: container.offsetHeight || 305
@@ -190,21 +162,90 @@
 
             // 渲染图表
             vchart.renderAsync().then(() => {
-                console.log('✅ [用户分析图表] 渲染完成');
-
-                // 动态创建图表标题
+                console.log(`✅ [${chartTitle}] 渲染完成`);
                 createChartTitle(container, chartTitle);
             }).catch(err => {
-                console.error('❌ [用户分析图表] 渲染失败:', err);
+                console.error(`❌ [${chartTitle}] 渲染失败:`, err);
             });
 
-            // 保存实例到全局变量，用于后续更新
-            userAnalysisChartInstance = vchart;
-            userAnalysisChartContainer = container;
-
+            return vchart;
         } catch (error) {
-            console.error('❌ 图表创建失败:', error);
+            console.error(`❌ [${chartTitle}] 创建失败:`, error);
+            return null;
         }
+    }
+
+    function initUserAnalysisChart() {
+        // 从 JSON 配置中获取数据
+        let data = [];
+        let chartTitle = '活跃用户数';
+
+        if (window.chartDataConfig && window.chartDataConfig.overview && window.chartDataConfig.overview.length > 0) {
+            const chartConfig = window.chartDataConfig.overview[0];
+            // 过滤最近 7 天的数据（不包括今天）
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            sevenDaysAgo.setHours(0, 0, 0, 0);
+
+            const filteredData = chartConfig.data.filter(item => {
+                const [month, day] = item.date.split('/').map(Number);
+                const currentYear = new Date().getFullYear();
+                const itemDate = new Date(currentYear, month - 1, day);
+                return itemDate >= sevenDaysAgo && itemDate < today;
+            });
+
+            data = filteredData.map(item => ({
+                date: item.date,
+                value: item.dailyUsers,
+                displayValue: item.dailyUsers.toLocaleString('zh-CN'),
+                medalType: '活跃用户数'
+            }));
+
+            console.log('✅ [用户分析图表] 使用 JSON 配置数据:', chartTitle, `(最近 7 天，共${data.length}条数据)`);
+        } else {
+            console.log('⚠️ 未找到图表数据配置');
+        }
+
+        // 使用公共渲染函数
+        const vchart = renderChart('visactor_window_user', data, chartTitle);
+        if (vchart) {
+            userAnalysisChartInstance = vchart;
+            userAnalysisChartContainer = document.getElementById('visactor_window_user');
+        }
+    }
+
+    /**
+     * 初始化实时分析图表
+     */
+    function initRealTimeChart() {
+        // 从 JSON 配置中获取小时数据
+        let data = [];
+        const chartTitle = '访问人数';
+
+        if (window.chartDataConfig && window.chartDataConfig.realTime && window.chartDataConfig.realTime.hourlyData) {
+            const hourlyData = window.chartDataConfig.realTime.hourlyData;
+            const currentHour = new Date().getHours();
+
+            // 只取 0 点到当前小时的数据
+            data = hourlyData
+                .slice(0, currentHour + 1)
+                .map(item => ({
+                    date: item.hour,
+                    value: item.visitors,
+                    displayValue: item.visitors.toLocaleString('zh-CN'),
+                    medalType: '访问人数'
+                }));
+
+            console.log('✅ [实时分析图表] 使用 JSON 配置数据:', chartTitle, `(00:00 - ${String(currentHour).padStart(2, '0')}:00，共${data.length}条数据)`);
+        } else {
+            console.log('⚠️ 未找到实时分析图表数据配置');
+        }
+
+        // 使用公共渲染函数
+        renderChart('real_time_window_user', data, chartTitle);
     }
 
     // 动态创建图表标题（与首页保持一致）
