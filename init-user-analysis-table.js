@@ -389,21 +389,33 @@
     }
 
     /**
-     * 渲染实时分析卡片
+     * 渲染实时分析卡片（累计到当前小时）
      */
     function renderRealTimeCards() {
         const chartData = window.chartDataConfig;
-        const realTimeData = chartData.realTime[0];
+        const hourlyData = chartData.realTime.hourlyData;
+
+        // 获取当前小时
+        const currentHour = new Date().getHours();
+
+        // 累计 0 点到当前小时的数据
+        let totalVisitors = 0;
+        let totalVisits = 0;
+
+        for (let i = 0; i <= currentHour && i < hourlyData.length; i++) {
+            totalVisitors += hourlyData[i].visitors;
+            totalVisits += hourlyData[i].visits;
+        }
 
         // 查找访问人数和访问次数的卡片
         const cards = document.querySelectorAll('#semiTabPanelRealTime .omg-metric-card-number');
 
         if (cards.length >= 2) {
-            // 第一个卡片：访问人数
-            cards[0].textContent = formatNumber(realTimeData.visitors);
-            // 第二个卡片：访问次数
-            cards[1].textContent = formatNumber(realTimeData.visits);
-            console.log('✓ 实时分析卡片已更新');
+            // 第一个卡片：访问人数（累计）
+            cards[0].textContent = formatNumber(totalVisitors);
+            // 第二个卡片：访问次数（累计）
+            cards[1].textContent = formatNumber(totalVisits);
+            console.log('✓ 实时分析卡片已更新（累计到', String(currentHour).padStart(2, '0') + ':00）');
         } else {
             console.warn('未找到实时分析卡片元素');
         }
@@ -414,7 +426,7 @@
      */
     function exportRealTimeData() {
         const chartData = window.chartDataConfig;
-        const realTimeData = chartData.realTime[0];
+        const hourlyData = chartData.realTime.hourlyData;
 
         // 获取当前小时
         const now = new Date();
@@ -422,39 +434,16 @@
 
         console.log(`导出实时数据：00:00 - ${String(currentHour).padStart(2, '0')}:00`);
 
-        // 计算动态权重：取 0 点到当前小时的权重，然后归一化
-        const dynamicWeights = {};
-        let weightSum = 0;
-
-        // 累加 0 点到当前小时的权重
-        for (let hour = 0; hour <= currentHour; hour++) {
-            const hourKey = String(hour).padStart(2, '0');
-            dynamicWeights[hourKey] = HOURLY_WEIGHTS[hourKey];
-            weightSum += HOURLY_WEIGHTS[hourKey];
-        }
-
-        // 归一化：让这几个小时的权重总和 = 1
-        Object.keys(dynamicWeights).forEach(hourKey => {
-            dynamicWeights[hourKey] = dynamicWeights[hourKey] / weightSum;
-        });
-
         // 构建 CSV 内容
         const csvRows = [];
 
         // 添加表头
         csvRows.push('日期,访问人数,访问次数');
 
-        // 生成 0 点到当前小时的数据
-        for (let hour = 0; hour <= currentHour; hour++) {
-            const hourKey = String(hour).padStart(2, '0');
-            const timeStr = `${hourKey}:00:00`;
-            const weight = dynamicWeights[hourKey];
-
-            // 按动态权重计算当前小时的数据
-            const visitors = Math.max(1, Math.round(realTimeData.visitors * weight));
-            const visits = Math.max(1, Math.round(realTimeData.visits * weight));
-
-            csvRows.push(`${timeStr},${visitors},${visits}`);
+        // 生成 0 点到当前小时的数据（从 JSON 中读取）
+        for (let i = 0; i <= currentHour && i < hourlyData.length; i++) {
+            const row = hourlyData[i];
+            csvRows.push(`${row.hour},${row.visitors},${row.visits}`);
         }
 
         // 生成 CSV 字符串
@@ -467,11 +456,10 @@
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
 
-        // 生成文件名（实时数据_日期.csv）
+        // 生成文件名
         const dateStr = now.getFullYear() +
             String(now.getMonth() + 1).padStart(2, '0') +
             String(now.getDate()).padStart(2, '0');
-        // const fileName = `实时数据_${dateStr}.csv`;
         const fileName = `行为数据.csv`;
 
         link.setAttribute('href', url);
