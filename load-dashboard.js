@@ -162,13 +162,85 @@
 
                     // 延迟执行确保 DOM 完全渲染
                     setTimeout(() => {
-                        // 可以在这里添加流量主页面的初始化逻辑
+                        // 初始化流量主标签切换
+                        initFlowRateTabs();
                         console.log('流量主页面初始化完成');
                     }, 100);
                 }
             }
         };
         xhr.send();
+    }
+
+    // 初始化流量主标签切换
+    function initFlowRateTabs() {
+        console.log('初始化流量主标签切换...');
+
+        // 获取流量主页面中的所有标签页
+        const tabs = document.querySelectorAll('[role="tab"]');
+
+        if (!tabs || tabs.length === 0) {
+            console.warn('未找到标签页元素');
+            return;
+        }
+
+        // 为每个标签添加点击事件
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                const tabKey = this.getAttribute('data-tabkey');
+
+                // 只处理流量主页面的标签（广告数据、广告管理、收入结算）
+                if (tabKey !== 'semiTabadData' && tabKey !== 'semiTabadManage' && tabKey !== 'semiTabadSettlement') {
+                    return;
+                }
+
+                console.log('点击流量主标签:', this.textContent.trim());
+
+                // 移除所有标签的选中状态
+                tabs.forEach(t => {
+                    t.classList.remove('semi-dy-open-tabs-tab-active');
+                    t.setAttribute('aria-selected', 'false');
+                    t.setAttribute('tabindex', '-1');
+                });
+
+                // 添加当前标签的选中状态
+                this.classList.add('semi-dy-open-tabs-tab-active');
+                this.setAttribute('aria-selected', 'true');
+                this.setAttribute('tabindex', '0');
+
+                // 获取对应的内容面板 ID
+                const panelId = this.getAttribute('aria-controls');
+
+                // 隐藏所有内容面板
+                document.querySelectorAll('[role="tabpanel"]').forEach(panel => {
+                    panel.style.display = 'none';
+                    panel.setAttribute('aria-hidden', 'true');
+                    panel.classList.remove('semi-dy-open-tabs-pane-active');
+                    panel.classList.add('semi-dy-open-tabs-pane-inactive');
+                });
+
+                // 显示当前选中的面板
+                const activePanel = document.getElementById(panelId);
+                if (activePanel) {
+                    activePanel.style.display = 'block';
+                    activePanel.setAttribute('aria-hidden', 'false');
+                    activePanel.classList.remove('semi-dy-open-tabs-pane-inactive');
+                    activePanel.classList.add('semi-dy-open-tabs-pane-active');
+                    console.log('显示面板:', panelId);
+                }
+
+                // 如果切换到非广告数据标签，隐藏广告数据内容
+                if (tabKey !== 'semiTabadData') {
+                    const adDataPanel = document.getElementById('semiTabPaneladData');
+                    if (adDataPanel) {
+                        adDataPanel.style.display = 'none';
+                        console.log('已隐藏广告数据内容');
+                    }
+                }
+            });
+        });
+
+        console.log('流量主标签切换初始化完成');
     }
 
     // 初始加载仪表板
