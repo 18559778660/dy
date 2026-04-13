@@ -147,6 +147,30 @@
         xhr.send();
     }
 
+    // 加载流量主内容
+    function loadFlowRate() {
+        console.log('加载流量主内容...');
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', './flow_rate.html', true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const container = document.querySelector('.content-Ick90x');
+                if (container) {
+                    container.innerHTML = xhr.responseText;
+                    console.log('流量主内容加载完成');
+                    currentPage = 'flow_rate';
+
+                    // 延迟执行确保 DOM 完全渲染
+                    setTimeout(() => {
+                        // 可以在这里添加流量主页面的初始化逻辑
+                        console.log('流量主页面初始化完成');
+                    }, 100);
+                }
+            }
+        };
+        xhr.send();
+    }
+
     // 初始加载仪表板
     loadDashboard();
 
@@ -218,6 +242,22 @@
 
                         // 加载用户分析内容
                         loadUserAnalysis();
+                    });
+                }
+
+                // 流量主菜单
+                else if (text === '流量主') {
+                    item.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        console.log('点击流量主菜单');
+
+                        // 移除其他菜单的选中状态
+                        menuItems.forEach(mi => mi.classList.remove('semi-dy-open-navigation-item-selected'));
+                        // 添加当前菜单选中状态
+                        this.classList.add('semi-dy-open-navigation-item-selected');
+
+                        // 加载流量主内容
+                        loadFlowRate();
                     });
                 }
 
