@@ -268,6 +268,9 @@ function initDropdownFilters() {
             if (dropdownId && options) {
                 _createDropdownDOM(this, dropdownId, options);
 
+                // 更新 aria-controls 为我们生成的 wrapper ID
+                this.setAttribute('aria-controls', dropdownId);
+
                 // 绑定选项的点击和 hover 事件（只绑定一次）
                 if (!this._eventBound) {
                     bindDropdownEvents(this, dropdownId);
