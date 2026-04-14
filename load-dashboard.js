@@ -228,15 +228,6 @@
                     activePanel.classList.add('semi-dy-open-tabs-pane-active');
                     console.log('显示面板:', panelId);
                 }
-
-                // 如果切换到非广告数据标签，隐藏广告数据内容
-                if (tabKey !== 'semiTabadData') {
-                    const adDataPanel = document.getElementById('semiTabPaneladData');
-                    if (adDataPanel) {
-                        adDataPanel.style.display = 'none';
-                        console.log('已隐藏广告数据内容');
-                    }
-                }
             });
         });
 
