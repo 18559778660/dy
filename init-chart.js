@@ -382,9 +382,7 @@
         sevenDaysAgo.setHours(0, 0, 0, 0);
 
         const filteredData = chartConfig.data.filter(item => {
-            const [month, day] = item.date.split('/').map(Number);
-            const currentYear = new Date().getFullYear();
-            const itemDate = new Date(currentYear, month - 1, day);
+            const itemDate = new Date(item.date);
             return itemDate >= sevenDaysAgo && itemDate < today;
         });
 
