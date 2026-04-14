@@ -15,7 +15,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 5000
+                    "totalShares": 5000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "03/23",
@@ -29,7 +39,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 999
+                    "totalShares": 999,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "03/24",
@@ -43,7 +63,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 888
+                    "totalShares": 888,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "03/25",
@@ -57,7 +87,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 812
+                    "totalShares": 812,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "03/26",
@@ -71,7 +111,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 912
+                    "totalShares": 912,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "03/27",
@@ -85,7 +135,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 1000
+                    "totalShares": 1000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "03/28",
@@ -99,7 +159,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 2000
+                    "totalShares": 2000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "03/29",
@@ -113,7 +183,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 3000
+                    "totalShares": 3000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "03/30",
@@ -127,7 +207,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 1500
+                    "totalShares": 1500,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "03/31",
@@ -141,7 +231,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 1600
+                    "totalShares": 1600,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/01",
@@ -155,7 +255,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 1700
+                    "totalShares": 1700,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/02",
@@ -169,7 +279,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 920
+                    "totalShares": 920,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/03",
@@ -183,7 +303,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 777,
-                    "totalShares": 930
+                    "totalShares": 930,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/04",
@@ -197,7 +327,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 25,
-                    "totalShares": 940
+                    "totalShares": 940,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/05",
@@ -211,7 +351,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 50,
-                    "totalShares": 950
+                    "totalShares": 950,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/06",
@@ -225,7 +375,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 100,
-                    "totalShares": 12000
+                    "totalShares": 12000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/07",
@@ -239,7 +399,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
-                    "totalShares": 15000
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/08",
@@ -253,7 +423,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
-                    "totalShares": 15000
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/09",
@@ -267,7 +447,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
-                    "totalShares": 15000
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/10",
@@ -281,7 +471,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
-                    "totalShares": 15000
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/11",
@@ -295,7 +495,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
-                    "totalShares": 15000
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/12",
@@ -309,7 +519,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
-                    "totalShares": 15000
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/13",
@@ -323,7 +543,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
-                    "totalShares": 15000
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/14",
@@ -337,7 +567,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
-                    "totalShares": 15000
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 },
                 {
                     "date": "04/15",
@@ -351,7 +591,17 @@
                     "shareSuccess": 555,
                     "shareNewUsers": 666,
                     "shareSuccessUsers": 200,
-                    "totalShares": 15000
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 }
             ]
         }
