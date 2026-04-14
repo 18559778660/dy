@@ -625,4 +625,51 @@
             createChartTitle(userAnalysisChartContainer, metricTitle);
         }
     }
+
+    /**
+     * 初始化留存分析图表
+     */
+    function initRetentionChart() {
+        console.log('初始化留存分析图表...');
+
+        // 从 JSON 配置中获取数据
+        let data = [];
+        let chartTitle = '次日留存率';
+
+        if (window.chartDataConfig && window.chartDataConfig.overview && window.chartDataConfig.overview.length > 0) {
+            const chartConfig = window.chartDataConfig.overview[0];
+
+            // 过滤最近 7 天的数据（不包括今天）
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            sevenDaysAgo.setHours(0, 0, 0, 0);
+
+            const filteredData = chartConfig.data.filter(item => {
+                const [month, day] = item.date.split('/').map(Number);
+                const currentYear = new Date().getFullYear();
+                const itemDate = new Date(currentYear, month - 1, day);
+                return itemDate >= sevenDaysAgo && itemDate < today;
+            });
+
+            data = filteredData.map(item => ({
+                date: item.date,
+                value: item.day1Retention,  // 使用次日留存率
+                displayValue: item.day1Retention ? item.day1Retention.toFixed(2) + '%' : '-',
+                medalType: '次日留存率'
+            }));
+
+            console.log('✅ [留存分析图表] 使用 JSON 配置数据:', chartTitle, `(最近 7 天，共${data.length}条数据)`);
+        } else {
+            console.log('⚠️ 未找到留存分析图表数据配置');
+        }
+
+        // 使用公共渲染函数
+        renderChart('visactor_window_7', data, chartTitle);
+    }
+
+    // 暴露到全局
+    window.initRetentionChart = initRetentionChart;
 })();

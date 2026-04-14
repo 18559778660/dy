@@ -141,6 +141,11 @@
                         setTimeout(() => window.initRealTimeChart(), 100);
                     }
 
+                    // 初始化留存分析图表
+                    if (typeof window.initRetentionChart === 'function') {
+                        setTimeout(() => window.initRetentionChart(), 100);
+                    }
+
                 }
             }
         };
