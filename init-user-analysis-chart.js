@@ -663,9 +663,169 @@
         }
 
         // 使用公共渲染函数
-        renderChart('visactor_window_7', data, chartTitle);
+        const vchart = renderChart('visactor_window_7', data, chartTitle);
+        if (vchart) {
+            window.retentionChartInstance = vchart;
+        }
     }
 
     // 暴露到全局
     window.initRetentionChart = initRetentionChart;
+
+    /**
+     * 初始化留存分析单选按钮切换
+     */
+    function initRetentionRadioButtons() {
+        console.log('初始化留存分析单选按钮...');
+
+        // 通过文本内容精确查找留存分析的按钮
+        const allSpans = document.querySelectorAll('.semi-dy-open-radio-addon-buttonRadio');
+        const retentionButtons = [];
+
+        allSpans.forEach(span => {
+            const text = span.textContent.trim();
+            // 匹配留存率按钮（不管有没有“全部-”前缀）
+            if (text.includes('天后留存率')) {
+                retentionButtons.push(span);
+            }
+        });
+
+        if (retentionButtons.length === 0) {
+            console.warn('未找到留存分析单选按钮');
+            return;
+        }
+
+        console.log(`✅ 找到 ${retentionButtons.length} 个留存分析按钮`);
+
+        // 定义每个按钮对应的数据字段和标题
+        const buttonConfig = [
+            { text: '全部-1天后留存率', field: 'day1Retention' },
+            { text: '全部-3天后留存率', field: 'day3Retention' },
+            { text: '全部-14天后留存率', field: 'day14Retention' },
+            { text: '全部-30天后留存率', field: 'day30Retention' }
+        ];
+
+        // 为每个按钮添加点击事件
+        retentionButtons.forEach((btn) => {
+            const htmlText = btn.textContent.trim();  // HTML 中的文本，如 "1天后留存率"
+
+            // 根据 HTML 文本找到对应的配置
+            let config = null;
+            if (htmlText === '1天后留存率') {
+                config = buttonConfig[0];
+            } else if (htmlText === '3天后留存率') {
+                config = buttonConfig[1];
+            } else if (htmlText === '14天后留存率') {
+                config = buttonConfig[2];
+            } else if (htmlText === '30天后留存率') {
+                config = buttonConfig[3];
+            }
+
+            if (!config) {
+                console.warn(`未找到配置: ${htmlText}`);
+                return;
+            }
+
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                console.log(`🔘 点击了: ${config.text}`);
+
+                // 移除所有按钮的选中状态
+                retentionButtons.forEach(b => {
+                    b.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
+                    // 同时移除父级 label 的 checked 状态
+                    const parentLabel = b.closest('.semi-dy-open-radio');
+                    if (parentLabel) {
+                        parentLabel.classList.remove('semi-dy-open-radio-checked');
+                        const inner = parentLabel.querySelector('.semi-dy-open-radio-inner');
+                        if (inner) {
+                            inner.classList.remove('semi-dy-open-radio-inner-checked');
+                        }
+                    }
+                });
+
+                // 添加当前按钮的选中状态
+                this.classList.add('semi-dy-open-radio-addon-buttonRadio-checked');
+                const parentLabel = this.closest('.semi-dy-open-radio');
+                if (parentLabel) {
+                    parentLabel.classList.add('semi-dy-open-radio-checked');
+                    const inner = parentLabel.querySelector('.semi-dy-open-radio-inner');
+                    if (inner) {
+                        inner.classList.add('semi-dy-open-radio-inner-checked');
+                    }
+                }
+
+                // 更新图表数据
+                updateRetentionChart(config.field, config.text);
+            });
+
+            // Hover 效果
+            btn.addEventListener('mouseenter', function () {
+                if (!this.classList.contains('semi-dy-open-radio-addon-buttonRadio-checked')) {
+                    this.classList.add('semi-dy-open-radio-addon-buttonRadio-hover');
+                }
+            });
+
+            btn.addEventListener('mouseleave', function () {
+                this.classList.remove('semi-dy-open-radio-addon-buttonRadio-hover');
+            });
+        });
+
+        console.log('✅ 留存分析单选按钮初始化完成');
+    }
+
+    /**
+     * 更新留存分析图表数据
+     */
+    function updateRetentionChart(field, title) {
+        console.log(`更新留存图表: ${title}`);
+
+        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
+            console.warn('未找到图表数据配置');
+            return;
+        }
+
+        const chartConfig = window.chartDataConfig.overview[0];
+
+        // 过滤最近 7 天的数据
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        const filteredData = chartConfig.data.filter(item => {
+            const itemDate = new Date(item.date);
+            return itemDate >= sevenDaysAgo && itemDate < today;
+        });
+
+        const data = filteredData.map(item => {
+            const value = item[field];
+            const validValue = (value !== null && value !== undefined) ? Number(value) : 0;
+
+            return {
+                date: item.date,
+                value: validValue,
+                displayValue: value ? value.toFixed(2) + '%' : '0.00%',
+                medalType: title
+            };
+        });
+
+        console.log(`✅ [留存分析] 切换到指标: ${title} (共${data.length}条数据)`);
+
+        // 更新 VChart 数据
+        if (window.retentionChartInstance) {
+            window.retentionChartInstance.updateData('data', data);
+
+            // 更新标题
+            const container = document.getElementById('visactor_window_7');
+            if (container) {
+                createChartTitle(container, title);
+            }
+        }
+    }
+
+    // 暴露到全局
+    window.initRetentionRadioButtons = initRetentionRadioButtons;
 })();

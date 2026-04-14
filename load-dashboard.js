@@ -146,6 +146,14 @@
                         setTimeout(() => window.initRetentionChart(), 100);
                     }
 
+                    // 初始化留存分析单选按钮
+                    if (typeof window.initRetentionRadioButtons === 'function') {
+                        setTimeout(() => {
+                            console.log('开始初始化留存分析按钮...');
+                            window.initRetentionRadioButtons();
+                        }, 200);
+                    }
+
                 }
             }
         };
