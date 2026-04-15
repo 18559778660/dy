@@ -138,8 +138,13 @@
 
     /**
      * 渲染图表（公共渲染函数）
+     * @param {string} containerId - 容器ID
+     * @param {Array} data - 数据数组
+     * @param {string} chartTitle - 图表标题
+     * @param {Object} options - 可选配置
+     * @param {boolean} options.yAxisPercent - Y轴是否显示百分比
      */
-    function renderChart(containerId, data, chartTitle) {
+    function renderChart(containerId, data, chartTitle, options = {}) {
         const container = document.getElementById(containerId);
         if (!container) {
             console.error(`❌ 未找到图表容器 ${containerId}`);
@@ -152,7 +157,14 @@
 
         try {
             const ChartClass = VChart.VChart || VChart;
-            const config = createChartConfig(data);
+            let config = createChartConfig(data);
+
+            // 如果指定了Y轴百分比，修改配置
+            if (options.yAxisPercent) {
+                config.axes[0].label.formatMethod = (val) => {
+                    return val + '%';
+                };
+            }
 
             const vchart = new ChartClass(config, {
                 dom: container,
@@ -662,8 +674,8 @@
             console.log('⚠️ 未找到留存分析图表数据配置');
         }
 
-        // 使用公共渲染函数
-        const vchart = renderChart('visactor_window_7', data, chartTitle);
+        // 使用公共渲染函数，传入Y轴百分比选项
+        const vchart = renderChart('visactor_window_7', data, chartTitle, { yAxisPercent: true });
         if (vchart) {
             window.retentionChartInstance = vchart;
         }
