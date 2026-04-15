@@ -106,11 +106,14 @@
 
     /**
      * 渲染表格内容（支持分页）
+     * @param {Array} hourlyData - 小时数据数组
+     * @param {number} page - 页码，默认 1
+     * @param {string} tbodySelector - tbody 选择器，默认为第一个 .semi-dy-open-table-tbody
      */
-    function renderTable(hourlyData, page = 1) {
-        const tbody = document.querySelector('.semi-dy-open-table-tbody');
+    function renderTable(hourlyData, page = 1, tbodySelector = '.semi-dy-open-table-tbody') {
+        const tbody = document.querySelector(tbodySelector);
         if (!tbody) {
-            console.warn('未找到表格 tbody 元素');
+            console.warn(`未找到表格 tbody 元素: ${tbodySelector}`);
             return;
         }
 
@@ -252,8 +255,9 @@
 
     /**
      * 绑定分页事件
+     * @param {string} tbodySelector - tbody 选择器，用于重新渲染时传递
      */
-    function bindPaginationEvents() {
+    function bindPaginationEvents(tbodySelector = '.semi-dy-open-table-tbody') {
         const pageList = document.querySelector('.semi-dy-open-page');
         if (!pageList) return;
 
@@ -263,7 +267,7 @@
             if (pageItem && !pageItem.classList.contains('semi-dy-open-page-item-disabled')) {
                 const page = parseInt(pageItem.textContent);
                 if (!isNaN(page)) {
-                    renderTable(allHourlyData, page);
+                    renderTable(allHourlyData, page, tbodySelector);
                 }
             }
         });
@@ -273,7 +277,7 @@
         if (prevBtn) {
             prevBtn.addEventListener('click', function () {
                 if (!this.classList.contains('semi-dy-open-page-item-disabled') && currentPage > 1) {
-                    renderTable(allHourlyData, currentPage - 1);
+                    renderTable(allHourlyData, currentPage - 1, tbodySelector);
                 }
             });
         }
@@ -284,7 +288,7 @@
             nextBtn.addEventListener('click', function () {
                 const totalPages = Math.ceil(allHourlyData.length / pageSize);
                 if (!this.classList.contains('semi-dy-open-page-item-disabled') && currentPage < totalPages) {
-                    renderTable(allHourlyData, currentPage + 1);
+                    renderTable(allHourlyData, currentPage + 1, tbodySelector);
                 }
             });
         }
@@ -528,8 +532,9 @@
 
     /**
      * 主初始化函数
+     * @param {string} tbodySelector - tbody 选择器，默认为第一个表格
      */
-    async function initUserAnalysisTable() {
+    async function initUserAnalysisTable(tbodySelector = '.semi-dy-open-table-tbody') {
         console.log('初始化用户分析表格...');
 
         // 首先加载权重配置
@@ -544,9 +549,9 @@
 
         // 渲染表格（第1页）
         if (hourlyData.length > 0) {
-            renderTable(hourlyData, 1);
+            renderTable(hourlyData, 1, tbodySelector);
             // 绑定分页事件
-            bindPaginationEvents();
+            bindPaginationEvents(tbodySelector);
             // 绑定导出按钮
             bindExportButton();
         }
@@ -558,4 +563,129 @@
         // 绑定实时分析导出按钮
         bindRealTimeExportButton();
     }
+
+    /**
+     * 渲染留存分析表格
+     */
+    function renderRetentionTable() {
+        console.log('渲染留存分析表格...');
+
+        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
+            console.warn('未找到图表数据配置');
+            return;
+        }
+
+        const tbody = document.querySelector('#retention-tbody');
+        if (!tbody) {
+            console.warn('未找到留存分析表格 tbody');
+            return;
+        }
+
+        const chartConfig = window.chartDataConfig.overview[0];
+        const data = chartConfig.data;
+
+        // 清空现有内容
+        tbody.innerHTML = '';
+
+        // 生成表格行（最近7天）
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        const filteredData = data.filter(item => {
+            const itemDate = new Date(item.date);
+            return itemDate >= sevenDaysAgo && itemDate < today;
+        });
+
+        // 按日期正序排列（从旧到新）
+        filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        filteredData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.setAttribute('role', 'row');
+            row.setAttribute('aria-rowindex', index + 1);
+            row.className = 'semi-dy-open-table-row';
+            row.setAttribute('data-row-key', `retention-${item.date}-全部`);
+
+            // 第1列：日期
+            const dateCell = createCell(item.date, 1, 'left');
+            row.appendChild(dateCell);
+
+            // 第2列：平台（默认显示“全部”）
+            const platformCell = createCell('全部', 2, 'left', true);
+            row.appendChild(platformCell);
+
+            // 第3列：活跃用户数
+            const activeUsersCell = createCell(item.dailyUsers ? item.dailyUsers.toLocaleString('zh-CN') : '-', 3);
+            row.appendChild(activeUsersCell);
+
+            // 第4-12列：留存率（1天、2天、3天、4天、5天、6天、7天、14天、30天）
+            const retentionFields = [
+                'day1Retention',
+                'day2Retention',
+                'day3Retention',
+                'day4Retention',
+                'day5Retention',
+                'day6Retention',
+                'day7Retention',
+                'day14Retention',
+                'day30Retention'
+            ];
+
+            retentionFields.forEach((field, i) => {
+                const value = item[field];
+                const displayValue = value ? value.toFixed(2) + '%' : '-';
+                const colIndex = i + 4;
+
+                // 第12列（30天后）需要固定右列样式
+                let cell;
+                if (colIndex === 12) {
+                    cell = createCell(displayValue, colIndex, 'right', false, true);
+                } else {
+                    cell = createCell(displayValue, colIndex);
+                }
+
+                row.appendChild(cell);
+            });
+
+            tbody.appendChild(row);
+        });
+
+        console.log(`✅ 留存分析表格渲染完成，共${filteredData.length}行`);
+    }
+
+    /**
+     * 创建表格单元格
+     */
+    function createCell(content, colIndex, position = null, isLastLeft = false, isFirstRight = false) {
+        const td = document.createElement('td');
+        td.setAttribute('role', 'gridcell');
+        td.setAttribute('aria-colindex', colIndex);
+        td.className = 'semi-dy-open-table-row-cell';
+        td.title = content;
+        td.textContent = content;
+
+        if (position === 'left') {
+            td.classList.add('semi-dy-open-table-cell-fixed-left');
+            if (isLastLeft) {
+                td.classList.add('semi-dy-open-table-cell-fixed-left-last');
+                td.style.left = '150px';
+            } else {
+                td.style.left = '0px';
+            }
+        } else if (position === 'right') {
+            td.classList.add('semi-dy-open-table-cell-fixed-right');
+            if (isFirstRight) {
+                td.classList.add('semi-dy-open-table-cell-fixed-right-first');
+                td.style.right = '0px';
+            }
+        }
+
+        return td;
+    }
+
+    // 暴露到全局
+    window.initRetentionTable = renderRetentionTable;
 })();
