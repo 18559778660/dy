@@ -602,6 +602,9 @@
         // 按日期正序排列（从旧到新）
         filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
 
+        // ✅ 保存数据到全局变量，供导出使用
+        window.retentionTableData = filteredData;
+
         filteredData.forEach((item, index) => {
             const row = document.createElement('tr');
             row.setAttribute('role', 'row');
@@ -686,6 +689,66 @@
         return td;
     }
 
+    /**
+     * 导出留存分析表格为CSV
+     */
+    function exportRetentionTable() {
+        console.log('导出留存分析表格...');
+
+        // ✅ 直接使用已渲染的数据，不重新查询
+        const filteredData = window.retentionTableData;
+
+        if (!filteredData || filteredData.length === 0) {
+            console.warn('没有可导出的留存数据');
+            return;
+        }
+
+        // 构建CSV内容
+        const headers = ['日期', '影响因素', '活跃用户数', '1天后', '2天后', '3天后', '4天后', '5天后', '6天后', '7天后', '14天后', '30天后'];
+        const csvRows = [];
+
+        // 添加表头
+        csvRows.push(headers.join(','));
+
+        // 添加数据行
+        filteredData.forEach(item => {
+            const row = [
+                item.date,
+                '全部',
+                item.dailyUsers || 0,
+                item.day1Retention ? item.day1Retention.toFixed(2) + '%' : '-',
+                item.day2Retention ? item.day2Retention.toFixed(2) + '%' : '-',
+                item.day3Retention ? item.day3Retention.toFixed(2) + '%' : '-',
+                item.day4Retention ? item.day4Retention.toFixed(2) + '%' : '-',
+                item.day5Retention ? item.day5Retention.toFixed(2) + '%' : '-',
+                item.day6Retention ? item.day6Retention.toFixed(2) + '%' : '-',
+                item.day7Retention ? item.day7Retention.toFixed(2) + '%' : '-',
+                item.day14Retention ? item.day14Retention.toFixed(2) + '%' : '-',
+                item.day30Retention ? item.day30Retention.toFixed(2) + '%' : '-'
+            ];
+            csvRows.push(row.join(','));
+        });
+
+        const csvContent = csvRows.join('\n');
+
+        // 创建Blob并下载
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+
+        const fileName = '留存分析数据.csv';
+
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        console.log('✅ 留存分析表格导出完成');
+    }
+
     // 暴露到全局
     window.initRetentionTable = renderRetentionTable;
+    window.exportRetentionTable = exportRetentionTable;
 })();

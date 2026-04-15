@@ -138,7 +138,15 @@
 
                     // 初始化留存分析表格
                     if (typeof window.initRetentionTable === 'function') {
-                        setTimeout(() => window.initRetentionTable(), 150);
+                        setTimeout(() => {
+                            window.initRetentionTable();
+                            // 绑定导出按钮
+                            const exportBtn = document.querySelector('.export-retention-btn');
+                            if (exportBtn && typeof window.exportRetentionTable === 'function') {
+                                exportBtn.addEventListener('click', window.exportRetentionTable);
+                                console.log('✅ 留存分析导出按钮已绑定');
+                            }
+                        }, 150);
                     }
 
                     // 初始化实时分析图表
