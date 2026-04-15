@@ -53,17 +53,17 @@
             const timeStr = `${hourKey}:00:00`;
             const weight = HOURLY_WEIGHTS[hourKey];
 
-            // 根据权重分配各项指标
+            // 根据权重分配各项指标（允许某些小时为0）
             hourlyData.push({
                 time: timeStr,
-                activeUsers: Math.max(1, Math.round(yesterdayData.dailyUsers * weight)),
-                newUsers: Math.max(1, Math.round(yesterdayData.newUsers * weight)),
-                totalUsers: Math.max(1, Math.round(yesterdayData.totalUser * weight)),
-                shares: Math.max(1, Math.round(yesterdayData.totalShares * weight)),
-                shareSuccessUsers: Math.max(1, Math.round(yesterdayData.shareSuccessUsers * weight)),
-                shareNewUsers: Math.max(1, Math.round(yesterdayData.shareNewUsers * weight)),
-                shareSuccess: Math.max(1, Math.round(yesterdayData.shareSuccess * weight)),
-                startup: Math.max(1, Math.round(yesterdayData.startup * weight)),
+                activeUsers: Math.round(yesterdayData.dailyUsers * weight),
+                newUsers: Math.round(yesterdayData.newUsers * weight),
+                totalUsers: Math.round(yesterdayData.totalUser * weight),
+                shares: Math.round(yesterdayData.totalShares * weight),
+                shareSuccessUsers: Math.round(yesterdayData.shareSuccessUsers * weight),
+                shareNewUsers: Math.round(yesterdayData.shareNewUsers * weight),
+                shareSuccess: Math.round(yesterdayData.shareSuccess * weight),
+                startup: Math.round(yesterdayData.startup * weight),
                 avgStartup: Math.round(yesterdayData.avgStartup * weight),
                 avgDuration: Math.round(yesterdayData.avgDuration * weight), // 秒数，后续格式化
                 singleAvgDuration: Math.round(yesterdayData.singleAvgDuration * weight) // 秒数，后续格式化
