@@ -149,6 +149,19 @@
                         }, 150);
                     }
 
+                    // 初始化侧边栏留存分析表格
+                    if (typeof window.initSidebarRetentionTable === 'function') {
+                        setTimeout(() => {
+                            window.initSidebarRetentionTable();
+                            // 绑定导出按钮
+                            const exportBtn = document.querySelector('.export-sidebar-retention-btn');
+                            if (exportBtn && typeof window.exportSidebarRetentionTable === 'function') {
+                                exportBtn.addEventListener('click', window.exportSidebarRetentionTable);
+                                console.log('✅ 侧边栏留存导出按钮已绑定');
+                            }
+                        }, 200);
+                    }
+
                     // 初始化实时分析图表
                     if (typeof window.initRealTimeChart === 'function') {
                         setTimeout(() => window.initRealTimeChart(), 100);

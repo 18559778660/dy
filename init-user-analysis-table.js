@@ -751,4 +751,161 @@
     // 暴露到全局
     window.initRetentionTable = renderRetentionTable;
     window.exportRetentionTable = exportRetentionTable;
+
+    /**
+     * 渲染侧边栏留存分析表格
+     */
+    function renderSidebarRetentionTable() {
+        console.log('渲染侧边栏留存分析表格...');
+
+        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
+            console.warn('未找到图表数据配置');
+            return;
+        }
+
+        const tbody = document.querySelector('#sidebar-retention-tbody');
+        if (!tbody) {
+            console.warn('未找到侧边栏留存分析表格 tbody');
+            return;
+        }
+
+        const chartConfig = window.chartDataConfig.overview[0];
+        const data = chartConfig.data;
+
+        // 清空现有内容
+        tbody.innerHTML = '';
+
+        // 生成表格行（最近7天）
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        const filteredData = data.filter(item => {
+            const itemDate = new Date(item.date);
+            return itemDate >= sevenDaysAgo && itemDate < today;
+        });
+
+        // 按日期正序排列（从旧到新）
+        filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        // ✅ 保存数据到全局变量，供导出使用
+        window.sidebarRetentionTableData = filteredData;
+
+        filteredData.forEach((item, index) => {
+            const row = document.createElement('tr');
+            row.setAttribute('role', 'row');
+            row.setAttribute('aria-rowindex', index + 1);
+            row.className = 'semi-dy-open-table-row';
+            row.setAttribute('data-row-key', `sideBarRetention-${item.date}-全部`);
+
+            // 第1列：日期（固定左列，只有一列所以不是最后一列）
+            const dateCell = createCell(item.date, 1, 'left', false);
+            row.appendChild(dateCell);
+
+            // 第2列：活跃用户数
+            const activeUsersCell = createCell(item.sidebarDailyUsers ? item.sidebarDailyUsers.toLocaleString('zh-CN') : '-', 2);
+            row.appendChild(activeUsersCell);
+
+            // 第3列：渗透率
+            const penetrationCell = createCell(item.penetrationRate ? item.penetrationRate.toFixed(2) + '%' : '-', 3);
+            row.appendChild(penetrationCell);
+
+            // 第4-11列：侧边栏留存率（1天、2天、3天、4天、5天、6天、7天、14天）
+            const sidebarRetentionFields = [
+                'sidebarDay1Retention',
+                'sidebarDay2Retention',
+                'sidebarDay3Retention',
+                'sidebarDay4Retention',
+                'sidebarDay5Retention',
+                'sidebarDay6Retention',
+                'sidebarDay7Retention',
+                'sidebarDay14Retention'
+            ];
+
+            sidebarRetentionFields.forEach((field, i) => {
+                const value = item[field];
+                const displayValue = value ? value.toFixed(2) + '%' : '-';
+                const colIndex = i + 4; // 从第4列开始
+                const cell = createCell(displayValue, colIndex);
+                row.appendChild(cell);
+            });
+
+            // 第12列：30天后留存率（固定右列）
+            const day30Value = item.sidebarDay30Retention;
+            const day30Display = day30Value ? day30Value.toFixed(2) + '%' : '-';
+            const day30Cell = createCell(day30Display, 12, 'right', false, true);
+            row.appendChild(day30Cell);
+
+            tbody.appendChild(row);
+        });
+
+        console.log(`✅ 侧边栏留存分析表格渲染完成，共${filteredData.length}行`);
+    }
+
+    // 暴露到全局
+    window.initSidebarRetentionTable = renderSidebarRetentionTable;
+
+    /**
+     * 导出侧边栏留存分析表格为CSV
+     */
+    function exportSidebarRetentionTable() {
+        console.log('导出侧边栏留存分析表格...');
+
+        // ✅ 直接使用已渲染的数据，不重新查询
+        const filteredData = window.sidebarRetentionTableData;
+
+        if (!filteredData || filteredData.length === 0) {
+            console.warn('没有可导出的侧边栏留存数据');
+            return;
+        }
+
+        // 构建CSV内容
+        const headers = ['日期', '活跃用户数', '渗透率', '1天后', '2天后', '3天后', '4天后', '5天后', '6天后', '7天后', '14天后', '30天后'];
+        const csvRows = [];
+
+        // 添加表头
+        csvRows.push(headers.join(','));
+
+        // 添加数据行
+        filteredData.forEach(item => {
+            const row = [
+                item.date,
+                item.sidebarDailyUsers || 0,
+                item.penetrationRate ? item.penetrationRate.toFixed(2) + '%' : '-',
+                item.sidebarDay1Retention ? item.sidebarDay1Retention.toFixed(2) + '%' : '-',
+                item.sidebarDay2Retention ? item.sidebarDay2Retention.toFixed(2) + '%' : '-',
+                item.sidebarDay3Retention ? item.sidebarDay3Retention.toFixed(2) + '%' : '-',
+                item.sidebarDay4Retention ? item.sidebarDay4Retention.toFixed(2) + '%' : '-',
+                item.sidebarDay5Retention ? item.sidebarDay5Retention.toFixed(2) + '%' : '-',
+                item.sidebarDay6Retention ? item.sidebarDay6Retention.toFixed(2) + '%' : '-',
+                item.sidebarDay7Retention ? item.sidebarDay7Retention.toFixed(2) + '%' : '-',
+                item.sidebarDay14Retention ? item.sidebarDay14Retention.toFixed(2) + '%' : '-',
+                item.sidebarDay30Retention ? item.sidebarDay30Retention.toFixed(2) + '%' : '-'
+            ];
+            csvRows.push(row.join(','));
+        });
+
+        const csvContent = csvRows.join('\n');
+
+        // 创建Blob并下载
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+
+        const fileName = '侧边栏留存数据.csv';
+
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        console.log('✅ 侧边栏留存表格导出完成');
+    }
+
+    // 暴露到全局
+    window.exportSidebarRetentionTable = exportSidebarRetentionTable;
 })();
