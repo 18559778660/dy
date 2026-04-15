@@ -25,12 +25,13 @@
      * @returns {Array} - 按小时的数据数组（只返回第一天的24小时数据用于表格展示）
      */
     function convertDailyToHourly(dailyData) {
-        // 获取昨天的日期（格式：MM/DD）
+        // 获取昨天的日期（格式：YYYY-MM-DD）
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
+        const year = yesterday.getFullYear();
         const month = String(yesterday.getMonth() + 1).padStart(2, '0');
         const day = String(yesterday.getDate()).padStart(2, '0');
-        const yesterdayStr = `${month}/${day}`;
+        const yesterdayStr = `${year}-${month}-${day}`;
 
         console.log('查找昨天的日期:', yesterdayStr);
 

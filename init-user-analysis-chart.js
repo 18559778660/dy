@@ -356,12 +356,13 @@
             return;
         }
 
-        // 获取昨天的日期（MM/DD 格式）
+        // 获取昨天的日期（YYYY-MM-DD 格式）
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
+        const year = yesterday.getFullYear();
         const month = String(yesterday.getMonth() + 1).padStart(2, '0');
         const day = String(yesterday.getDate()).padStart(2, '0');
-        const yesterdayStr = `${month}/${day}`;
+        const yesterdayStr = `${year}-${month}-${day}`;
 
         console.log('加载昨天数据:', yesterdayStr);
 
@@ -380,9 +381,10 @@
         // 找到前天的数据
         const dayBeforeYesterday = new Date();
         dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
+        const dbyYear = dayBeforeYesterday.getFullYear();
         const dbyMonth = String(dayBeforeYesterday.getMonth() + 1).padStart(2, '0');
         const dbyDay = String(dayBeforeYesterday.getDate()).padStart(2, '0');
-        const dayBeforeStr = `${dbyMonth}/${dbyDay}`;
+        const dayBeforeStr = `${dbyYear}-${dbyMonth}-${dbyDay}`;
 
         const dayBeforeData = chartConfig.data.find(item => item.date === dayBeforeStr);
 
@@ -566,9 +568,7 @@
         sevenDaysAgo.setHours(0, 0, 0, 0);
 
         const filteredData = chartConfig.data.filter(item => {
-            const [month, day] = item.date.split('/').map(Number);
-            const currentYear = new Date().getFullYear();
-            const itemDate = new Date(currentYear, month - 1, day);
+            const itemDate = new Date(item.date);
             return itemDate >= sevenDaysAgo && itemDate < today;
         });
 

@@ -602,6 +602,30 @@
                     "day14Retention": 55.05,
                     "day30Retention": 51.62,
                     "retainedUsers": 6842
+                },
+                {
+                    "date": "2026-04-16",
+                    "dailyUsers": 70,
+                    "newUsers": 10,
+                    "avgDuration": 9999,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgDuration": 200,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 200,
+                    "totalShares": 15000,
+                    "day1Retention": 54.62,
+                    "day2Retention": 58.3,
+                    "day3Retention": 65.83,
+                    "day4Retention": 62.1,
+                    "day5Retention": 61.5,
+                    "day6Retention": 60.8,
+                    "day7Retention": 60.3,
+                    "day14Retention": 55.05,
+                    "day30Retention": 51.62,
+                    "retainedUsers": 6842
                 }
             ]
         }
