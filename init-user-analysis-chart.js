@@ -936,11 +936,12 @@
 
         // 创建图表配置
         const spec = {
-            type: 'line',
+            type: 'area',
             data: [{ values: data, id: 'data' }],
             xField: 'date',
             yField: 'value',
             seriesField: 'sourceType',
+            stack: false,  // 不堆叠，让线条正常显示，只有最上面的区域可见
             // 线条样式
             line: {
                 style: {
@@ -961,6 +962,43 @@
                             return colors[index >= 0 ? index : 0];
                         },
                         lineWidth: 2
+                    }
+                }
+            },
+            // 区域渐变填充
+            area: {
+                visible: true,
+                style: {
+                    curveType: 'monotone',
+                    fill: (datum) => {
+                        const index = sourceTypeNames.indexOf(datum.sourceType);
+                        const baseColor = colors[index >= 0 ? index : 0];
+                        // 提取 RGB 值并创建 rgba 格式的渐变色
+                        const rgbMatch = baseColor.match(/\d+/g);
+                        if (rgbMatch) {
+                            return {
+                                gradient: 'linear',
+                                x0: 0,
+                                y0: 0,
+                                x1: 0,
+                                y1: 1,
+                                stops: [
+                                    { offset: 0, color: `rgba(${rgbMatch[0]}, ${rgbMatch[1]}, ${rgbMatch[2]}, 0.3)` },
+                                    { offset: 1, color: `rgba(${rgbMatch[0]}, ${rgbMatch[1]}, ${rgbMatch[2]}, 0)` }
+                                ]
+                            };
+                        }
+                        return {
+                            gradient: 'linear',
+                            x0: 0,
+                            y0: 0,
+                            x1: 0,
+                            y1: 1,
+                            stops: [
+                                { offset: 0, color: baseColor },
+                                { offset: 1, color: baseColor }
+                            ]
+                        };
                     }
                 }
             },
