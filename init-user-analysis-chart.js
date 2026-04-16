@@ -840,4 +840,221 @@
 
     // 暴露到全局
     window.initRetentionRadioButtons = initRetentionRadioButtons;
+
+    /**
+     * 初始化来源分析多折线图
+     */
+    function initSourceAnalysisChart() {
+        console.log('初始化来源分析图表...');
+
+        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
+            console.warn('未找到图表数据配置');
+            return;
+        }
+
+        const chartConfig = window.chartDataConfig.overview[0];
+        const data = chartConfig.data;
+
+        // 获取最近7天的数据
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        sevenDaysAgo.setHours(0, 0, 0, 0);
+
+        const filteredData = data.filter(item => {
+            const itemDate = new Date(item.date);
+            return itemDate >= sevenDaysAgo && itemDate < today;
+        });
+
+        // 按日期正序排列
+        filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        // 定义7种来源类型
+        const sourceTypes = [
+            { key: 'sidebarDailyUsers', name: '侧边栏' },
+            { key: 'anchorCouponDailyUsers', name: '主播端发券' },
+            { key: 'directPlayDailyUsers', name: '直玩容器' },
+            { key: 'videoAnchorDailyUsers', name: '抖音视频锚点' },
+            { key: 'desktopLaunchDailyUsers', name: '抖音桌面启动' },
+            { key: 'gameCenterDailyUsers', name: '抖音小游戏中心' },
+            { key: 'profileSidebarDailyUsers', name: '个人主页侧边栏' }
+        ];
+
+        // 构建多系列数据
+        const multiSeriesData = [];
+        filteredData.forEach(item => {
+            sourceTypes.forEach(source => {
+                multiSeriesData.push({
+                    date: item.date,
+                    value: item[source.key] || 0,
+                    sourceType: source.name
+                });
+            });
+        });
+
+        // 渲染多折线图
+        renderMultiLineChart('visactor_window_9', multiSeriesData, '来源分析-日活跃用户数');
+    }
+
+    /**
+     * 渲染多折线图
+     */
+    function renderMultiLineChart(containerId, data, title) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.warn(`未找到图表容器: ${containerId}`);
+            return;
+        }
+
+        // 销毁旧实例
+        if (window.sourceAnalysisChartInstance) {
+            window.sourceAnalysisChartInstance.release();
+        }
+
+        // 颜色配置（7种不同颜色）
+        const colors = [
+            'rgb(73 127 252)', // 蓝色
+            'rgb(38 194 176)', // 绿色
+            'rgb(253 166 51)', // 橙色
+            'rgb(251 218 49)', // 黄色
+            'rgb(89 194 98)', // 绿色
+            'rgb(167 218 44)', // 绿色
+            'rgb(180 74 194)', // 紫色
+        ];
+
+        // 定义来源类型（用于 hover 时的颜色映射）
+        const sourceTypeNames = [
+            '侧边栏',
+            '主播端发券',
+            '直玩容器',
+            '抖音视频锚点',
+            '抖音桌面启动',
+            '抖音小游戏中心',
+            '个人主页侧边栏'
+        ];
+
+        // 创建图表配置
+        const spec = {
+            type: 'line',
+            data: [{ values: data, id: 'data' }],
+            xField: 'date',
+            yField: 'value',
+            seriesField: 'sourceType',
+            // 线条样式
+            line: {
+                style: {
+                    lineWidth: 2
+                }
+            },
+            // 数据点配置
+            point: {
+                style: {
+                    size: 0
+                },
+                state: {
+                    dimension_hover: {
+                        size: 8,
+                        fill: '#ffffff',
+                        stroke: (datum) => {
+                            const index = sourceTypeNames.indexOf(datum.sourceType);
+                            return colors[index >= 0 ? index : 0];
+                        },
+                        lineWidth: 2
+                    }
+                }
+            },
+            // 图例配置 - 放在底部
+            legends: {
+                visible: true,
+                orient: 'bottom',
+                padding: [20, 0, 0, 0],
+                item: {
+                    shape: {
+                        style: {
+                            symbolType: 'square'  // 正方形
+                        }
+                    }
+                }
+            },
+            // 十字准星配置（hover 虚线）
+            crosshair: {
+                xField: {
+                    visible: true,
+                    line: {
+                        type: 'line',
+                        style: {
+                            lineWidth: 1,
+                            opacity: 0.6,
+                            stroke: 'rgb(138, 141, 143)',
+                            lineDash: [4, 4]
+                        }
+                    },
+                    bindingAxesIndex: [1]
+                },
+                yField: {
+                    visible: false
+                }
+            },
+            // 坐标轴配置
+            axes: [
+                {
+                    orient: 'left',
+                    label: {
+                        formatMethod: (val) => {
+                            return val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val;
+                        }
+                    }
+                },
+                {
+                    orient: 'bottom',
+                    label: {
+                        formatMethod: (val) => {
+                            const date = new Date(val);
+                            const year = date.getFullYear(); // 完整年份
+                            const month = String(date.getMonth() + 1).padStart(2, '0');
+                            const day = String(date.getDate()).padStart(2, '0');
+                            return `${year}-${month}-${day}`;
+                        }
+                    }
+                }
+            ],
+            // Tooltip 配置
+            tooltip: {
+                mark: {
+                    content: [
+                        {
+                            key: (datum) => datum.sourceType,
+                            value: (datum) => datum.value.toLocaleString('zh-CN')
+                        }
+                    ]
+                }
+            },
+            color: {
+                range: colors
+            }
+        };
+
+        // 创建图表
+        try {
+            const ChartClass = VChart.VChart || VChart;
+            const vchart = new ChartClass(spec, {
+                dom: container,
+                width: container.offsetWidth || 1128,
+                height: container.offsetHeight || 340,
+                theme: 'light'
+            });
+            vchart.renderAsync().then(() => {
+                console.log('✅ 来源分析图表渲染完成');
+            }).catch(err => {
+                console.error('[来源分析图表] 渲染失败:', err);
+            });
+            window.sourceAnalysisChartInstance = vchart;
+        } catch (error) {
+            console.error('[来源分析图表] 创建失败:', error);
+        }
+    }
+
+    // 暴露到全局
+    window.initSourceAnalysisChart = initSourceAnalysisChart;
 })();

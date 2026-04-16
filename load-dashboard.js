@@ -162,6 +162,11 @@
                         }, 200);
                     }
 
+                    // 初始化来源分析图表
+                    if (typeof window.initSourceAnalysisChart === 'function') {
+                        setTimeout(() => window.initSourceAnalysisChart(), 250);
+                    }
+
                     // 初始化实时分析图表
                     if (typeof window.initRealTimeChart === 'function') {
                         setTimeout(() => window.initRealTimeChart(), 100);
