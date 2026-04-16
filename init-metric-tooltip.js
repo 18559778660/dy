@@ -161,26 +161,33 @@ function initRadioButtons() {
 }
 
 // 初始化时间范围单选按钮
-function initTimeRangeButtons() {
-    console.log('初始化时间范围单选按钮...');
+function initTimeRangeButtons(containerSelector = 'body') {
+    console.log(`初始化时间范围单选按钮 (容器: ${containerSelector})...`);
 
-    // 使用 class 选择器获取三个时间按钮
-    const yesterdayBtn = document.querySelector('.time-range-yesterday');
-    const sevenDaysBtn = document.querySelector('.time-range-7days');
-    const thirtyDaysBtn = document.querySelector('.time-range-30days');
-
-    if (!yesterdayBtn || !sevenDaysBtn || !thirtyDaysBtn) {
-        console.warn('未找到时间范围按钮元素');
+    // 在指定容器内查找按钮
+    const container = document.querySelector(containerSelector);
+    if (!container) {
+        console.warn(`未找到容器: ${containerSelector}`);
         return;
     }
 
+    // 使用 class 选择器获取时间按钮（可能有2个或3个）
+    const timeButtons = container.querySelectorAll('.time-range-yesterday, .time-range-7days, .time-range-30days');
+
+    if (timeButtons.length === 0) {
+        console.warn(`在 ${containerSelector} 中未找到时间范围按钮元素`);
+        return;
+    }
+
+    console.log(`找到 ${timeButtons.length} 个时间范围按钮`);
+
     // 为每个按钮添加点击和 hover 事件
-    [yesterdayBtn, sevenDaysBtn, thirtyDaysBtn].forEach(btn => {
+    timeButtons.forEach(btn => {
         btn.addEventListener('click', function () {
-            // 移除所有按钮的选中状态
-            yesterdayBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
-            sevenDaysBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
-            thirtyDaysBtn.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
+            // 只在当前容器内移除所有时间按钮的选中状态
+            container.querySelectorAll('.time-range-yesterday, .time-range-7days, .time-range-30days').forEach(b => {
+                b.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
+            });
 
             // 添加当前按钮的选中状态
             this.classList.add('semi-dy-open-radio-addon-buttonRadio-checked');
@@ -454,7 +461,7 @@ function bindDropdownEvents(triggerElement, dropdownId) {
             const tabType = triggerElement.getAttribute('data-tab');
             if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);
-                
+
                 // TODO: 根据 tabType 和 value 更新对应的表格/图表
                 // if (tabType === 'behavior') {
                 //     updateBehaviorTable(value);

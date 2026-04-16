@@ -116,9 +116,30 @@
                         setTimeout(() => window.initRadioButtons(), 100);
                     }
 
-                    // 初始化时间范围单选按钮
+                    // 初始化时间范围单选按钮（行为分析）
                     if (typeof window.initTimeRangeButtons === 'function') {
-                        setTimeout(() => window.initTimeRangeButtons(), 100);
+                        setTimeout(() => window.initTimeRangeButtons('.user-behavior-section'), 100);
+                    }
+
+                    // 初始化时间范围单选按钮（来源分析）
+                    if (typeof window.initTimeRangeButtons === 'function') {
+                        setTimeout(() => window.initTimeRangeButtons('.user-source-section'), 150);
+                    }
+                    //初始化时间范围单选按钮(留存分析)
+                    if (typeof window.initTimeRangeButtons === 'function') {
+                        setTimeout(() => window.initTimeRangeButtons('.user-retention-section'), 150);
+                    }
+                    // 初始化时间范围单选按钮（转化分析）
+                    if (typeof window.initTimeRangeButtons === 'function') {
+                        setTimeout(() => window.initTimeRangeButtons('.user-transformation-section'), 150);
+                    }
+                    // 初始化时间范围单选按钮（用户画像分析）
+                    if (typeof window.initTimeRangeButtons === 'function') {
+                        setTimeout(() => window.initTimeRangeButtons('.user-gender-section'), 150);
+                    }
+                    // 初始化时间范围单选按钮（终端分析）
+                    if (typeof window.initTimeRangeButtons === 'function') {
+                        setTimeout(() => window.initTimeRangeButtons('.user-terminal-section'), 150);
                     }
 
                     // 初始化下拉筛选框
