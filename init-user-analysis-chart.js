@@ -1068,8 +1068,16 @@
                     orient: 'bottom',
                     label: {
                         formatMethod: (val) => {
+                            // 如果包含时间格式（YYYY-MM-DD HH:00），只提取时间部分
+                            if (val && val.includes(' ')) {
+                                const parts = val.split(' ');
+                                const timePart = parts[1];  // "HH:00"
+                                // 补充秒数，变成 "HH:00:00" 格式
+                                return timePart + ':00';
+                            }
+                            // 否则按日期格式处理
                             const date = new Date(val);
-                            const year = date.getFullYear(); // 完整年份
+                            const year = date.getFullYear();
                             const month = String(date.getMonth() + 1).padStart(2, '0');
                             const day = String(date.getDate()).padStart(2, '0');
                             return `${year}-${month}-${day}`;
@@ -1081,6 +1089,19 @@
             tooltip: {
                 // mark tooltip：鼠标精确落在图元上时
                 mark: {
+                    title: {
+                        value: (datum) => {
+                            // 如果包含时间格式（YYYY-MM-DD HH:00），只提取时间部分
+                            if (datum && datum.date && datum.date.includes(' ')) {
+                                const parts = datum.date.split(' ');
+                                const timePart = parts[1];  // "HH:00"
+                                // 补充秒数，变成 "HH:00:00" 格式
+                                return timePart + ':00';
+                            }
+                            // 否则返回原始日期
+                            return datum.date;
+                        }
+                    },
                     content: [
                         {
                             key: (datum) => datum.sourceType,
@@ -1103,6 +1124,19 @@
                 },
                 // dimension tooltip：crosshair 触发，显示该 x 下所有系列（关键！）
                 dimension: {
+                    title: {
+                        value: (datum) => {
+                            // 如果包含时间格式（YYYY-MM-DD HH:00），只提取时间部分
+                            if (datum && datum.date && datum.date.includes(' ')) {
+                                const parts = datum.date.split(' ');
+                                const timePart = parts[1];  // "HH:00"
+                                // 补充秒数，变成 "HH:00:00" 格式
+                                return timePart + ':00';
+                            }
+                            // 否则返回原始日期
+                            return datum.date;
+                        }
+                    },
                     content: [
                         {
                             key: (datum) => datum.sourceType,
@@ -1151,4 +1185,82 @@
 
     // 暴露到全局
     window.initSourceAnalysisChart = initSourceAnalysisChart;
+
+    /**
+     * 更新来源分析图表为昨天的小时数据（00-23点）
+     */
+    async function updateSourceAnalysisChartToYesterday() {
+        console.log('[来源分析] 更新为昨天的小时数据...');
+
+        // 1. 加载权重配置
+        const response = await fetch('./conf/hourly-weights.json');
+        const config = await response.json();
+        const weights = config.hourlyWeights;
+
+        // 2. 获取昨天的日期
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const year = yesterday.getFullYear();
+        const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+        const day = String(yesterday.getDate()).padStart(2, '0');
+        const yesterdayStr = `${year}-${month}-${day}`;
+
+        console.log('昨天日期:', yesterdayStr);
+
+        // 3. 从全局配置中获取昨天的日数据
+        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
+            console.error('未找到图表数据配置');
+            return;
+        }
+
+        const chartConfig = window.chartDataConfig.overview[0];
+        const yesterdayData = chartConfig.data.find(item => item.date === yesterdayStr);
+
+        if (!yesterdayData) {
+            console.error('未找到昨天的数据:', yesterdayStr);
+            return;
+        }
+
+        console.log('昨天的日数据:', yesterdayData);
+
+        // 4. 定义7种来源类型
+        const sourceTypes = [
+            { key: 'sidebarDailyUsers', name: '侧边栏' },
+            { key: 'anchorCouponDailyUsers', name: '主播端发券' },
+            { key: 'directPlayDailyUsers', name: '直玩容器' },
+            { key: 'videoAnchorDailyUsers', name: '抖音视频锚点' },
+            { key: 'desktopLaunchDailyUsers', name: '抖音桌面启动' },
+            { key: 'gameCenterDailyUsers', name: '抖音小游戏中心' },
+            { key: 'profileSidebarDailyUsers', name: '个人主页侧边栏' }
+        ];
+
+        // 5. 将每个来源的日数据按权重分配到24小时
+        const multiSeriesData = [];
+        for (let hour = 0; hour < 24; hour++) {
+            const hourStr = String(hour).padStart(2, '0');
+            const weight = weights[hourStr] || 0;
+            const timeLabel = `${yesterdayStr} ${hourStr}:00`;
+
+            sourceTypes.forEach(source => {
+                const dailyValue = yesterdayData[source.key] || 0;
+                const hourlyValue = Math.round(dailyValue * weight);
+
+                multiSeriesData.push({
+                    date: timeLabel,
+                    value: hourlyValue,
+                    sourceType: source.name
+                });
+            });
+        }
+
+        console.log('生成的小时数据:', multiSeriesData.length, '条记录');
+
+        // 6. 重新渲染图表
+        renderMultiLineChart('visactor_window_9', multiSeriesData, '昨日来源分析-小时活跃用户数');
+
+        console.log('✅ 来源分析图表已更新为昨天的小时数据');
+    }
+
+    // 暴露到全局
+    window.updateSourceAnalysisChartToYesterday = updateSourceAnalysisChartToYesterday;
 })();
