@@ -1007,10 +1007,30 @@
                 visible: true,
                 orient: 'bottom',
                 padding: [20, 0, 0, 0],
+                // 用 data 回调逐项覆盖图例图标的 fill/透明度，
+                // 避免面积图的渐变半透明 fill 被图例图标继承
+                data: (items) => {
+                    return items.map((item) => {
+                        const idx = sourceTypeNames.indexOf(item.label);
+                        const solidColor = colors[idx >= 0 ? idx : 0];
+                        item.shape.fill = solidColor;
+                        item.shape.fillOpacity = 1;
+                        item.shape.stroke = solidColor;
+                        item.shape.strokeOpacity = 1;
+                        item.shape.symbolType = 'square';
+                        return item;
+                    });
+                },
                 item: {
                     shape: {
                         style: {
                             symbolType: 'square'  // 正方形
+                        }
+                    },
+                    label: {
+                        style: {
+                            fill: 'rgb(90 94 100)',
+                            fillOpacity: 1
                         }
                     }
                 }
@@ -1059,11 +1079,47 @@
             ],
             // Tooltip 配置
             tooltip: {
+                // mark tooltip：鼠标精确落在图元上时
                 mark: {
                     content: [
                         {
                             key: (datum) => datum.sourceType,
-                            value: (datum) => datum.value.toLocaleString('zh-CN')
+                            value: (datum) => datum.value.toLocaleString('zh-CN'),
+                            shapeType: 'square',
+                            shapeFill: (datum) => {
+                                const idx = sourceTypeNames.indexOf(datum.sourceType);
+                                return colors[idx >= 0 ? idx : 0];
+                            },
+                            shapeStroke: (datum) => {
+                                const idx = sourceTypeNames.indexOf(datum.sourceType);
+                                return colors[idx >= 0 ? idx : 0];
+                            },
+                            shapeFillOpacity: 1,
+                            shapeStrokeOpacity: 1,
+                            keyStyle: { fill: 'rgb(90 94 100)', fillOpacity: 1 },
+                            valueStyle: { fill: 'rgb(90 94 100)', fillOpacity: 1 }
+                        }
+                    ]
+                },
+                // dimension tooltip：crosshair 触发，显示该 x 下所有系列（关键！）
+                dimension: {
+                    content: [
+                        {
+                            key: (datum) => datum.sourceType,
+                            value: (datum) => datum.value.toLocaleString('zh-CN'),
+                            shapeType: 'square',
+                            shapeFill: (datum) => {
+                                const idx = sourceTypeNames.indexOf(datum.sourceType);
+                                return colors[idx >= 0 ? idx : 0];
+                            },
+                            shapeStroke: (datum) => {
+                                const idx = sourceTypeNames.indexOf(datum.sourceType);
+                                return colors[idx >= 0 ? idx : 0];
+                            },
+                            shapeFillOpacity: 1,
+                            shapeStrokeOpacity: 1,
+                            keyStyle: { fill: 'rgb(90 94 100)', fillOpacity: 1 },
+                            valueStyle: { fill: 'rgb(90 94 100)', fillOpacity: 1 }
                         }
                     ]
                 }
