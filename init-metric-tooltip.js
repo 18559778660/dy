@@ -196,7 +196,11 @@ function initTimeRangeButtons(containerSelector = 'body') {
 
             // 根据选中的时间范围加载不同的数据
             if (timeRange === '昨天') {
-                loadYesterdaySourceAnalysisData();
+                window.updateSourceAnalysisChart && window.updateSourceAnalysisChart('yesterday');
+            } else if (timeRange === '7天') {
+                window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(7);
+            } else if (timeRange === '30天') {
+                window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(30);
             }
         });
 
@@ -217,18 +221,6 @@ function initTimeRangeButtons(containerSelector = 'body') {
 
 // 暴露到全局
 window.initTimeRangeButtons = initTimeRangeButtons;
-
-// 加载昨天的来源分析数据（小时分布）
-async function loadYesterdaySourceAnalysisData() {
-    console.log('[时间范围] 加载昨天来源分析数据...');
-
-    // 调用来源分析图表的更新函数
-    if (typeof window.updateSourceAnalysisChartToYesterday === 'function') {
-        await window.updateSourceAnalysisChartToYesterday();
-    } else {
-        console.error('未找到来源分析图表更新函数');
-    }
-}
 
 // 初始化下拉筛选框（APP 和操作系统）
 window.initDropdownFilters = initDropdownFilters;

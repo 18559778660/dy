@@ -847,6 +847,40 @@
     function initSourceAnalysisChart() {
         console.log('初始化来源分析图表...');
 
+        // 检查当前选中的时间范围按钮
+        const yesterdayBtn = document.querySelector('.time-range-yesterday.semi-dy-open-radio-addon-buttonRadio-checked');
+
+        // 根据选中的按钮加载对应的数据
+        if (yesterdayBtn) {
+            console.log('[来源分析] 检测到“昨天”按钮选中，加载昨天的小时数据');
+            updateSourceAnalysisChart('yesterday');
+        } else {
+            console.log('[来源分析] 加载近7天数据');
+            updateSourceAnalysisChart(7);
+        }
+    }
+
+    /**
+     * 更新来源分析图表（通用函数）
+     * @param {string|number} timeRange - 时间范围：'yesterday' 或 天数（7, 30等）
+     */
+    async function updateSourceAnalysisChart(timeRange) {
+        console.log('[来源分析] 更新时间范围:', timeRange);
+
+        // 如果是昨天，加载小时数据
+        if (timeRange === 'yesterday') {
+            await loadYesterdayHourlyData();
+        } else {
+            // 否则加载指定天数的日数据
+            loadMultiDaysData(timeRange);
+        }
+    }
+
+    /**
+     * 加载多天数据（7天、30天等）
+     * @param {number} days - 天数
+     */
+    function loadMultiDaysData(days) {
         if (!window.chartDataConfig || !window.chartDataConfig.overview) {
             console.warn('未找到图表数据配置');
             return;
@@ -855,16 +889,16 @@
         const chartConfig = window.chartDataConfig.overview[0];
         const data = chartConfig.data;
 
-        // 获取最近7天的数据
+        // 获取指定天数的数据
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
+        const daysAgo = new Date();
+        daysAgo.setDate(daysAgo.getDate() - days);
+        daysAgo.setHours(0, 0, 0, 0);
 
         const filteredData = data.filter(item => {
             const itemDate = new Date(item.date);
-            return itemDate >= sevenDaysAgo && itemDate < today;
+            return itemDate >= daysAgo && itemDate < today;
         });
 
         // 按日期正序排列
@@ -894,7 +928,83 @@
         });
 
         // 渲染多折线图
-        renderMultiLineChart('visactor_window_9', multiSeriesData, '来源分析-日活跃用户数');
+        const title = days === 7 ? '来源分析-日活跃用户数' : `来源分析-日活跃用户数（近${days}天）`;
+        renderMultiLineChart('visactor_window_9', multiSeriesData, title);
+    }
+
+    /**
+     * 加载昨天的小时数据（00-23点）
+     */
+    async function loadYesterdayHourlyData() {
+        console.log('[来源分析] 加载昨天的小时数据...');
+
+        // 1. 加载权重配置
+        const response = await fetch('./conf/hourly-weights.json');
+        const config = await response.json();
+        const weights = config.hourlyWeights;
+
+        // 2. 获取昨天的日期
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const year = yesterday.getFullYear();
+        const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+        const day = String(yesterday.getDate()).padStart(2, '0');
+        const yesterdayStr = `${year}-${month}-${day}`;
+
+        console.log('昨天日期:', yesterdayStr);
+
+        // 3. 从全局配置中获取昨天的日数据
+        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
+            console.error('未找到图表数据配置');
+            return;
+        }
+
+        const chartConfig = window.chartDataConfig.overview[0];
+        const yesterdayData = chartConfig.data.find(item => item.date === yesterdayStr);
+
+        if (!yesterdayData) {
+            console.error('未找到昨天的数据:', yesterdayStr);
+            return;
+        }
+
+        console.log('昨天的日数据:', yesterdayData);
+
+        // 4. 定义7种来源类型
+        const sourceTypes = [
+            { key: 'sidebarDailyUsers', name: '侧边栏' },
+            { key: 'anchorCouponDailyUsers', name: '主播端发券' },
+            { key: 'directPlayDailyUsers', name: '直玩容器' },
+            { key: 'videoAnchorDailyUsers', name: '抖音视频锚点' },
+            { key: 'desktopLaunchDailyUsers', name: '抖音桌面启动' },
+            { key: 'gameCenterDailyUsers', name: '抖音小游戏中心' },
+            { key: 'profileSidebarDailyUsers', name: '个人主页侧边栏' }
+        ];
+
+        // 5. 将每个来源的日数据按权重分配到24小时
+        const multiSeriesData = [];
+        for (let hour = 0; hour < 24; hour++) {
+            const hourStr = String(hour).padStart(2, '0');
+            const weight = weights[hourStr] || 0;
+            const timeLabel = `${yesterdayStr} ${hourStr}:00`;
+
+            sourceTypes.forEach(source => {
+                const dailyValue = yesterdayData[source.key] || 0;
+                const hourlyValue = Math.round(dailyValue * weight);
+
+                multiSeriesData.push({
+                    date: timeLabel,
+                    value: hourlyValue,
+                    sourceType: source.name
+                });
+            });
+        }
+
+        console.log('生成的小时数据:', multiSeriesData.length, '条记录');
+
+        // 6. 重新渲染图表
+        renderMultiLineChart('visactor_window_9', multiSeriesData, '昨日来源分析-小时活跃用户数');
+
+        console.log('✅ 来源分析图表已更新为昨天的小时数据');
     }
 
     /**
@@ -1185,82 +1295,5 @@
 
     // 暴露到全局
     window.initSourceAnalysisChart = initSourceAnalysisChart;
-
-    /**
-     * 更新来源分析图表为昨天的小时数据（00-23点）
-     */
-    async function updateSourceAnalysisChartToYesterday() {
-        console.log('[来源分析] 更新为昨天的小时数据...');
-
-        // 1. 加载权重配置
-        const response = await fetch('./conf/hourly-weights.json');
-        const config = await response.json();
-        const weights = config.hourlyWeights;
-
-        // 2. 获取昨天的日期
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const year = yesterday.getFullYear();
-        const month = String(yesterday.getMonth() + 1).padStart(2, '0');
-        const day = String(yesterday.getDate()).padStart(2, '0');
-        const yesterdayStr = `${year}-${month}-${day}`;
-
-        console.log('昨天日期:', yesterdayStr);
-
-        // 3. 从全局配置中获取昨天的日数据
-        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
-            console.error('未找到图表数据配置');
-            return;
-        }
-
-        const chartConfig = window.chartDataConfig.overview[0];
-        const yesterdayData = chartConfig.data.find(item => item.date === yesterdayStr);
-
-        if (!yesterdayData) {
-            console.error('未找到昨天的数据:', yesterdayStr);
-            return;
-        }
-
-        console.log('昨天的日数据:', yesterdayData);
-
-        // 4. 定义7种来源类型
-        const sourceTypes = [
-            { key: 'sidebarDailyUsers', name: '侧边栏' },
-            { key: 'anchorCouponDailyUsers', name: '主播端发券' },
-            { key: 'directPlayDailyUsers', name: '直玩容器' },
-            { key: 'videoAnchorDailyUsers', name: '抖音视频锚点' },
-            { key: 'desktopLaunchDailyUsers', name: '抖音桌面启动' },
-            { key: 'gameCenterDailyUsers', name: '抖音小游戏中心' },
-            { key: 'profileSidebarDailyUsers', name: '个人主页侧边栏' }
-        ];
-
-        // 5. 将每个来源的日数据按权重分配到24小时
-        const multiSeriesData = [];
-        for (let hour = 0; hour < 24; hour++) {
-            const hourStr = String(hour).padStart(2, '0');
-            const weight = weights[hourStr] || 0;
-            const timeLabel = `${yesterdayStr} ${hourStr}:00`;
-
-            sourceTypes.forEach(source => {
-                const dailyValue = yesterdayData[source.key] || 0;
-                const hourlyValue = Math.round(dailyValue * weight);
-
-                multiSeriesData.push({
-                    date: timeLabel,
-                    value: hourlyValue,
-                    sourceType: source.name
-                });
-            });
-        }
-
-        console.log('生成的小时数据:', multiSeriesData.length, '条记录');
-
-        // 6. 重新渲染图表
-        renderMultiLineChart('visactor_window_9', multiSeriesData, '昨日来源分析-小时活跃用户数');
-
-        console.log('✅ 来源分析图表已更新为昨天的小时数据');
-    }
-
-    // 暴露到全局
-    window.updateSourceAnalysisChartToYesterday = updateSourceAnalysisChartToYesterday;
+    window.updateSourceAnalysisChart = updateSourceAnalysisChart;
 })();
