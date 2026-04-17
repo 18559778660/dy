@@ -976,14 +976,18 @@
         }
 
         // 渲染多折线图
-        renderMultiLineChart('visactor_window_9', multiSeriesData, chartTitle);
+        renderMultiLineChart('visactor_window_9', multiSeriesData, chartTitle, timeRange);
         console.log('✅ 来源分析图表已更新');
     }
 
     /**
      * 渲染多折线图
+     * @param {string} containerId - 容器ID
+     * @param {Array} data - 图表数据
+     * @param {string} title - 图表标题
+     * @param {string|number} timeRange - 时间范围：'yesterday' 或 天数（7, 30等）
      */
-    function renderMultiLineChart(containerId, data, title) {
+    function renderMultiLineChart(containerId, data, title, timeRange) {
         const container = document.getElementById(containerId);
         if (!container) {
             console.warn(`未找到图表容器: ${containerId}`);
@@ -1016,6 +1020,9 @@
             '抖音小游戏中心',
             '抖音个人主页侧边栏'
         ];
+
+        // 判断是否为长周期场景（30天及以上）
+        const isLongRange = timeRange === 30;
 
         // 创建图表配置
         const spec = {
@@ -1149,23 +1156,43 @@
                 },
                 {
                     orient: 'bottom',
-                    label: {
-                        formatMethod: (val) => {
-                            // 如果包含时间格式（YYYY-MM-DD HH:00），只提取时间部分
-                            if (val && val.includes(' ')) {
-                                const parts = val.split(' ');
-                                const timePart = parts[1];  // "HH:00"
-                                // 补充秒数，变成 "HH:00:00" 格式
-                                return timePart + ':00';
+                    // 仅在 30 天场景关闭默认采样 + 自定义每 3 天过滤；
+                    // 其它场景保持 VChart 默认行为
+                    ...(isLongRange
+                        ? {
+                            sampling: false,
+                            label: {
+                                autoHide: false,
+                                dataFilter: (items) => items.filter((_, i) => i % 3 === 0),
+                                formatMethod: (val) => {
+                                    const date = new Date(val);
+                                    if (isNaN(date.getTime())) return val;
+                                    const year = date.getFullYear();
+                                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                                    const day = String(date.getDate()).padStart(2, '0');
+                                    return `${year}-${month}-${day}`;
+                                }
+                            },
+                            tick: {
+                                dataFilter: (items) => items.filter((_, i) => i % 3 === 0)
                             }
-                            // 否则按日期格式处理
-                            const date = new Date(val);
-                            const year = date.getFullYear();
-                            const month = String(date.getMonth() + 1).padStart(2, '0');
-                            const day = String(date.getDate()).padStart(2, '0');
-                            return `${year}-${month}-${day}`;
                         }
-                    }
+                        : {
+                            label: {
+                                formatMethod: (val) => {
+                                    if (val && typeof val === 'string' && val.includes(' ')) {
+                                        const parts = val.split(' ');
+                                        return parts[1] + ':00';
+                                    }
+                                    const date = new Date(val);
+                                    if (isNaN(date.getTime())) return val;
+                                    const year = date.getFullYear();
+                                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                                    const day = String(date.getDate()).padStart(2, '0');
+                                    return `${year}-${month}-${day}`;
+                                }
+                            }
+                        })
                 }
             ],
             // Tooltip 配置
