@@ -621,20 +621,20 @@
             row.appendChild(platformCell);
 
             // 第3列：活跃用户数
-            const activeUsersCell = createCell(item.dailyUsers ? item.dailyUsers.toLocaleString('zh-CN') : '-', 3);
+            const activeUsersCell = createCell(item.sidebarVisitdailyUsers ? item.sidebarVisitdailyUsers.toLocaleString('zh-CN') : '-', 3);
             row.appendChild(activeUsersCell);
 
             // 第4-12列：留存率（1天、2天、3天、4天、5天、6天、7天、14天、30天）
             const retentionFields = [
-                'day1Retention',
-                'day2Retention',
-                'day3Retention',
-                'day4Retention',
-                'day5Retention',
-                'day6Retention',
-                'day7Retention',
-                'day14Retention',
-                'day30Retention'
+                'sidebarVisitday1Retention',
+                'sidebarVisitday2Retention',
+                'sidebarVisitday3Retention',
+                'sidebarVisitday4Retention',
+                'sidebarVisitday5Retention',
+                'sidebarVisitday6Retention',
+                'sidebarVisitday7Retention',
+                'sidebarVisitday14Retention',
+                'sidebarVisitday30Retention'
             ];
 
             retentionFields.forEach((field, i) => {
@@ -715,16 +715,16 @@
             const row = [
                 item.date,
                 '全部',
-                item.dailyUsers || 0,
-                item.day1Retention ? item.day1Retention.toFixed(2) + '%' : '-',
-                item.day2Retention ? item.day2Retention.toFixed(2) + '%' : '-',
-                item.day3Retention ? item.day3Retention.toFixed(2) + '%' : '-',
-                item.day4Retention ? item.day4Retention.toFixed(2) + '%' : '-',
-                item.day5Retention ? item.day5Retention.toFixed(2) + '%' : '-',
-                item.day6Retention ? item.day6Retention.toFixed(2) + '%' : '-',
-                item.day7Retention ? item.day7Retention.toFixed(2) + '%' : '-',
-                item.day14Retention ? item.day14Retention.toFixed(2) + '%' : '-',
-                item.day30Retention ? item.day30Retention.toFixed(2) + '%' : '-'
+                item.sidebarVisitdailyUsers || 0,
+                item.sidebarVisitday1Retention ? item.sidebarVisitday1Retention.toFixed(2) + '%' : '-',
+                item.sidebarVisitday2Retention ? item.sidebarVisitday2Retention.toFixed(2) + '%' : '-',
+                item.sidebarVisitday3Retention ? item.sidebarVisitday3Retention.toFixed(2) + '%' : '-',
+                item.sidebarVisitday4Retention ? item.sidebarVisitday4Retention.toFixed(2) + '%' : '-',
+                item.sidebarVisitday5Retention ? item.sidebarVisitday5Retention.toFixed(2) + '%' : '-',
+                item.sidebarVisitday6Retention ? item.sidebarVisitday6Retention.toFixed(2) + '%' : '-',
+                item.sidebarVisitday7Retention ? item.sidebarVisitday7Retention.toFixed(2) + '%' : '-',
+                item.sidebarVisitday14Retention ? item.sidebarVisitday14Retention.toFixed(2) + '%' : '-',
+                item.sidebarVisitday30Retention ? item.sidebarVisitday30Retention.toFixed(2) + '%' : '-'
             ];
             csvRows.push(row.join(','));
         });
@@ -895,16 +895,16 @@
         const rowMapper = (item) => [
             item.date,
             '全部',
-            item.dailyUsers || 0,
-            item.day1Retention ? item.day1Retention.toFixed(2) + '%' : '-',
-            item.day2Retention ? item.day2Retention.toFixed(2) + '%' : '-',
-            item.day3Retention ? item.day3Retention.toFixed(2) + '%' : '-',
-            item.day4Retention ? item.day4Retention.toFixed(2) + '%' : '-',
-            item.day5Retention ? item.day5Retention.toFixed(2) + '%' : '-',
-            item.day6Retention ? item.day6Retention.toFixed(2) + '%' : '-',
-            item.day7Retention ? item.day7Retention.toFixed(2) + '%' : '-',
-            item.day14Retention ? item.day14Retention.toFixed(2) + '%' : '-',
-            item.day30Retention ? item.day30Retention.toFixed(2) + '%' : '-'
+            item.sidebarVisitdailyUsers || 0,
+            item.sidebarVisitday1Retention ? item.sidebarVisitday1Retention.toFixed(2) + '%' : '-',
+            item.sidebarVisitday2Retention ? item.sidebarVisitday2Retention.toFixed(2) + '%' : '-',
+            item.sidebarVisitday3Retention ? item.sidebarVisitday3Retention.toFixed(2) + '%' : '-',
+            item.sidebarVisitday4Retention ? item.sidebarVisitday4Retention.toFixed(2) + '%' : '-',
+            item.sidebarVisitday5Retention ? item.sidebarVisitday5Retention.toFixed(2) + '%' : '-',
+            item.sidebarVisitday6Retention ? item.sidebarVisitday6Retention.toFixed(2) + '%' : '-',
+            item.sidebarVisitday7Retention ? item.sidebarVisitday7Retention.toFixed(2) + '%' : '-',
+            item.sidebarVisitday14Retention ? item.sidebarVisitday14Retention.toFixed(2) + '%' : '-',
+            item.sidebarVisitday30Retention ? item.sidebarVisitday30Retention.toFixed(2) + '%' : '-'
         ];
 
         exportTableToCSV('retentionTableData', headers, rowMapper, '留存分析数据.csv');

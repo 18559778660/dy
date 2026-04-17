@@ -664,8 +664,8 @@
 
             data = filteredData.map(item => ({
                 date: item.date,
-                value: item.day1Retention,  // 使用次日留存率
-                displayValue: item.day1Retention ? item.day1Retention.toFixed(2) + '%' : '-',
+                value: item.sidebarVisitday1Retention,  // 使用次日留存率
+                displayValue: item.sidebarVisitday1Retention ? item.sidebarVisitday1Retention.toFixed(2) + '%' : '-',
                 medalType: '全部-1天后留存率'
             }));
 
@@ -711,10 +711,10 @@
 
         // 定义每个按钮对应的数据字段和标题
         const buttonConfig = [
-            { text: '全部-1天后留存率', field: 'day1Retention' },
-            { text: '全部-3天后留存率', field: 'day3Retention' },
-            { text: '全部-14天后留存率', field: 'day14Retention' },
-            { text: '全部-30天后留存率', field: 'day30Retention' }
+            { text: '全部-1天后留存率', field: 'sidebarVisitday1Retention' },
+            { text: '全部-3天后留存率', field: 'sidebarVisitday3Retention' },
+            { text: '全部-14天后留存率', field: 'sidebarVisitday14Retention' },
+            { text: '全部-30天后留存率', field: 'sidebarVisitday30Retention' }
         ];
 
         // 为每个按钮添加点击事件
@@ -866,16 +866,15 @@
      */
     async function updateSourceAnalysisChart(timeRange) {
         console.log('[来源分析] 更新时间范围:', timeRange);
-
         // 定义7种来源类型
         const sourceTypes = [
-            { key: 'sidebarDailyUsers', name: '侧边栏' },
-            { key: 'anchorCouponDailyUsers', name: '主播端发券' },
-            { key: 'directPlayDailyUsers', name: '直玩容器' },
+            { key: 'sidebarDailyUsers', name: '首页侧边栏-最近使用（常用小程序）' },
+            { key: 'anchorCouponDailyUsers', name: '主播端发券-查看链接' },
+            { key: 'directPlayDailyUsers', name: '直玩容器启动小游戏' },
             { key: 'videoAnchorDailyUsers', name: '抖音视频锚点' },
             { key: 'desktopLaunchDailyUsers', name: '抖音桌面启动' },
             { key: 'gameCenterDailyUsers', name: '抖音小游戏中心' },
-            { key: 'profileSidebarDailyUsers', name: '个人主页侧边栏' }
+            { key: 'profileSidebarDailyUsers', name: '抖音个人主页侧边栏' }
         ];
 
         let multiSeriesData = [];
@@ -1009,13 +1008,13 @@
 
         // 定义来源类型（用于 hover 时的颜色映射）
         const sourceTypeNames = [
-            '侧边栏',
-            '主播端发券',
-            '直玩容器',
+            '首页侧边栏-最近使用（常用小程序）',
+            '主播端发券-查看链接',
+            '直玩容器启动小游戏',
             '抖音视频锚点',
             '抖音桌面启动',
             '抖音小游戏中心',
-            '个人主页侧边栏'
+            '抖音个人主页侧边栏'
         ];
 
         // 创建图表配置
