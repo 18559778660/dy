@@ -181,6 +181,19 @@ function initTimeRangeButtons(containerSelector = 'body') {
 
     console.log(`找到 ${timeButtons.length} 个时间范围按钮`);
 
+    // 文案 -> 参数值
+    const labelToRange = { '昨天': 'yesterday', '7天': 7, '30天': 30 };
+
+    // 按容器派发的 handler：同一容器下想响应多个组件就在这里累加调用
+    // 没列出的容器 = 仅做视觉切换，不触发任何业务更新
+    const handlersByContainer = {
+        '.user-source-section': (range) => {
+            window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(range);
+            window.updateSourceSceneTable && window.updateSourceSceneTable(range);
+        }
+    };
+    const dispatch = handlersByContainer[containerSelector] || null;
+
     // 为每个按钮添加点击和 hover 事件
     timeButtons.forEach(btn => {
         btn.addEventListener('click', function () {
@@ -191,17 +204,11 @@ function initTimeRangeButtons(containerSelector = 'body') {
 
             // 添加当前按钮的选中状态
             this.classList.add('semi-dy-open-radio-addon-buttonRadio-checked');
-            const timeRange = this.textContent.trim();
-            console.log('选中时间范围:', timeRange);
+            const label = this.textContent.trim();
+            console.log(`[${containerSelector}] 选中时间范围:`, label);
 
-            // 根据选中的时间范围加载不同的数据
-            if (timeRange === '昨天') {
-                window.updateSourceAnalysisChart && window.updateSourceAnalysisChart('yesterday');
-            } else if (timeRange === '7天') {
-                window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(7);
-            } else if (timeRange === '30天') {
-                window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(30);
-            }
+            const range = labelToRange[label];
+            if (range !== undefined && dispatch) dispatch(range);
         });
 
         // hover 效果

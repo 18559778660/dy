@@ -944,19 +944,91 @@
 
     /**
      * 「来源分析 - 汇总数据」表格
-     * 默认展示昨天所有 douyinSourceScenes 场景，按 dailyUsers 降序，分页显示
+     * 支持时间范围切换：'yesterday' / 7 / 30
+     * 7/30 天会按 sceneId 聚合（用户数类指标累加，次均时长按 dailyUsers 加权平均）
      */
     const SOURCE_SCENE_PAGE_SIZE = 10;
     let sourceSceneAllData = [];
     let sourceScenePage = 1;
+    let sourceSceneTimeRange = 'yesterday';
 
-    function renderSourceSceneTable(page = 1) {
-        console.log('渲染来源分析汇总表...');
+    /** 汇总一组 scene 到单条记录（dailyUsers/newUsers/startup 累加，singleAvgDuration 加权均值） */
+    function aggregateScenes(sceneList) {
+        const bucket = new Map();
+        sceneList.forEach(scene => {
+            const key = scene.sceneId;
+            if (!bucket.has(key)) {
+                bucket.set(key, {
+                    sceneId: scene.sceneId,
+                    sceneName: scene.sceneName,
+                    dailyUsers: 0,
+                    newUsers: 0,
+                    startup: 0,
+                    _durationWeightedSum: 0, // singleAvgDuration * dailyUsers 累计
+                    _durationCount: 0        // 无加权时的简单计数
+                });
+            }
+            const agg = bucket.get(key);
+            agg.dailyUsers += scene.dailyUsers || 0;
+            agg.newUsers += scene.newUsers || 0;
+            agg.startup += scene.startup || 0;
+            agg._durationWeightedSum += (scene.singleAvgDuration || 0) * (scene.dailyUsers || 0);
+            agg._durationCount += 1;
+        });
+        // 产出 singleAvgDuration
+        return Array.from(bucket.values()).map(agg => {
+            const duration = agg.dailyUsers > 0
+                ? Math.round(agg._durationWeightedSum / agg.dailyUsers)
+                : 0;
+            return {
+                sceneId: agg.sceneId,
+                sceneName: agg.sceneName,
+                dailyUsers: agg.dailyUsers,
+                newUsers: agg.newUsers,
+                startup: agg.startup,
+                singleAvgDuration: duration
+            };
+        });
+    }
 
-        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
-            console.warn('未找到图表数据配置');
-            return;
+    /** 按 timeRange 收集场景数据（未排序、未分页） */
+    function collectScenesByTimeRange(timeRange) {
+        const config = window.chartDataConfig && window.chartDataConfig.overview;
+        if (!config) return [];
+
+        const allDays = config[0].data;
+
+        if (timeRange === 'yesterday') {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const y = yesterday.getFullYear();
+            const m = String(yesterday.getMonth() + 1).padStart(2, '0');
+            const d = String(yesterday.getDate()).padStart(2, '0');
+            const yesterdayStr = `${y}-${m}-${d}`;
+            const dayData = allDays.find(item => item.date === yesterdayStr);
+            return dayData ? [...dayData.douyinSourceScenes] : [];
         }
+
+        // 近 N 天聚合
+        const days = Number(timeRange) || 7;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const from = new Date();
+        from.setDate(from.getDate() - days);
+        from.setHours(0, 0, 0, 0);
+
+        const bucketList = [];
+        allDays.forEach(item => {
+            const itemDate = new Date(item.date);
+            if (itemDate >= from && itemDate < today) {
+                bucketList.push(...(item.douyinSourceScenes || []));
+            }
+        });
+        return aggregateScenes(bucketList);
+    }
+
+    function renderSourceSceneTable(page = 1, timeRange = sourceSceneTimeRange) {
+        console.log(`渲染来源分析汇总表... (timeRange=${timeRange})`);
 
         const tbody = document.querySelector('#source-scene-tbody');
         if (!tbody) {
@@ -964,23 +1036,9 @@
             return;
         }
 
-        // 取昨天日期的数据
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const y = yesterday.getFullYear();
-        const m = String(yesterday.getMonth() + 1).padStart(2, '0');
-        const d = String(yesterday.getDate()).padStart(2, '0');
-        const yesterdayStr = `${y}-${m}-${d}`;
+        sourceSceneTimeRange = timeRange;
 
-        const dayData = window.chartDataConfig.overview[0].data
-            .find(item => item.date === yesterdayStr);
-        if (!dayData) {
-            console.warn('未找到昨天的数据:', yesterdayStr);
-            return;
-        }
-
-        // 所有场景按 dailyUsers 降序
-        const scenes = [...dayData.douyinSourceScenes]
+        const scenes = collectScenesByTimeRange(timeRange)
             .sort((a, b) => (b.dailyUsers || 0) - (a.dailyUsers || 0));
 
         sourceSceneAllData = scenes;
@@ -1078,12 +1136,12 @@
 
             const totalPages = Math.ceil(sourceSceneAllData.length / SOURCE_SCENE_PAGE_SIZE);
             if (pageItem.classList.contains('semi-dy-open-page-prev')) {
-                if (sourceScenePage > 1) renderSourceSceneTable(sourceScenePage - 1);
+                if (sourceScenePage > 1) renderSourceSceneTable(sourceScenePage - 1, sourceSceneTimeRange);
             } else if (pageItem.classList.contains('semi-dy-open-page-next')) {
-                if (sourceScenePage < totalPages) renderSourceSceneTable(sourceScenePage + 1);
+                if (sourceScenePage < totalPages) renderSourceSceneTable(sourceScenePage + 1, sourceSceneTimeRange);
             } else {
                 const p = parseInt(pageItem.textContent, 10);
-                if (!isNaN(p)) renderSourceSceneTable(p);
+                if (!isNaN(p)) renderSourceSceneTable(p, sourceSceneTimeRange);
             }
         });
     }
@@ -1119,11 +1177,17 @@
     }
 
     function initSourceSceneTable() {
-        renderSourceSceneTable(1);
+        renderSourceSceneTable(1, 'yesterday');
         bindSourceScenePaginationEvents();
+    }
+
+    /** 时间筛选切换时调用（'yesterday' | 7 | 30），自动回到第 1 页 */
+    function updateSourceSceneTable(timeRange) {
+        renderSourceSceneTable(1, timeRange);
     }
 
     // 暴露到全局
     window.initSourceSceneTable = initSourceSceneTable;
+    window.updateSourceSceneTable = updateSourceSceneTable;
     window.exportSourceSceneTable = exportSourceSceneTable;
 })();
