@@ -999,19 +999,34 @@
             'rgb(180 74 194)', // 紫色
         ];
 
-        // 定义来源场景 sceneId 顺序（与 colors 一一对应，用于颜色映射）
-        // 页面固定只展示这 7 个场景，数组顺序 = 颜色顺序
-        const sceneIdOrder = [
-            '021036', // 首页侧边栏-最近使用（常用小程序）
-            '023010', // 主播端发券-查看链接
-            '021020', // 抖音桌面启动
-            '023041', // 直玩容器启动小游戏
-            '021012', // 抖音小游戏中心
-            '021001', // 抖音个人主页侧边栏
-            '024001', // 私信分享
-        ];
+        // 动态计算 sceneIdOrder：
+        //   1) 用与汇总表相同的白名单收紧候选场景
+        //   2) 按 sceneId 汇总 value（与表格「dailyUsers 降序」口径一致）
+        //   3) 取汇总值最大的前 TOP_N 个 sceneId
+        // 结果数组顺序 = 颜色顺序（value 高的用第一个颜色）
+        const TOP_N = colors.length; // 7
+        const whitelist = typeof window.getSourceSceneWhitelist === 'function'
+            ? window.getSourceSceneWhitelist(timeRange)
+            : null;
 
-        // 只保留 sceneIdOrder 中声明的场景，其它全部过滤掉
+        // 先按白名单过滤
+        if (whitelist) {
+            data = data.filter(d => whitelist.has(d.sceneId));
+        }
+
+        // 按 sceneId 聚合 value
+        const valueBySceneId = new Map();
+        data.forEach(d => {
+            valueBySceneId.set(d.sceneId, (valueBySceneId.get(d.sceneId) || 0) + (d.value || 0));
+        });
+
+        // 取 Top-N sceneId（降序）
+        const sceneIdOrder = Array.from(valueBySceneId.entries())
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, TOP_N)
+            .map(([sceneId]) => sceneId);
+
+        // 最终只保留 Top-N 场景的数据
         data = data.filter(d => sceneIdOrder.includes(d.sceneId));
 
         // sceneId -> sceneName，用于图例/tooltip 展示
@@ -1032,7 +1047,12 @@
             // 线条样式
             line: {
                 style: {
-                    lineWidth: 2
+                    lineWidth: 2,
+                    // 线条颜色按 sceneIdOrder（value 降序）映射，和图例/面积/tooltip 保持一致
+                    stroke: (datum) => {
+                        const idx = sceneIdOrder.indexOf(datum.sceneId);
+                        return colors[idx >= 0 ? idx : 0];
+                    }
                 }
             },
             // 数据点配置
@@ -1097,10 +1117,21 @@
                 // 用 data 回调逐项覆盖图例图标的 fill/透明度，
                 // 避免面积图的渐变半透明 fill 被图例图标继承
                 data: (items) => {
-                    return items.map((item) => {
+                    // 只排序 + 覆盖图标颜色/透明度，**不要修改 item.label**。
+                    // item.label 是 VChart 图例与 series 的联动 key（= sceneId），
+                    // 改动它会导致点击图例的"显隐切换"失灵。
+                    // 展示用的中文名通过下面的 item.label.formatter 做翻译。
+                    const ordered = [...items].sort((a, b) => {
+                        const ia = sceneIdOrder.indexOf(a.label);
+                        const ib = sceneIdOrder.indexOf(b.label);
+                        const ra = ia === -1 ? Number.MAX_SAFE_INTEGER : ia;
+                        const rb = ib === -1 ? Number.MAX_SAFE_INTEGER : ib;
+                        return ra - rb;
+                    });
+
+                    return ordered.map((item) => {
                         const idx = sceneIdOrder.indexOf(item.label);
                         const solidColor = colors[idx >= 0 ? idx : 0];
-                        item.label = sceneIdToName[item.label] || item.label;
                         item.shape.fill = solidColor;
                         item.shape.fillOpacity = 1;
                         item.shape.stroke = solidColor;
@@ -1116,6 +1147,8 @@
                         }
                     },
                     label: {
+                        // 仅改"显示文本"，不改底层 label（sceneId），保证点击显隐联动正常
+                        formatMethod: (text) => sceneIdToName[text] || text,
                         style: {
                             fill: 'rgb(90 94 100)',
                             fillOpacity: 1
@@ -1266,7 +1299,11 @@
                     ]
                 }
             },
+            // 让 VChart 按 sceneIdOrder 顺序把 colors 分配给对应 series，
+            // 避免默认按数据出现顺序分配导致颜色与图例/面积错位
             color: {
+                type: 'ordinal',
+                domain: sceneIdOrder,
                 range: colors
             }
         };

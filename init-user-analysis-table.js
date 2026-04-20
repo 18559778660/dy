@@ -952,6 +952,42 @@
     let sourceScenePage = 1;
     let sourceSceneTimeRange = 'yesterday';
 
+    // 三种视图的场景白名单（由昨天 → 7 天 → 30 天层层扩展）
+
+    // "昨天" 视图：21 个场景
+    const YESTERDAY_SCENE_WHITELIST = new Set([
+        '021036', '023010', '021020', '023041', '021012', '021001', '024001',
+        '023001', '021043', '022001', '021009', '0', '023009', '023023',
+        '104001', '023042', '021002', '991020', '024002', '022411', '234001'
+    ]);
+
+    // "7 天" 视图：31 个场景 = 昨天 21 个 + 仅在 7/30 天出现的 10 个
+    const WEEK_SCENE_WHITELIST = new Set([
+        ...YESTERDAY_SCENE_WHITELIST,
+        '023002', '029105', '024007', '251043', '990001',
+        '021017', '024004', '021011', '252001', '021008'
+    ]);
+
+    // "30 天" 视图：38 个场景 = 7 天 31 个 + 仅在 30 天出现的 7 个
+    const MONTH_SCENE_WHITELIST = new Set([
+        ...WEEK_SCENE_WHITELIST,
+        '029988', '021014', '024003', '021053', '21042', '025002', '025001'
+    ]);
+
+    /**
+     * 根据时间范围获取对应场景白名单（供图表/表格共享使用）
+     * @param {'yesterday' | number} timeRange
+     * @returns {Set<string>}
+     */
+    function getSourceSceneWhitelist(timeRange) {
+        if (timeRange === 'yesterday') return YESTERDAY_SCENE_WHITELIST;
+        const days = Number(timeRange) || 7;
+        return days >= 30 ? MONTH_SCENE_WHITELIST : WEEK_SCENE_WHITELIST;
+    }
+
+    // 暴露到全局，让 init-user-analysis-chart.js 能复用
+    window.getSourceSceneWhitelist = getSourceSceneWhitelist;
+
     /** 汇总一组 scene 到单条记录（dailyUsers/newUsers/startup 累加，singleAvgDuration 加权均值） */
     function aggregateScenes(sceneList) {
         const bucket = new Map();
@@ -1006,11 +1042,15 @@
             const d = String(yesterday.getDate()).padStart(2, '0');
             const yesterdayStr = `${y}-${m}-${d}`;
             const dayData = allDays.find(item => item.date === yesterdayStr);
-            return dayData ? [...dayData.douyinSourceScenes] : [];
+            if (!dayData) return [];
+            const whitelist = getSourceSceneWhitelist('yesterday');
+            return dayData.douyinSourceScenes.filter(s => whitelist.has(s.sceneId));
         }
 
-        // 近 N 天聚合
+        // 近 N 天聚合（仅聚合白名单内的场景，减少无效数据）
         const days = Number(timeRange) || 7;
+        const whitelist = getSourceSceneWhitelist(days);
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const from = new Date();
@@ -1021,7 +1061,9 @@
         allDays.forEach(item => {
             const itemDate = new Date(item.date);
             if (itemDate >= from && itemDate < today) {
-                bucketList.push(...(item.douyinSourceScenes || []));
+                (item.douyinSourceScenes || []).forEach(s => {
+                    if (whitelist.has(s.sceneId)) bucketList.push(s);
+                });
             }
         });
         return aggregateScenes(bucketList);
