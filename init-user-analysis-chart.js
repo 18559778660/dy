@@ -983,6 +983,7 @@
      * @param {Array}  [options.colors]                     自定义颜色数组
      * @param {string} [options.chartInstanceKey='sourceAnalysisChartInstance']
      * @param {string} [options.logPrefix='来源分析图表']
+     * @param {Function}[options.valueFormatter]           自定义 y 轴/tooltip value 格式化（如 v => v.toFixed(2)+'%'）
      */
     function renderMultiLineChart(containerId, data, title, timeRange, options) {
         options = options || {};
@@ -992,6 +993,18 @@
         const useWhitelist = options.useWhitelist !== false;
         const chartInstanceKey = options.chartInstanceKey || 'sourceAnalysisChartInstance';
         const logPrefix = options.logPrefix || '来源分析图表';
+        const valueFormatter = typeof options.valueFormatter === 'function' ? options.valueFormatter : null;
+
+        // y 轴 label 格式化：有自定义 valueFormatter 则用它，否则按 k 收缩
+        const yAxisFormat = (val) => {
+            if (valueFormatter) return valueFormatter(val);
+            return val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val;
+        };
+        // tooltip value 格式化：有自定义 valueFormatter 则用它，否则千分位
+        const tooltipValueFormat = (v) => {
+            if (valueFormatter) return valueFormatter(v);
+            return (Number(v) || 0).toLocaleString('zh-CN');
+        };
 
         const container = document.getElementById(containerId);
         if (!container) {
@@ -1199,9 +1212,7 @@
                 {
                     orient: 'left',
                     label: {
-                        formatMethod: (val) => {
-                            return val >= 1000 ? (val / 1000).toFixed(1) + 'k' : val;
-                        }
+                        formatMethod: (val) => yAxisFormat(val)
                     }
                 },
                 {
@@ -1265,7 +1276,7 @@
                     content: [
                         {
                             key: (datum) => datum[nameField],
-                            value: (datum) => datum.value.toLocaleString('zh-CN'),
+                            value: (datum) => tooltipValueFormat(datum.value),
                             shapeType: 'square',
                             shapeFill: (datum) => {
                                 const idx = seriesOrder.indexOf(datum[seriesField]);
@@ -1300,7 +1311,7 @@
                     content: [
                         {
                             key: (datum) => datum[nameField],
-                            value: (datum) => datum.value.toLocaleString('zh-CN'),
+                            value: (datum) => tooltipValueFormat(datum.value),
                             shapeType: 'square',
                             shapeFill: (datum) => {
                                 const idx = seriesOrder.indexOf(datum[seriesField]);
@@ -1388,7 +1399,9 @@
      * @param {string} [metric='newUsers'] - 'newUsers' | 'activeUsers' | 'conversionRate'
      */
     async function updateDouyinVideoChart(timeRange, metric) {
-        metric = metric || 'newUsers';
+        // 未传 metric 时，沿用上一次的选择（保证"切时间"不会把指标重置回新增用户）
+        metric = metric || window._douyinVideoMetric || 'newUsers';
+        window._douyinVideoMetric = metric;
         const metricName = VIDEO_METRIC_NAME[metric] || '新增用户';
         const chartTitle = `抖音视频数据-${metricName}`;
         const displayNameFor = (type) => `${type}${metricName}`;
@@ -1457,7 +1470,12 @@
             });
         }
 
-        renderMultiLineChart('visactor_window_10', chartData, chartTitle, timeRange, getVideoChartOptions());
+        const videoOpts = getVideoChartOptions();
+        if (metric === 'conversionRate') {
+            // 转化率：y 轴/tooltip 统一展示 X.XX%
+            videoOpts.valueFormatter = (v) => `${(Number(v) || 0).toFixed(2)}%`;
+        }
+        renderMultiLineChart('visactor_window_10', chartData, chartTitle, timeRange, videoOpts);
         console.log('✅ 抖音视频数据图表已更新');
     }
 

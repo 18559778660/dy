@@ -280,10 +280,23 @@ function initDropdownFilters() {
         ]);
     }
 
+    // 抖音视频数据-指标下拉（新增用户 / 活跃用户 / 视频转化率）
+    const videoMetricFilter = document.querySelector('.filter-video-metric');
+    if (videoMetricFilter) {
+        createDropdownContent(videoMetricFilter, 'semi-dy-open-select-video-metric', [
+            { value: 'newUsers', label: '新增用户' },
+            { value: 'activeUsers', label: '活跃用户' },
+            { value: 'conversionRate', label: '视频转化率' }
+        ]);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
         allFilters.push(osFilter);
+    }
+    if (videoMetricFilter) {
+        allFilters.push(videoMetricFilter);
     }
 
     allFilters.forEach(filter => {
@@ -338,6 +351,7 @@ function initDropdownFilters() {
                  position: absolute;
                  left: ${rect.left + scrollLeft}px;
                  top: ${rect.bottom + scrollTop + 4}px;
+                 width: ${rect.width}px;
                  transform: translateX(0%) translateY(0%);
                  z-index: 1030;
                  display: block !important;
@@ -354,6 +368,7 @@ function initDropdownFilters() {
         // 如果点击的是筛选框或时间按钮，不关闭
         if (e.target.closest('.filter-app') ||
             e.target.closest('.filter-os') ||
+            e.target.closest('.filter-video-metric') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
             e.target.closest('.time-range-30days')) {
@@ -402,7 +417,7 @@ function _createDropdownDOM(triggerElement, dropdownId, options) {
                   <div class="semi-dy-open-tooltip-content">
                       <div class="semi-dy-open-popover">
                           <div class="semi-dy-open-popover-content">
-                              <div id="${dropdownId}" class="semi-dy-open-select-option-list-wrapper" style="min-width: 200px;">
+                              <div id="${dropdownId}" class="semi-dy-open-select-option-list-wrapper" style="width: 100%;">
                                   <div class="semi-dy-open-select-option-list semi-dy-open-select-option-list-chosen" role="listbox" aria-multiselectable="false" style="max-height: 270px;">
                                       ${generateOptionsHTML(options)}
                                   </div>
@@ -448,6 +463,16 @@ function generateOptionsHTML(options) {
     }).join('');
 }
 
+// 读取 .user-source-section 当前选中的时间范围（'yesterday' | 7 | 30）
+function getCurrentSourceTimeRange() {
+    const section = document.querySelector('.user-source-section');
+    if (!section) return 'yesterday';
+    if (section.querySelector('.time-range-yesterday.semi-dy-open-radio-addon-buttonRadio-checked')) return 'yesterday';
+    if (section.querySelector('.time-range-30days.semi-dy-open-radio-addon-buttonRadio-checked')) return 30;
+    if (section.querySelector('.time-range-7days.semi-dy-open-radio-addon-buttonRadio-checked')) return 7;
+    return 'yesterday';
+}
+
 // 绑定下拉框选项的事件（点击选中、hover 效果）
 function bindDropdownEvents(triggerElement, dropdownId) {
     const dropdown = document.getElementById(dropdownId);
@@ -480,15 +505,16 @@ function bindDropdownEvents(triggerElement, dropdownId) {
 
             // 根据 data-tab 标识，触发不同的更新逻辑
             const tabType = triggerElement.getAttribute('data-tab');
-            if (tabType) {
+            if (tabType === 'video-metric') {
+                // 抖音视频数据-指标切换：保持当前时间范围，只换指标
+                const range = getCurrentSourceTimeRange();
+                console.log('[video-metric] 指标切换:', value, label, '当前时间:', range);
+                if (typeof window.updateDouyinVideoChart === 'function') {
+                    window.updateDouyinVideoChart(range, value);
+                }
+            } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);
-
                 // TODO: 根据 tabType 和 value 更新对应的表格/图表
-                // if (tabType === 'behavior') {
-                //     updateBehaviorTable(value);
-                // } else if (tabType === 'realtime') {
-                //     updateRealTimeTable(value);
-                // }
             }
 
             // 关闭下拉菜单
