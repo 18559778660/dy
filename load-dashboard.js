@@ -183,6 +183,18 @@
                         }, 200);
                     }
 
+                    // 初始化来源分析汇总表
+                    if (typeof window.initSourceSceneTable === 'function') {
+                        setTimeout(() => {
+                            window.initSourceSceneTable();
+                            const exportBtn = document.querySelector('.export-source-scene-btn');
+                            if (exportBtn && typeof window.exportSourceSceneTable === 'function') {
+                                exportBtn.addEventListener('click', window.exportSourceSceneTable);
+                                console.log('✅ 来源分析汇总导出按钮已绑定');
+                            }
+                        }, 220);
+                    }
+
                     // 初始化来源分析图表
                     if (typeof window.initSourceAnalysisChart === 'function') {
                         setTimeout(() => window.initSourceAnalysisChart(), 250);

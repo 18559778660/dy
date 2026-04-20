@@ -4,7 +4,7 @@
             "title": "总览",
             "data": [
                 {
-                    "date": "2026-04-07",
+                    "date": "2026-04-12",
                     "dailyUsers": 10,
                     "newUsers": 10,
                     "avgDuration": 10,
@@ -92,466 +92,198 @@
                             "newUsers": 50,
                             "startup": 20,
                             "singleAvgDuration": 100
-                        }
-                    ]
-                },
-                {
-                    "date": "2026-04-08",
-                    "dailyUsers": 10,
-                    "newUsers": 10,
-                    "avgDuration": 10,
-                    "sharing": 111,
-                    "startup": 222,
-                    "avgStartup": 333,
-                    "singleAvgDuration": 444,
-                    "shareSuccess": 555,
-                    "shareNewUsers": 666,
-                    "shareSuccessUsers": 777,
-                    "totalShares": 5000,
-                    "sidebarVisitdailyUsers": 185,
-                    "sidebarVisitday1Retention": 54.62,
-                    "sidebarVisitday2Retention": 58.3,
-                    "sidebarVisitday3Retention": 65.83,
-                    "sidebarVisitday4Retention": 62.1,
-                    "sidebarVisitday5Retention": 61.5,
-                    "sidebarVisitday6Retention": 60.8,
-                    "sidebarVisitday7Retention": 60.3,
-                    "sidebarVisitday14Retention": 55.05,
-                    "sidebarVisitday30Retention": 51.62,
-                    "sidebarDay1Retention": 45.2,
-                    "sidebarDay2Retention": 48.5,
-                    "sidebarDay3Retention": 50.3,
-                    "sidebarDay4Retention": 47.8,
-                    "sidebarDay5Retention": 46.9,
-                    "sidebarDay6Retention": 45.5,
-                    "sidebarDay7Retention": 44.2,
-                    "sidebarDay14Retention": 40.1,
-                    "sidebarDay30Retention": 38.5,
-                    "penetrationRate": 45.5,
-                    "douyinSourceScenes": [
-                        {
-                            "sceneId": "021036",
-                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
-                            "dailyUsers": 100,
-                            "newUsers": 100,
-                            "startup": 100,
-                            "singleAvgDuration": 100
                         },
                         {
-                            "sceneId": "023010",
-                            "sceneName": "主播端发券-查看链接",
-                            "dailyUsers": 80,
-                            "newUsers": 80,
-                            "startup": 80,
-                            "singleAvgDuration": 80
-                        },
-                        {
-                            "sceneId": "023041",
-                            "sceneName": "直玩容器启动小游戏",
-                            "dailyUsers": 90,
-                            "newUsers": 90,
-                            "startup": 90,
+                            "sceneId": "024001",
+                            "sceneName": "私信分享",
+                            "dailyUsers": 60,
+                            "newUsers": 40,
+                            "startup": 50,
                             "singleAvgDuration": 90
                         },
                         {
-                            "sceneId": "023001",
-                            "sceneName": "抖音视频锚点",
-                            "dailyUsers": 110,
-                            "newUsers": 110,
-                            "startup": 110,
-                            "singleAvgDuration": 110
+                            "sceneId": "022001",
+                            "sceneName": "抖音游戏搜索",
+                            "dailyUsers": 55,
+                            "newUsers": 35,
+                            "startup": 45,
+                            "singleAvgDuration": 85
                         },
                         {
-                            "sceneId": "021020",
-                            "sceneName": "抖音桌面启动",
-                            "dailyUsers": 70,
-                            "newUsers": 70,
-                            "startup": 70,
-                            "singleAvgDuration": 70
-                        },
-                        {
-                            "sceneId": "021012",
-                            "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 888,
-                            "newUsers": 777,
-                            "startup": 555,
-                            "singleAvgDuration": 321
-                        },
-                        {
-                            "sceneId": "021001",
-                            "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 456,
-                            "newUsers": 856,
-                            "startup": 159,
-                            "singleAvgDuration": 357
-                        }
-                    ]
-                },
-                {
-                    "date": "2026-04-09",
-                    "dailyUsers": 10,
-                    "newUsers": 10,
-                    "avgDuration": 10,
-                    "sharing": 111,
-                    "startup": 222,
-                    "avgStartup": 333,
-                    "singleAvgDuration": 444,
-                    "shareSuccess": 555,
-                    "shareNewUsers": 666,
-                    "shareSuccessUsers": 777,
-                    "totalShares": 5000,
-                    "sidebarVisitdailyUsers": 185,
-                    "sidebarVisitday1Retention": 54.62,
-                    "sidebarVisitday2Retention": 58.3,
-                    "sidebarVisitday3Retention": 65.83,
-                    "sidebarVisitday4Retention": 62.1,
-                    "sidebarVisitday5Retention": 61.5,
-                    "sidebarVisitday6Retention": 60.8,
-                    "sidebarVisitday7Retention": 60.3,
-                    "sidebarVisitday14Retention": 55.05,
-                    "sidebarVisitday30Retention": 51.62,
-                    "sidebarDay1Retention": 45.2,
-                    "sidebarDay2Retention": 48.5,
-                    "sidebarDay3Retention": 50.3,
-                    "sidebarDay4Retention": 47.8,
-                    "sidebarDay5Retention": 46.9,
-                    "sidebarDay6Retention": 45.5,
-                    "sidebarDay7Retention": 44.2,
-                    "sidebarDay14Retention": 40.1,
-                    "sidebarDay30Retention": 38.5,
-                    "penetrationRate": 45.5,
-                    "douyinSourceScenes": [
-                        {
-                            "sceneId": "021036",
-                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
-                            "dailyUsers": 100,
-                            "newUsers": 100,
-                            "startup": 100,
-                            "singleAvgDuration": 100
-                        },
-                        {
-                            "sceneId": "023010",
-                            "sceneName": "主播端发券-查看链接",
-                            "dailyUsers": 80,
-                            "newUsers": 80,
-                            "startup": 80,
-                            "singleAvgDuration": 80
-                        },
-                        {
-                            "sceneId": "023041",
-                            "sceneName": "直玩容器启动小游戏",
-                            "dailyUsers": 90,
-                            "newUsers": 90,
-                            "startup": 90,
-                            "singleAvgDuration": 90
-                        },
-                        {
-                            "sceneId": "023001",
-                            "sceneName": "抖音视频锚点",
-                            "dailyUsers": 110,
-                            "newUsers": 110,
-                            "startup": 110,
-                            "singleAvgDuration": 110
-                        },
-                        {
-                            "sceneId": "021020",
-                            "sceneName": "抖音桌面启动",
-                            "dailyUsers": 70,
-                            "newUsers": 70,
-                            "startup": 70,
-                            "singleAvgDuration": 70
-                        },
-                        {
-                            "sceneId": "021012",
+                            "sceneId": "021043",
                             "sceneName": "抖音小游戏中心",
                             "dailyUsers": 120,
-                            "newUsers": 888,
-                            "startup": 423,
-                            "singleAvgDuration": 756
-                        },
-                        {
-                            "sceneId": "021001",
-                            "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 157,
-                            "newUsers": 963,
-                            "startup": 741,
-                            "singleAvgDuration": 852
-                        }
-                    ]
-                },
-                {
-                    "date": "2026-04-10",
-                    "dailyUsers": 10,
-                    "newUsers": 10,
-                    "avgDuration": 10,
-                    "sharing": 111,
-                    "startup": 222,
-                    "avgStartup": 333,
-                    "singleAvgDuration": 444,
-                    "shareSuccess": 555,
-                    "shareNewUsers": 666,
-                    "shareSuccessUsers": 777,
-                    "totalShares": 5000,
-                    "sidebarVisitdailyUsers": 185,
-                    "sidebarVisitday1Retention": 54.62,
-                    "sidebarVisitday2Retention": 58.3,
-                    "sidebarVisitday3Retention": 65.83,
-                    "sidebarVisitday4Retention": 62.1,
-                    "sidebarVisitday5Retention": 61.5,
-                    "sidebarVisitday6Retention": 60.8,
-                    "sidebarVisitday7Retention": 60.3,
-                    "sidebarVisitday14Retention": 55.05,
-                    "sidebarVisitday30Retention": 51.62,
-                    "sidebarDay1Retention": 45.2,
-                    "sidebarDay2Retention": 48.5,
-                    "sidebarDay3Retention": 50.3,
-                    "sidebarDay4Retention": 47.8,
-                    "sidebarDay5Retention": 46.9,
-                    "sidebarDay6Retention": 45.5,
-                    "sidebarDay7Retention": 44.2,
-                    "sidebarDay14Retention": 40.1,
-                    "sidebarDay30Retention": 38.5,
-                    "penetrationRate": 45.5,
-                    "douyinSourceScenes": [
-                        {
-                            "sceneId": "021036",
-                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
-                            "dailyUsers": 100,
-                            "newUsers": 100,
-                            "startup": 100,
-                            "singleAvgDuration": 100
-                        },
-                        {
-                            "sceneId": "023010",
-                            "sceneName": "主播端发券-查看链接",
-                            "dailyUsers": 80,
-                            "newUsers": 80,
-                            "startup": 80,
-                            "singleAvgDuration": 80
-                        },
-                        {
-                            "sceneId": "023041",
-                            "sceneName": "直玩容器启动小游戏",
-                            "dailyUsers": 90,
                             "newUsers": 90,
-                            "startup": 90,
-                            "singleAvgDuration": 90
+                            "startup": 100,
+                            "singleAvgDuration": 150
                         },
                         {
-                            "sceneId": "023001",
-                            "sceneName": "抖音视频锚点",
-                            "dailyUsers": 110,
-                            "newUsers": 110,
-                            "startup": 110,
-                            "singleAvgDuration": 110
+                            "sceneId": "0",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 30,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 60
                         },
                         {
-                            "sceneId": "021020",
-                            "sceneName": "抖音桌面启动",
-                            "dailyUsers": 70,
-                            "newUsers": 70,
-                            "startup": 70,
+                            "sceneId": "023009",
+                            "sceneName": "小程序开播面板",
+                            "dailyUsers": 45,
+                            "newUsers": 25,
+                            "startup": 30,
                             "singleAvgDuration": 70
                         },
                         {
-                            "sceneId": "021012",
-                            "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 120,
-                            "newUsers": 120,
-                            "startup": 120,
+                            "sceneId": "021009",
+                            "sceneName": "抖音其他小游戏跳转",
+                            "dailyUsers": 65,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "021002",
+                            "sceneName": "扫一扫",
+                            "dailyUsers": 35,
+                            "newUsers": 20,
+                            "startup": 25,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "023023",
+                            "sceneName": "抖音搜索结果视频锚点",
+                            "dailyUsers": 75,
+                            "newUsers": 55,
+                            "startup": 60,
+                            "singleAvgDuration": 95
+                        },
+                        {
+                            "sceneId": "023042",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 25,
+                            "newUsers": 12,
+                            "startup": 18,
+                            "singleAvgDuration": 50
+                        },
+                        {
+                            "sceneId": "024002",
+                            "sceneName": "微信对话",
+                            "dailyUsers": 85,
+                            "newUsers": 60,
+                            "startup": 70,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "104001",
+                            "sceneName": "抖极私信分享",
+                            "dailyUsers": 40,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "022411",
+                            "sceneName": "商城-我的订单",
+                            "dailyUsers": 50,
+                            "newUsers": 30,
+                            "startup": 40,
+                            "singleAvgDuration": 75
+                        },
+                        {
+                            "sceneId": "023002",
+                            "sceneName": "抖音视频评论页锚点",
+                            "dailyUsers": 95,
+                            "newUsers": 70,
+                            "startup": 80,
                             "singleAvgDuration": 120
                         },
                         {
-                            "sceneId": "021001",
-                            "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 95,
+                            "sceneId": "991020",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 22,
+                            "newUsers": 10,
+                            "startup": 15,
+                            "singleAvgDuration": 45
+                        },
+                        {
+                            "sceneId": "029105",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 18,
+                            "newUsers": 8,
+                            "startup": 12,
+                            "singleAvgDuration": 40
+                        },
+                        {
+                            "sceneId": "024007",
+                            "sceneName": "免流服务toast提示",
+                            "dailyUsers": 28,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "251043",
+                            "sceneName": "小游戏中心",
+                            "dailyUsers": 130,
                             "newUsers": 95,
-                            "startup": 95,
-                            "singleAvgDuration": 95
-                        }
-                    ]
-                },
-                {
-                    "date": "2026-04-11",
-                    "dailyUsers": 10,
-                    "newUsers": 10,
-                    "avgDuration": 10,
-                    "sharing": 111,
-                    "startup": 222,
-                    "avgStartup": 333,
-                    "singleAvgDuration": 444,
-                    "shareSuccess": 555,
-                    "shareNewUsers": 666,
-                    "shareSuccessUsers": 777,
-                    "totalShares": 5000,
-                    "sidebarVisitdailyUsers": 185,
-                    "sidebarVisitday1Retention": 54.62,
-                    "sidebarVisitday2Retention": 58.3,
-                    "sidebarVisitday3Retention": 65.83,
-                    "sidebarVisitday4Retention": 62.1,
-                    "sidebarVisitday5Retention": 61.5,
-                    "sidebarVisitday6Retention": 60.8,
-                    "sidebarVisitday7Retention": 60.3,
-                    "sidebarVisitday14Retention": 55.05,
-                    "sidebarVisitday30Retention": 51.62,
-                    "sidebarDay1Retention": 45.2,
-                    "sidebarDay2Retention": 48.5,
-                    "sidebarDay3Retention": 50.3,
-                    "sidebarDay4Retention": 47.8,
-                    "sidebarDay5Retention": 46.9,
-                    "sidebarDay6Retention": 45.5,
-                    "sidebarDay7Retention": 44.2,
-                    "sidebarDay14Retention": 40.1,
-                    "sidebarDay30Retention": 38.5,
-                    "penetrationRate": 45.5,
-                    "douyinSourceScenes": [
-                        {
-                            "sceneId": "021036",
-                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
-                            "dailyUsers": 100,
-                            "newUsers": 100,
-                            "startup": 100,
-                            "singleAvgDuration": 100
+                            "startup": 110,
+                            "singleAvgDuration": 160
                         },
                         {
-                            "sceneId": "023010",
-                            "sceneName": "主播端发券-查看链接",
-                            "dailyUsers": 80,
-                            "newUsers": 80,
-                            "startup": 80,
-                            "singleAvgDuration": 80
+                            "sceneId": "990001",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 15,
+                            "newUsers": 7,
+                            "startup": 10,
+                            "singleAvgDuration": 35
                         },
                         {
-                            "sceneId": "023041",
-                            "sceneName": "直玩容器启动小游戏",
-                            "dailyUsers": 90,
-                            "newUsers": 90,
-                            "startup": 90,
+                            "sceneId": "234001",
+                            "sceneName": "私信",
+                            "dailyUsers": 70,
+                            "newUsers": 45,
+                            "startup": 55,
                             "singleAvgDuration": 90
                         },
                         {
-                            "sceneId": "023001",
-                            "sceneName": "抖音视频锚点",
-                            "dailyUsers": 110,
-                            "newUsers": 110,
-                            "startup": 110,
-                            "singleAvgDuration": 110
+                            "sceneId": "021017",
+                            "sceneName": "发布页-已添加的小程序",
+                            "dailyUsers": 38,
+                            "newUsers": 22,
+                            "startup": 28,
+                            "singleAvgDuration": 60
                         },
                         {
-                            "sceneId": "021020",
-                            "sceneName": "抖音桌面启动",
-                            "dailyUsers": 70,
-                            "newUsers": 70,
-                            "startup": 70,
-                            "singleAvgDuration": 70
+                            "sceneId": "024004",
+                            "sceneName": "QQ对话",
+                            "dailyUsers": 42,
+                            "newUsers": 26,
+                            "startup": 32,
+                            "singleAvgDuration": 65
                         },
                         {
-                            "sceneId": "021012",
-                            "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 120,
-                            "newUsers": 120,
-                            "startup": 120,
-                            "singleAvgDuration": 120
-                        },
-                        {
-                            "sceneId": "021001",
-                            "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 95,
-                            "newUsers": 95,
-                            "startup": 95,
-                            "singleAvgDuration": 95
-                        }
-                    ]
-                },
-                {
-                    "date": "2026-04-12",
-                    "dailyUsers": 10,
-                    "newUsers": 10,
-                    "avgDuration": 10,
-                    "sharing": 111,
-                    "startup": 222,
-                    "avgStartup": 333,
-                    "singleAvgDuration": 444,
-                    "shareSuccess": 555,
-                    "shareNewUsers": 666,
-                    "shareSuccessUsers": 777,
-                    "totalShares": 5000,
-                    "sidebarVisitdailyUsers": 185,
-                    "sidebarVisitday1Retention": 54.62,
-                    "sidebarVisitday2Retention": 58.3,
-                    "sidebarVisitday3Retention": 65.83,
-                    "sidebarVisitday4Retention": 62.1,
-                    "sidebarVisitday5Retention": 61.5,
-                    "sidebarVisitday6Retention": 60.8,
-                    "sidebarVisitday7Retention": 60.3,
-                    "sidebarVisitday14Retention": 55.05,
-                    "sidebarVisitday30Retention": 51.62,
-                    "sidebarDay1Retention": 45.2,
-                    "sidebarDay2Retention": 48.5,
-                    "sidebarDay3Retention": 50.3,
-                    "sidebarDay4Retention": 47.8,
-                    "sidebarDay5Retention": 46.9,
-                    "sidebarDay6Retention": 45.5,
-                    "sidebarDay7Retention": 44.2,
-                    "sidebarDay14Retention": 40.1,
-                    "sidebarDay30Retention": 38.5,
-                    "penetrationRate": 45.5,
-                    "douyinSourceScenes": [
-                        {
-                            "sceneId": "021036",
-                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
-                            "dailyUsers": 100,
-                            "newUsers": 100,
-                            "startup": 100,
-                            "singleAvgDuration": 100
-                        },
-                        {
-                            "sceneId": "023010",
-                            "sceneName": "主播端发券-查看链接",
-                            "dailyUsers": 80,
-                            "newUsers": 80,
-                            "startup": 80,
+                            "sceneId": "021011",
+                            "sceneName": "钱包-金币任务页",
+                            "dailyUsers": 58,
+                            "newUsers": 38,
+                            "startup": 48,
                             "singleAvgDuration": 80
                         },
                         {
-                            "sceneId": "023041",
-                            "sceneName": "直玩容器启动小游戏",
-                            "dailyUsers": 90,
-                            "newUsers": 90,
-                            "startup": 90,
-                            "singleAvgDuration": 90
-                        },
-                        {
-                            "sceneId": "023001",
-                            "sceneName": "抖音视频锚点",
-                            "dailyUsers": 110,
-                            "newUsers": 110,
-                            "startup": 110,
-                            "singleAvgDuration": 110
-                        },
-                        {
-                            "sceneId": "021020",
-                            "sceneName": "抖音桌面启动",
-                            "dailyUsers": 70,
-                            "newUsers": 70,
-                            "startup": 70,
+                            "sceneId": "252001",
+                            "sceneName": "综搜",
+                            "dailyUsers": 48,
+                            "newUsers": 28,
+                            "startup": 35,
                             "singleAvgDuration": 70
                         },
                         {
-                            "sceneId": "021012",
-                            "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 120,
-                            "newUsers": 456,
-                            "startup": 166,
-                            "singleAvgDuration": 755
-                        },
-                        {
-                            "sceneId": "021001",
-                            "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 855,
-                            "newUsers": 961,
-                            "startup": 111,
-                            "singleAvgDuration": 555
+                            "sceneId": "021008",
+                            "sceneName": "夏日歌会互动入口",
+                            "dailyUsers": 33,
+                            "newUsers": 18,
+                            "startup": 25,
+                            "singleAvgDuration": 55
                         }
                     ]
                 },
@@ -632,18 +364,210 @@
                         {
                             "sceneId": "021012",
                             "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 753,
-                            "newUsers": 120,
-                            "startup": 888,
-                            "singleAvgDuration": 120
+                            "dailyUsers": 450,
+                            "newUsers": 350,
+                            "startup": 250,
+                            "singleAvgDuration": 200
                         },
                         {
                             "sceneId": "021001",
                             "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 666,
-                            "newUsers": 555,
-                            "startup": 777,
+                            "dailyUsers": 80,
+                            "newUsers": 50,
+                            "startup": 20,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "024001",
+                            "sceneName": "私信分享",
+                            "dailyUsers": 60,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "022001",
+                            "sceneName": "抖音游戏搜索",
+                            "dailyUsers": 55,
+                            "newUsers": 35,
+                            "startup": 45,
+                            "singleAvgDuration": 85
+                        },
+                        {
+                            "sceneId": "021043",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 90,
+                            "startup": 100,
+                            "singleAvgDuration": 150
+                        },
+                        {
+                            "sceneId": "0",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 30,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "023009",
+                            "sceneName": "小程序开播面板",
+                            "dailyUsers": 45,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021009",
+                            "sceneName": "抖音其他小游戏跳转",
+                            "dailyUsers": 65,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "021002",
+                            "sceneName": "扫一扫",
+                            "dailyUsers": 35,
+                            "newUsers": 20,
+                            "startup": 25,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "023023",
+                            "sceneName": "抖音搜索结果视频锚点",
+                            "dailyUsers": 75,
+                            "newUsers": 55,
+                            "startup": 60,
                             "singleAvgDuration": 95
+                        },
+                        {
+                            "sceneId": "023042",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 25,
+                            "newUsers": 12,
+                            "startup": 18,
+                            "singleAvgDuration": 50
+                        },
+                        {
+                            "sceneId": "024002",
+                            "sceneName": "微信对话",
+                            "dailyUsers": 85,
+                            "newUsers": 60,
+                            "startup": 70,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "104001",
+                            "sceneName": "抖极私信分享",
+                            "dailyUsers": 40,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "022411",
+                            "sceneName": "商城-我的订单",
+                            "dailyUsers": 50,
+                            "newUsers": 30,
+                            "startup": 40,
+                            "singleAvgDuration": 75
+                        },
+                        {
+                            "sceneId": "023002",
+                            "sceneName": "抖音视频评论页锚点",
+                            "dailyUsers": 95,
+                            "newUsers": 70,
+                            "startup": 80,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "991020",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 22,
+                            "newUsers": 10,
+                            "startup": 15,
+                            "singleAvgDuration": 45
+                        },
+                        {
+                            "sceneId": "029105",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 18,
+                            "newUsers": 8,
+                            "startup": 12,
+                            "singleAvgDuration": 40
+                        },
+                        {
+                            "sceneId": "024007",
+                            "sceneName": "免流服务toast提示",
+                            "dailyUsers": 28,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "251043",
+                            "sceneName": "小游戏中心",
+                            "dailyUsers": 130,
+                            "newUsers": 95,
+                            "startup": 110,
+                            "singleAvgDuration": 160
+                        },
+                        {
+                            "sceneId": "990001",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 15,
+                            "newUsers": 7,
+                            "startup": 10,
+                            "singleAvgDuration": 35
+                        },
+                        {
+                            "sceneId": "234001",
+                            "sceneName": "私信",
+                            "dailyUsers": 70,
+                            "newUsers": 45,
+                            "startup": 55,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "021017",
+                            "sceneName": "发布页-已添加的小程序",
+                            "dailyUsers": 38,
+                            "newUsers": 22,
+                            "startup": 28,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "024004",
+                            "sceneName": "QQ对话",
+                            "dailyUsers": 42,
+                            "newUsers": 26,
+                            "startup": 32,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "021011",
+                            "sceneName": "钱包-金币任务页",
+                            "dailyUsers": 58,
+                            "newUsers": 38,
+                            "startup": 48,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "252001",
+                            "sceneName": "综搜",
+                            "dailyUsers": 48,
+                            "newUsers": 28,
+                            "startup": 35,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021008",
+                            "sceneName": "夏日歌会互动入口",
+                            "dailyUsers": 33,
+                            "newUsers": 18,
+                            "startup": 25,
+                            "singleAvgDuration": 55
                         }
                     ]
                 },
@@ -724,18 +648,210 @@
                         {
                             "sceneId": "021012",
                             "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 120,
-                            "newUsers": 120,
-                            "startup": 444,
-                            "singleAvgDuration": 120
+                            "dailyUsers": 450,
+                            "newUsers": 350,
+                            "startup": 250,
+                            "singleAvgDuration": 200
                         },
                         {
                             "sceneId": "021001",
                             "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 222,
-                            "newUsers": 111,
-                            "startup": 95,
+                            "dailyUsers": 80,
+                            "newUsers": 50,
+                            "startup": 20,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "024001",
+                            "sceneName": "私信分享",
+                            "dailyUsers": 60,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "022001",
+                            "sceneName": "抖音游戏搜索",
+                            "dailyUsers": 55,
+                            "newUsers": 35,
+                            "startup": 45,
+                            "singleAvgDuration": 85
+                        },
+                        {
+                            "sceneId": "021043",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 90,
+                            "startup": 100,
+                            "singleAvgDuration": 150
+                        },
+                        {
+                            "sceneId": "0",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 30,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "023009",
+                            "sceneName": "小程序开播面板",
+                            "dailyUsers": 45,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021009",
+                            "sceneName": "抖音其他小游戏跳转",
+                            "dailyUsers": 65,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "021002",
+                            "sceneName": "扫一扫",
+                            "dailyUsers": 35,
+                            "newUsers": 20,
+                            "startup": 25,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "023023",
+                            "sceneName": "抖音搜索结果视频锚点",
+                            "dailyUsers": 75,
+                            "newUsers": 55,
+                            "startup": 60,
                             "singleAvgDuration": 95
+                        },
+                        {
+                            "sceneId": "023042",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 25,
+                            "newUsers": 12,
+                            "startup": 18,
+                            "singleAvgDuration": 50
+                        },
+                        {
+                            "sceneId": "024002",
+                            "sceneName": "微信对话",
+                            "dailyUsers": 85,
+                            "newUsers": 60,
+                            "startup": 70,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "104001",
+                            "sceneName": "抖极私信分享",
+                            "dailyUsers": 40,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "022411",
+                            "sceneName": "商城-我的订单",
+                            "dailyUsers": 50,
+                            "newUsers": 30,
+                            "startup": 40,
+                            "singleAvgDuration": 75
+                        },
+                        {
+                            "sceneId": "023002",
+                            "sceneName": "抖音视频评论页锚点",
+                            "dailyUsers": 95,
+                            "newUsers": 70,
+                            "startup": 80,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "991020",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 22,
+                            "newUsers": 10,
+                            "startup": 15,
+                            "singleAvgDuration": 45
+                        },
+                        {
+                            "sceneId": "029105",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 18,
+                            "newUsers": 8,
+                            "startup": 12,
+                            "singleAvgDuration": 40
+                        },
+                        {
+                            "sceneId": "024007",
+                            "sceneName": "免流服务toast提示",
+                            "dailyUsers": 28,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "251043",
+                            "sceneName": "小游戏中心",
+                            "dailyUsers": 130,
+                            "newUsers": 95,
+                            "startup": 110,
+                            "singleAvgDuration": 160
+                        },
+                        {
+                            "sceneId": "990001",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 15,
+                            "newUsers": 7,
+                            "startup": 10,
+                            "singleAvgDuration": 35
+                        },
+                        {
+                            "sceneId": "234001",
+                            "sceneName": "私信",
+                            "dailyUsers": 70,
+                            "newUsers": 45,
+                            "startup": 55,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "021017",
+                            "sceneName": "发布页-已添加的小程序",
+                            "dailyUsers": 38,
+                            "newUsers": 22,
+                            "startup": 28,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "024004",
+                            "sceneName": "QQ对话",
+                            "dailyUsers": 42,
+                            "newUsers": 26,
+                            "startup": 32,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "021011",
+                            "sceneName": "钱包-金币任务页",
+                            "dailyUsers": 58,
+                            "newUsers": 38,
+                            "startup": 48,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "252001",
+                            "sceneName": "综搜",
+                            "dailyUsers": 48,
+                            "newUsers": 28,
+                            "startup": 35,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021008",
+                            "sceneName": "夏日歌会互动入口",
+                            "dailyUsers": 33,
+                            "newUsers": 18,
+                            "startup": 25,
+                            "singleAvgDuration": 55
                         }
                     ]
                 },
@@ -816,18 +932,210 @@
                         {
                             "sceneId": "021012",
                             "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 900,
-                            "newUsers": 800,
-                            "startup": 210,
-                            "singleAvgDuration": 120
+                            "dailyUsers": 450,
+                            "newUsers": 350,
+                            "startup": 250,
+                            "singleAvgDuration": 200
                         },
                         {
                             "sceneId": "021001",
                             "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 200,
-                            "newUsers": 500,
-                            "startup": 666,
+                            "dailyUsers": 80,
+                            "newUsers": 50,
+                            "startup": 20,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "024001",
+                            "sceneName": "私信分享",
+                            "dailyUsers": 60,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "022001",
+                            "sceneName": "抖音游戏搜索",
+                            "dailyUsers": 55,
+                            "newUsers": 35,
+                            "startup": 45,
+                            "singleAvgDuration": 85
+                        },
+                        {
+                            "sceneId": "021043",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 90,
+                            "startup": 100,
+                            "singleAvgDuration": 150
+                        },
+                        {
+                            "sceneId": "0",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 30,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "023009",
+                            "sceneName": "小程序开播面板",
+                            "dailyUsers": 45,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021009",
+                            "sceneName": "抖音其他小游戏跳转",
+                            "dailyUsers": 65,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "021002",
+                            "sceneName": "扫一扫",
+                            "dailyUsers": 35,
+                            "newUsers": 20,
+                            "startup": 25,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "023023",
+                            "sceneName": "抖音搜索结果视频锚点",
+                            "dailyUsers": 75,
+                            "newUsers": 55,
+                            "startup": 60,
+                            "singleAvgDuration": 95
+                        },
+                        {
+                            "sceneId": "023042",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 25,
+                            "newUsers": 12,
+                            "startup": 18,
+                            "singleAvgDuration": 50
+                        },
+                        {
+                            "sceneId": "024002",
+                            "sceneName": "微信对话",
+                            "dailyUsers": 85,
+                            "newUsers": 60,
+                            "startup": 70,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "104001",
+                            "sceneName": "抖极私信分享",
+                            "dailyUsers": 40,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "022411",
+                            "sceneName": "商城-我的订单",
+                            "dailyUsers": 50,
+                            "newUsers": 30,
+                            "startup": 40,
+                            "singleAvgDuration": 75
+                        },
+                        {
+                            "sceneId": "023002",
+                            "sceneName": "抖音视频评论页锚点",
+                            "dailyUsers": 95,
+                            "newUsers": 70,
+                            "startup": 80,
                             "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "991020",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 22,
+                            "newUsers": 10,
+                            "startup": 15,
+                            "singleAvgDuration": 45
+                        },
+                        {
+                            "sceneId": "029105",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 18,
+                            "newUsers": 8,
+                            "startup": 12,
+                            "singleAvgDuration": 40
+                        },
+                        {
+                            "sceneId": "024007",
+                            "sceneName": "免流服务toast提示",
+                            "dailyUsers": 28,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "251043",
+                            "sceneName": "小游戏中心",
+                            "dailyUsers": 130,
+                            "newUsers": 95,
+                            "startup": 110,
+                            "singleAvgDuration": 160
+                        },
+                        {
+                            "sceneId": "990001",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 15,
+                            "newUsers": 7,
+                            "startup": 10,
+                            "singleAvgDuration": 35
+                        },
+                        {
+                            "sceneId": "234001",
+                            "sceneName": "私信",
+                            "dailyUsers": 70,
+                            "newUsers": 45,
+                            "startup": 55,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "021017",
+                            "sceneName": "发布页-已添加的小程序",
+                            "dailyUsers": 38,
+                            "newUsers": 22,
+                            "startup": 28,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "024004",
+                            "sceneName": "QQ对话",
+                            "dailyUsers": 42,
+                            "newUsers": 26,
+                            "startup": 32,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "021011",
+                            "sceneName": "钱包-金币任务页",
+                            "dailyUsers": 58,
+                            "newUsers": 38,
+                            "startup": 48,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "252001",
+                            "sceneName": "综搜",
+                            "dailyUsers": 48,
+                            "newUsers": 28,
+                            "startup": 35,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021008",
+                            "sceneName": "夏日歌会互动入口",
+                            "dailyUsers": 33,
+                            "newUsers": 18,
+                            "startup": 25,
+                            "singleAvgDuration": 55
                         }
                     ]
                 },
@@ -908,18 +1216,210 @@
                         {
                             "sceneId": "021012",
                             "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 900,
-                            "newUsers": 800,
-                            "startup": 210,
-                            "singleAvgDuration": 120
+                            "dailyUsers": 450,
+                            "newUsers": 350,
+                            "startup": 250,
+                            "singleAvgDuration": 200
                         },
                         {
                             "sceneId": "021001",
                             "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 200,
-                            "newUsers": 500,
-                            "startup": 666,
+                            "dailyUsers": 80,
+                            "newUsers": 50,
+                            "startup": 20,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "024001",
+                            "sceneName": "私信分享",
+                            "dailyUsers": 60,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "022001",
+                            "sceneName": "抖音游戏搜索",
+                            "dailyUsers": 55,
+                            "newUsers": 35,
+                            "startup": 45,
+                            "singleAvgDuration": 85
+                        },
+                        {
+                            "sceneId": "021043",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 90,
+                            "startup": 100,
+                            "singleAvgDuration": 150
+                        },
+                        {
+                            "sceneId": "0",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 30,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "023009",
+                            "sceneName": "小程序开播面板",
+                            "dailyUsers": 45,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021009",
+                            "sceneName": "抖音其他小游戏跳转",
+                            "dailyUsers": 65,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "021002",
+                            "sceneName": "扫一扫",
+                            "dailyUsers": 35,
+                            "newUsers": 20,
+                            "startup": 25,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "023023",
+                            "sceneName": "抖音搜索结果视频锚点",
+                            "dailyUsers": 75,
+                            "newUsers": 55,
+                            "startup": 60,
+                            "singleAvgDuration": 95
+                        },
+                        {
+                            "sceneId": "023042",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 25,
+                            "newUsers": 12,
+                            "startup": 18,
+                            "singleAvgDuration": 50
+                        },
+                        {
+                            "sceneId": "024002",
+                            "sceneName": "微信对话",
+                            "dailyUsers": 85,
+                            "newUsers": 60,
+                            "startup": 70,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "104001",
+                            "sceneName": "抖极私信分享",
+                            "dailyUsers": 40,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "022411",
+                            "sceneName": "商城-我的订单",
+                            "dailyUsers": 50,
+                            "newUsers": 30,
+                            "startup": 40,
+                            "singleAvgDuration": 75
+                        },
+                        {
+                            "sceneId": "023002",
+                            "sceneName": "抖音视频评论页锚点",
+                            "dailyUsers": 95,
+                            "newUsers": 70,
+                            "startup": 80,
                             "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "991020",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 22,
+                            "newUsers": 10,
+                            "startup": 15,
+                            "singleAvgDuration": 45
+                        },
+                        {
+                            "sceneId": "029105",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 18,
+                            "newUsers": 8,
+                            "startup": 12,
+                            "singleAvgDuration": 40
+                        },
+                        {
+                            "sceneId": "024007",
+                            "sceneName": "免流服务toast提示",
+                            "dailyUsers": 28,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "251043",
+                            "sceneName": "小游戏中心",
+                            "dailyUsers": 130,
+                            "newUsers": 95,
+                            "startup": 110,
+                            "singleAvgDuration": 160
+                        },
+                        {
+                            "sceneId": "990001",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 15,
+                            "newUsers": 7,
+                            "startup": 10,
+                            "singleAvgDuration": 35
+                        },
+                        {
+                            "sceneId": "234001",
+                            "sceneName": "私信",
+                            "dailyUsers": 70,
+                            "newUsers": 45,
+                            "startup": 55,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "021017",
+                            "sceneName": "发布页-已添加的小程序",
+                            "dailyUsers": 38,
+                            "newUsers": 22,
+                            "startup": 28,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "024004",
+                            "sceneName": "QQ对话",
+                            "dailyUsers": 42,
+                            "newUsers": 26,
+                            "startup": 32,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "021011",
+                            "sceneName": "钱包-金币任务页",
+                            "dailyUsers": 58,
+                            "newUsers": 38,
+                            "startup": 48,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "252001",
+                            "sceneName": "综搜",
+                            "dailyUsers": 48,
+                            "newUsers": 28,
+                            "startup": 35,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021008",
+                            "sceneName": "夏日歌会互动入口",
+                            "dailyUsers": 33,
+                            "newUsers": 18,
+                            "startup": 25,
+                            "singleAvgDuration": 55
                         }
                     ]
                 },
@@ -1000,18 +1500,210 @@
                         {
                             "sceneId": "021012",
                             "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 900,
-                            "newUsers": 800,
-                            "startup": 210,
-                            "singleAvgDuration": 120
+                            "dailyUsers": 450,
+                            "newUsers": 350,
+                            "startup": 250,
+                            "singleAvgDuration": 200
                         },
                         {
                             "sceneId": "021001",
                             "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 200,
-                            "newUsers": 500,
-                            "startup": 666,
+                            "dailyUsers": 80,
+                            "newUsers": 50,
+                            "startup": 20,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "024001",
+                            "sceneName": "私信分享",
+                            "dailyUsers": 60,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "022001",
+                            "sceneName": "抖音游戏搜索",
+                            "dailyUsers": 55,
+                            "newUsers": 35,
+                            "startup": 45,
+                            "singleAvgDuration": 85
+                        },
+                        {
+                            "sceneId": "021043",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 90,
+                            "startup": 100,
+                            "singleAvgDuration": 150
+                        },
+                        {
+                            "sceneId": "0",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 30,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "023009",
+                            "sceneName": "小程序开播面板",
+                            "dailyUsers": 45,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021009",
+                            "sceneName": "抖音其他小游戏跳转",
+                            "dailyUsers": 65,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "021002",
+                            "sceneName": "扫一扫",
+                            "dailyUsers": 35,
+                            "newUsers": 20,
+                            "startup": 25,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "023023",
+                            "sceneName": "抖音搜索结果视频锚点",
+                            "dailyUsers": 75,
+                            "newUsers": 55,
+                            "startup": 60,
+                            "singleAvgDuration": 95
+                        },
+                        {
+                            "sceneId": "023042",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 25,
+                            "newUsers": 12,
+                            "startup": 18,
+                            "singleAvgDuration": 50
+                        },
+                        {
+                            "sceneId": "024002",
+                            "sceneName": "微信对话",
+                            "dailyUsers": 85,
+                            "newUsers": 60,
+                            "startup": 70,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "104001",
+                            "sceneName": "抖极私信分享",
+                            "dailyUsers": 40,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "022411",
+                            "sceneName": "商城-我的订单",
+                            "dailyUsers": 50,
+                            "newUsers": 30,
+                            "startup": 40,
+                            "singleAvgDuration": 75
+                        },
+                        {
+                            "sceneId": "023002",
+                            "sceneName": "抖音视频评论页锚点",
+                            "dailyUsers": 95,
+                            "newUsers": 70,
+                            "startup": 80,
                             "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "991020",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 22,
+                            "newUsers": 10,
+                            "startup": 15,
+                            "singleAvgDuration": 45
+                        },
+                        {
+                            "sceneId": "029105",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 18,
+                            "newUsers": 8,
+                            "startup": 12,
+                            "singleAvgDuration": 40
+                        },
+                        {
+                            "sceneId": "024007",
+                            "sceneName": "免流服务toast提示",
+                            "dailyUsers": 28,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "251043",
+                            "sceneName": "小游戏中心",
+                            "dailyUsers": 130,
+                            "newUsers": 95,
+                            "startup": 110,
+                            "singleAvgDuration": 160
+                        },
+                        {
+                            "sceneId": "990001",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 15,
+                            "newUsers": 7,
+                            "startup": 10,
+                            "singleAvgDuration": 35
+                        },
+                        {
+                            "sceneId": "234001",
+                            "sceneName": "私信",
+                            "dailyUsers": 70,
+                            "newUsers": 45,
+                            "startup": 55,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "021017",
+                            "sceneName": "发布页-已添加的小程序",
+                            "dailyUsers": 38,
+                            "newUsers": 22,
+                            "startup": 28,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "024004",
+                            "sceneName": "QQ对话",
+                            "dailyUsers": 42,
+                            "newUsers": 26,
+                            "startup": 32,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "021011",
+                            "sceneName": "钱包-金币任务页",
+                            "dailyUsers": 58,
+                            "newUsers": 38,
+                            "startup": 48,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "252001",
+                            "sceneName": "综搜",
+                            "dailyUsers": 48,
+                            "newUsers": 28,
+                            "startup": 35,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021008",
+                            "sceneName": "夏日歌会互动入口",
+                            "dailyUsers": 33,
+                            "newUsers": 18,
+                            "startup": 25,
+                            "singleAvgDuration": 55
                         }
                     ]
                 },
@@ -1052,7 +1744,7 @@
                         {
                             "sceneId": "021036",
                             "sceneName": "首页侧边栏-最近使用（常用小程序）",
-                            "dailyUsers": 1996,
+                            "dailyUsers": 100,
                             "newUsers": 100,
                             "startup": 100,
                             "singleAvgDuration": 100
@@ -1092,18 +1784,210 @@
                         {
                             "sceneId": "021012",
                             "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 900,
-                            "newUsers": 800,
-                            "startup": 210,
-                            "singleAvgDuration": 120
+                            "dailyUsers": 450,
+                            "newUsers": 350,
+                            "startup": 250,
+                            "singleAvgDuration": 200
                         },
                         {
                             "sceneId": "021001",
                             "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 200,
-                            "newUsers": 500,
-                            "startup": 666,
+                            "dailyUsers": 80,
+                            "newUsers": 50,
+                            "startup": 20,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "024001",
+                            "sceneName": "私信分享",
+                            "dailyUsers": 60,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "022001",
+                            "sceneName": "抖音游戏搜索",
+                            "dailyUsers": 55,
+                            "newUsers": 35,
+                            "startup": 45,
+                            "singleAvgDuration": 85
+                        },
+                        {
+                            "sceneId": "021043",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 90,
+                            "startup": 100,
+                            "singleAvgDuration": 150
+                        },
+                        {
+                            "sceneId": "0",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 30,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "023009",
+                            "sceneName": "小程序开播面板",
+                            "dailyUsers": 45,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021009",
+                            "sceneName": "抖音其他小游戏跳转",
+                            "dailyUsers": 65,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "021002",
+                            "sceneName": "扫一扫",
+                            "dailyUsers": 35,
+                            "newUsers": 20,
+                            "startup": 25,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "023023",
+                            "sceneName": "抖音搜索结果视频锚点",
+                            "dailyUsers": 75,
+                            "newUsers": 55,
+                            "startup": 60,
+                            "singleAvgDuration": 95
+                        },
+                        {
+                            "sceneId": "023042",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 25,
+                            "newUsers": 12,
+                            "startup": 18,
+                            "singleAvgDuration": 50
+                        },
+                        {
+                            "sceneId": "024002",
+                            "sceneName": "微信对话",
+                            "dailyUsers": 85,
+                            "newUsers": 60,
+                            "startup": 70,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "104001",
+                            "sceneName": "抖极私信分享",
+                            "dailyUsers": 40,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "022411",
+                            "sceneName": "商城-我的订单",
+                            "dailyUsers": 50,
+                            "newUsers": 30,
+                            "startup": 40,
+                            "singleAvgDuration": 75
+                        },
+                        {
+                            "sceneId": "023002",
+                            "sceneName": "抖音视频评论页锚点",
+                            "dailyUsers": 95,
+                            "newUsers": 70,
+                            "startup": 80,
                             "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "991020",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 22,
+                            "newUsers": 10,
+                            "startup": 15,
+                            "singleAvgDuration": 45
+                        },
+                        {
+                            "sceneId": "029105",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 18,
+                            "newUsers": 8,
+                            "startup": 12,
+                            "singleAvgDuration": 40
+                        },
+                        {
+                            "sceneId": "024007",
+                            "sceneName": "免流服务toast提示",
+                            "dailyUsers": 28,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "251043",
+                            "sceneName": "小游戏中心",
+                            "dailyUsers": 130,
+                            "newUsers": 95,
+                            "startup": 110,
+                            "singleAvgDuration": 160
+                        },
+                        {
+                            "sceneId": "990001",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 15,
+                            "newUsers": 7,
+                            "startup": 10,
+                            "singleAvgDuration": 35
+                        },
+                        {
+                            "sceneId": "234001",
+                            "sceneName": "私信",
+                            "dailyUsers": 70,
+                            "newUsers": 45,
+                            "startup": 55,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "021017",
+                            "sceneName": "发布页-已添加的小程序",
+                            "dailyUsers": 38,
+                            "newUsers": 22,
+                            "startup": 28,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "024004",
+                            "sceneName": "QQ对话",
+                            "dailyUsers": 42,
+                            "newUsers": 26,
+                            "startup": 32,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "021011",
+                            "sceneName": "钱包-金币任务页",
+                            "dailyUsers": 58,
+                            "newUsers": 38,
+                            "startup": 48,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "252001",
+                            "sceneName": "综搜",
+                            "dailyUsers": 48,
+                            "newUsers": 28,
+                            "startup": 35,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021008",
+                            "sceneName": "夏日歌会互动入口",
+                            "dailyUsers": 33,
+                            "newUsers": 18,
+                            "startup": 25,
+                            "singleAvgDuration": 55
                         }
                     ]
                 },
@@ -1144,110 +2028,18 @@
                         {
                             "sceneId": "021036",
                             "sceneName": "首页侧边栏-最近使用（常用小程序）",
-                            "dailyUsers": 185,
-                            "newUsers": 100,
-                            "startup": 100,
-                            "singleAvgDuration": 100
-                        },
-                        {
-                            "sceneId": "023010",
-                            "sceneName": "主播端发券-查看链接",
-                            "dailyUsers": 80,
-                            "newUsers": 80,
-                            "startup": 80,
-                            "singleAvgDuration": 80
-                        },
-                        {
-                            "sceneId": "023041",
-                            "sceneName": "直玩容器启动小游戏",
-                            "dailyUsers": 90,
-                            "newUsers": 90,
-                            "startup": 90,
-                            "singleAvgDuration": 90
-                        },
-                        {
-                            "sceneId": "023001",
-                            "sceneName": "抖音视频锚点",
-                            "dailyUsers": 110,
-                            "newUsers": 110,
-                            "startup": 110,
-                            "singleAvgDuration": 110
-                        },
-                        {
-                            "sceneId": "021020",
-                            "sceneName": "抖音桌面启动",
-                            "dailyUsers": 70,
-                            "newUsers": 70,
-                            "startup": 70,
-                            "singleAvgDuration": 70
-                        },
-                        {
-                            "sceneId": "021012",
-                            "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 900,
-                            "newUsers": 800,
-                            "startup": 210,
-                            "singleAvgDuration": 120
-                        },
-                        {
-                            "sceneId": "021001",
-                            "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 851,
-                            "newUsers": 500,
-                            "startup": 666,
-                            "singleAvgDuration": 120
-                        }
-                    ]
-                },
-                {
-                    "date": "2026-04-20",
-                    "dailyUsers": 10,
-                    "newUsers": 10,
-                    "avgDuration": 10,
-                    "sharing": 111,
-                    "startup": 222,
-                    "avgStartup": 333,
-                    "singleAvgDuration": 444,
-                    "shareSuccess": 555,
-                    "shareNewUsers": 666,
-                    "shareSuccessUsers": 777,
-                    "totalShares": 5000,
-                    "sidebarVisitdailyUsers": 185,
-                    "sidebarVisitday1Retention": 54.62,
-                    "sidebarVisitday2Retention": 58.3,
-                    "sidebarVisitday3Retention": 65.83,
-                    "sidebarVisitday4Retention": 62.1,
-                    "sidebarVisitday5Retention": 61.5,
-                    "sidebarVisitday6Retention": 60.8,
-                    "sidebarVisitday7Retention": 60.3,
-                    "sidebarVisitday14Retention": 55.05,
-                    "sidebarVisitday30Retention": 51.62,
-                    "sidebarDay1Retention": 45.2,
-                    "sidebarDay2Retention": 48.5,
-                    "sidebarDay3Retention": 50.3,
-                    "sidebarDay4Retention": 47.8,
-                    "sidebarDay5Retention": 46.9,
-                    "sidebarDay6Retention": 45.5,
-                    "sidebarDay7Retention": 44.2,
-                    "sidebarDay14Retention": 40.1,
-                    "sidebarDay30Retention": 38.5,
-                    "penetrationRate": 45.5,
-                    "douyinSourceScenes": [
-                        {
-                            "sceneId": "021036",
-                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
                             "dailyUsers": 100,
                             "newUsers": 100,
-                            "startup": 100,
-                            "singleAvgDuration": 100
+                            "startup": 666,
+                            "singleAvgDuration": 666
                         },
                         {
                             "sceneId": "023010",
                             "sceneName": "主播端发券-查看链接",
                             "dailyUsers": 80,
                             "newUsers": 80,
-                            "startup": 80,
-                            "singleAvgDuration": 80
+                            "startup": 888,
+                            "singleAvgDuration": 888
                         },
                         {
                             "sceneId": "023041",
@@ -1276,110 +2068,210 @@
                         {
                             "sceneId": "021012",
                             "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 900,
-                            "newUsers": 800,
-                            "startup": 210,
-                            "singleAvgDuration": 120
+                            "dailyUsers": 450,
+                            "newUsers": 350,
+                            "startup": 250,
+                            "singleAvgDuration": 200
                         },
                         {
                             "sceneId": "021001",
                             "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 200,
-                            "newUsers": 500,
-                            "startup": 666,
-                            "singleAvgDuration": 120
-                        }
-                    ]
-                },
-                {
-                    "date": "2026-04-21",
-                    "dailyUsers": 10,
-                    "newUsers": 10,
-                    "avgDuration": 10,
-                    "sharing": 111,
-                    "startup": 222,
-                    "avgStartup": 333,
-                    "singleAvgDuration": 444,
-                    "shareSuccess": 555,
-                    "shareNewUsers": 666,
-                    "shareSuccessUsers": 777,
-                    "totalShares": 5000,
-                    "sidebarVisitdailyUsers": 185,
-                    "sidebarVisitday1Retention": 54.62,
-                    "sidebarVisitday2Retention": 58.3,
-                    "sidebarVisitday3Retention": 65.83,
-                    "sidebarVisitday4Retention": 62.1,
-                    "sidebarVisitday5Retention": 61.5,
-                    "sidebarVisitday6Retention": 60.8,
-                    "sidebarVisitday7Retention": 60.3,
-                    "sidebarVisitday14Retention": 55.05,
-                    "sidebarVisitday30Retention": 51.62,
-                    "sidebarDay1Retention": 45.2,
-                    "sidebarDay2Retention": 48.5,
-                    "sidebarDay3Retention": 50.3,
-                    "sidebarDay4Retention": 47.8,
-                    "sidebarDay5Retention": 46.9,
-                    "sidebarDay6Retention": 45.5,
-                    "sidebarDay7Retention": 44.2,
-                    "sidebarDay14Retention": 40.1,
-                    "sidebarDay30Retention": 38.5,
-                    "penetrationRate": 45.5,
-                    "douyinSourceScenes": [
-                        {
-                            "sceneId": "021036",
-                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
-                            "dailyUsers": 100,
-                            "newUsers": 100,
-                            "startup": 100,
+                            "dailyUsers": 80,
+                            "newUsers": 50,
+                            "startup": 20,
                             "singleAvgDuration": 100
                         },
                         {
-                            "sceneId": "023010",
-                            "sceneName": "主播端发券-查看链接",
-                            "dailyUsers": 80,
-                            "newUsers": 80,
-                            "startup": 80,
-                            "singleAvgDuration": 80
-                        },
-                        {
-                            "sceneId": "023041",
-                            "sceneName": "直玩容器启动小游戏",
-                            "dailyUsers": 90,
-                            "newUsers": 90,
-                            "startup": 90,
+                            "sceneId": "024001",
+                            "sceneName": "私信分享",
+                            "dailyUsers": 60,
+                            "newUsers": 40,
+                            "startup": 50,
                             "singleAvgDuration": 90
                         },
                         {
-                            "sceneId": "023001",
-                            "sceneName": "抖音视频锚点",
-                            "dailyUsers": 110,
-                            "newUsers": 110,
-                            "startup": 110,
-                            "singleAvgDuration": 110
+                            "sceneId": "022001",
+                            "sceneName": "抖音游戏搜索",
+                            "dailyUsers": 55,
+                            "newUsers": 35,
+                            "startup": 45,
+                            "singleAvgDuration": 85
                         },
                         {
-                            "sceneId": "021020",
-                            "sceneName": "抖音桌面启动",
-                            "dailyUsers": 70,
-                            "newUsers": 70,
-                            "startup": 70,
+                            "sceneId": "021043",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 90,
+                            "startup": 100,
+                            "singleAvgDuration": 150
+                        },
+                        {
+                            "sceneId": "0",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 30,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "023009",
+                            "sceneName": "小程序开播面板",
+                            "dailyUsers": 45,
+                            "newUsers": 25,
+                            "startup": 30,
                             "singleAvgDuration": 70
                         },
                         {
-                            "sceneId": "021012",
-                            "sceneName": "抖音小游戏中心",
-                            "dailyUsers": 900,
-                            "newUsers": 800,
-                            "startup": 210,
+                            "sceneId": "021009",
+                            "sceneName": "抖音其他小游戏跳转",
+                            "dailyUsers": 65,
+                            "newUsers": 40,
+                            "startup": 50,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "021002",
+                            "sceneName": "扫一扫",
+                            "dailyUsers": 35,
+                            "newUsers": 20,
+                            "startup": 25,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "023023",
+                            "sceneName": "抖音搜索结果视频锚点",
+                            "dailyUsers": 75,
+                            "newUsers": 55,
+                            "startup": 60,
+                            "singleAvgDuration": 95
+                        },
+                        {
+                            "sceneId": "023042",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 25,
+                            "newUsers": 12,
+                            "startup": 18,
+                            "singleAvgDuration": 50
+                        },
+                        {
+                            "sceneId": "024002",
+                            "sceneName": "微信对话",
+                            "dailyUsers": 85,
+                            "newUsers": 60,
+                            "startup": 70,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "104001",
+                            "sceneName": "抖极私信分享",
+                            "dailyUsers": 40,
+                            "newUsers": 25,
+                            "startup": 30,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "022411",
+                            "sceneName": "商城-我的订单",
+                            "dailyUsers": 50,
+                            "newUsers": 30,
+                            "startup": 40,
+                            "singleAvgDuration": 75
+                        },
+                        {
+                            "sceneId": "023002",
+                            "sceneName": "抖音视频评论页锚点",
+                            "dailyUsers": 95,
+                            "newUsers": 70,
+                            "startup": 80,
                             "singleAvgDuration": 120
                         },
                         {
-                            "sceneId": "021001",
-                            "sceneName": "抖音个人主页侧边栏",
-                            "dailyUsers": 285,
-                            "newUsers": 500,
-                            "startup": 666,
-                            "singleAvgDuration": 120
+                            "sceneId": "991020",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 22,
+                            "newUsers": 10,
+                            "startup": 15,
+                            "singleAvgDuration": 45
+                        },
+                        {
+                            "sceneId": "029105",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 18,
+                            "newUsers": 8,
+                            "startup": 12,
+                            "singleAvgDuration": 40
+                        },
+                        {
+                            "sceneId": "024007",
+                            "sceneName": "免流服务toast提示",
+                            "dailyUsers": 28,
+                            "newUsers": 15,
+                            "startup": 20,
+                            "singleAvgDuration": 55
+                        },
+                        {
+                            "sceneId": "251043",
+                            "sceneName": "小游戏中心",
+                            "dailyUsers": 130,
+                            "newUsers": 95,
+                            "startup": 110,
+                            "singleAvgDuration": 160
+                        },
+                        {
+                            "sceneId": "990001",
+                            "sceneName": "未知场景",
+                            "dailyUsers": 15,
+                            "newUsers": 7,
+                            "startup": 10,
+                            "singleAvgDuration": 35
+                        },
+                        {
+                            "sceneId": "234001",
+                            "sceneName": "私信",
+                            "dailyUsers": 70,
+                            "newUsers": 45,
+                            "startup": 55,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "021017",
+                            "sceneName": "发布页-已添加的小程序",
+                            "dailyUsers": 38,
+                            "newUsers": 22,
+                            "startup": 28,
+                            "singleAvgDuration": 60
+                        },
+                        {
+                            "sceneId": "024004",
+                            "sceneName": "QQ对话",
+                            "dailyUsers": 42,
+                            "newUsers": 26,
+                            "startup": 32,
+                            "singleAvgDuration": 65
+                        },
+                        {
+                            "sceneId": "021011",
+                            "sceneName": "钱包-金币任务页",
+                            "dailyUsers": 58,
+                            "newUsers": 38,
+                            "startup": 48,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "252001",
+                            "sceneName": "综搜",
+                            "dailyUsers": 48,
+                            "newUsers": 28,
+                            "startup": 35,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021008",
+                            "sceneName": "夏日歌会互动入口",
+                            "dailyUsers": 33,
+                            "newUsers": 18,
+                            "startup": 25,
+                            "singleAvgDuration": 55
                         }
                     ]
                 }

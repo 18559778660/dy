@@ -941,4 +941,189 @@
     // 暴露到全局
     window.exportRetentionTable = exportRetentionTable;
     window.exportSidebarRetentionTable = exportSidebarRetentionTable;
+
+    /**
+     * 「来源分析 - 汇总数据」表格
+     * 默认展示昨天所有 douyinSourceScenes 场景，按 dailyUsers 降序，分页显示
+     */
+    const SOURCE_SCENE_PAGE_SIZE = 10;
+    let sourceSceneAllData = [];
+    let sourceScenePage = 1;
+
+    function renderSourceSceneTable(page = 1) {
+        console.log('渲染来源分析汇总表...');
+
+        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
+            console.warn('未找到图表数据配置');
+            return;
+        }
+
+        const tbody = document.querySelector('#source-scene-tbody');
+        if (!tbody) {
+            console.warn('未找到来源分析汇总表 tbody');
+            return;
+        }
+
+        // 取昨天日期的数据
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const y = yesterday.getFullYear();
+        const m = String(yesterday.getMonth() + 1).padStart(2, '0');
+        const d = String(yesterday.getDate()).padStart(2, '0');
+        const yesterdayStr = `${y}-${m}-${d}`;
+
+        const dayData = window.chartDataConfig.overview[0].data
+            .find(item => item.date === yesterdayStr);
+        if (!dayData) {
+            console.warn('未找到昨天的数据:', yesterdayStr);
+            return;
+        }
+
+        // 所有场景按 dailyUsers 降序
+        const scenes = [...dayData.douyinSourceScenes]
+            .sort((a, b) => (b.dailyUsers || 0) - (a.dailyUsers || 0));
+
+        sourceSceneAllData = scenes;
+        sourceScenePage = page;
+        window.sourceSceneTableData = scenes;
+
+        const total = scenes.length;
+        const start = (page - 1) * SOURCE_SCENE_PAGE_SIZE;
+        const end = Math.min(start + SOURCE_SCENE_PAGE_SIZE, total);
+        const pageData = scenes.slice(start, end);
+
+        tbody.innerHTML = '';
+        pageData.forEach((scene, idx) => {
+            const rowIndex = start + idx + 1;
+            const tr = document.createElement('tr');
+            tr.setAttribute('role', 'row');
+            tr.setAttribute('aria-rowindex', rowIndex);
+            tr.className = 'semi-dy-open-table-row';
+            tr.setAttribute('data-row-key', start + idx);
+
+            tr.innerHTML = `
+                <td role="gridcell" aria-colindex="1"
+                    class="semi-dy-open-table-row-cell semi-dy-open-table-cell-fixed-left semi-dy-open-table-cell-fixed-left-last"
+                    title="${rowIndex}" style="left: 0px;">${rowIndex}</td>
+                <td role="gridcell" aria-colindex="2" class="semi-dy-open-table-row-cell"
+                    title="${scene.sceneId}">${scene.sceneId}</td>
+                <td role="gridcell" aria-colindex="3" class="semi-dy-open-table-row-cell"
+                    title="${scene.sceneName}">${scene.sceneName}</td>
+                <td role="gridcell" aria-colindex="4" class="semi-dy-open-table-row-cell"
+                    title="${formatNumber(scene.dailyUsers)}">${formatNumber(scene.dailyUsers)}</td>
+                <td role="gridcell" aria-colindex="5" class="semi-dy-open-table-row-cell"
+                    title="${formatNumber(scene.newUsers)}">${formatNumber(scene.newUsers)}</td>
+                <td role="gridcell" aria-colindex="6" class="semi-dy-open-table-row-cell"
+                    title="${formatNumber(scene.startup)}">${formatNumber(scene.startup)}</td>
+                <td role="gridcell" aria-colindex="7"
+                    class="semi-dy-open-table-row-cell semi-dy-open-table-cell-fixed-right semi-dy-open-table-cell-fixed-right-first"
+                    title="${formatTime(scene.singleAvgDuration)}" style="right: 0px;">${formatTime(scene.singleAvgDuration)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        updateSourceScenePagination(total, page, start, end);
+        console.log(`✅ 来源分析汇总表渲染完成，第${page}页，显示 ${start + 1}-${end} / 共 ${total} 条`);
+    }
+
+    function updateSourceScenePagination(total, page, start, end) {
+        const info = document.querySelector('.source-scene-pagination-info');
+        if (info) {
+            info.textContent = total > 0
+                ? `显示第 ${start + 1} 条-第 ${end} 条，共 ${total} 条`
+                : '暂无数据';
+        }
+
+        const ul = document.querySelector('.source-scene-pagination');
+        if (!ul) return;
+
+        const totalPages = Math.max(1, Math.ceil(total / SOURCE_SCENE_PAGE_SIZE));
+        const prevBtn = ul.querySelector('.semi-dy-open-page-prev');
+        const nextBtn = ul.querySelector('.semi-dy-open-page-next');
+
+        // 清掉旧的数字页按钮
+        ul.querySelectorAll('.semi-dy-open-page-item:not(.semi-dy-open-page-prev):not(.semi-dy-open-page-next)')
+            .forEach(el => el.remove());
+
+        // 重新生成
+        for (let i = 1; i <= totalPages; i++) {
+            const li = document.createElement('li');
+            li.className = 'semi-dy-open-page-item';
+            li.setAttribute('aria-label', `Page ${i}`);
+            li.setAttribute('aria-current', i === page ? 'page' : 'false');
+            li.textContent = i;
+            if (i === page) li.classList.add('semi-dy-open-page-item-active');
+            if (nextBtn) ul.insertBefore(li, nextBtn);
+            else ul.appendChild(li);
+        }
+
+        // 前后按钮禁用状态
+        if (prevBtn) {
+            prevBtn.classList.toggle('semi-dy-open-page-item-disabled', page === 1);
+            prevBtn.setAttribute('aria-disabled', page === 1 ? 'true' : 'false');
+        }
+        if (nextBtn) {
+            nextBtn.classList.toggle('semi-dy-open-page-item-disabled', page >= totalPages);
+            nextBtn.setAttribute('aria-disabled', page >= totalPages ? 'true' : 'false');
+        }
+    }
+
+    function bindSourceScenePaginationEvents() {
+        const ul = document.querySelector('.source-scene-pagination');
+        if (!ul) return;
+
+        ul.addEventListener('click', function (e) {
+            const pageItem = e.target.closest('.semi-dy-open-page-item');
+            if (!pageItem || pageItem.classList.contains('semi-dy-open-page-item-disabled')) return;
+
+            const totalPages = Math.ceil(sourceSceneAllData.length / SOURCE_SCENE_PAGE_SIZE);
+            if (pageItem.classList.contains('semi-dy-open-page-prev')) {
+                if (sourceScenePage > 1) renderSourceSceneTable(sourceScenePage - 1);
+            } else if (pageItem.classList.contains('semi-dy-open-page-next')) {
+                if (sourceScenePage < totalPages) renderSourceSceneTable(sourceScenePage + 1);
+            } else {
+                const p = parseInt(pageItem.textContent, 10);
+                if (!isNaN(p)) renderSourceSceneTable(p);
+            }
+        });
+    }
+
+    function exportSourceSceneTable() {
+        const headers = ['顺序', '场景值ID', '场景值名称', '活跃用户数', '新增用户数', '启动次数', '次均游戏时长'];
+        const rowMapper = (scene, i) => [
+            i + 1,
+            scene.sceneId,
+            scene.sceneName,
+            scene.dailyUsers,
+            scene.newUsers,
+            scene.startup,
+            formatTime(scene.singleAvgDuration)
+        ];
+
+        const data = window.sourceSceneTableData;
+        if (!data || data.length === 0) {
+            console.warn('没有可导出的来源场景数据');
+            return;
+        }
+        const csvRows = [headers.join(',')];
+        data.forEach((item, i) => csvRows.push(rowMapper(item, i).join(',')));
+        const blob = new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.setAttribute('href', URL.createObjectURL(blob));
+        link.setAttribute('download', '来源分析汇总数据.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        console.log('✅ 来源分析汇总表导出完成');
+    }
+
+    function initSourceSceneTable() {
+        renderSourceSceneTable(1);
+        bindSourceScenePaginationEvents();
+    }
+
+    // 暴露到全局
+    window.initSourceSceneTable = initSourceSceneTable;
+    window.exportSourceSceneTable = exportSourceSceneTable;
 })();
