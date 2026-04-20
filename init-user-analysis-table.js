@@ -5,6 +5,9 @@
     // 将初始化函数暴露到全局作用域
     window.initUserAnalysisTable = initUserAnalysisTable;
 
+    /** 与 chart-data.json 中 douyinSourceScenes 里「首页侧边栏」场景的官方 sceneId 一致 */
+    const DOUYIN_SIDEBAR_SCENE_ID = '021036';
+
     // 24小时权重配置（从配置文件加载）
     let HOURLY_WEIGHTS = {};
 
@@ -804,8 +807,9 @@
             const dateCell = createCell(item.date, 1, 'left', false);
             row.appendChild(dateCell);
 
-            // 第2列：活跃用户数
-            const activeUsersCell = createCell(item.sidebarDailyUsers ? item.sidebarDailyUsers.toLocaleString('zh-CN') : '-', 2);
+            // 第2列：活跃用户数（按 sceneId 精确匹配，sceneName 不唯一）
+            const sidebarDaily = item.douyinSourceScenes.find(s => s.sceneId === DOUYIN_SIDEBAR_SCENE_ID).dailyUsers;
+            const activeUsersCell = createCell(sidebarDaily.toLocaleString('zh-CN'), 2);
             row.appendChild(activeUsersCell);
 
             // 第3列：渗透率
@@ -918,7 +922,7 @@
 
         const rowMapper = (item) => [
             item.date,
-            item.sidebarDailyUsers || 0,
+            item.douyinSourceScenes.find(s => s.sceneId === DOUYIN_SIDEBAR_SCENE_ID).dailyUsers,
             item.penetrationRate ? item.penetrationRate.toFixed(2) + '%' : '-',
             item.sidebarDay1Retention ? item.sidebarDay1Retention.toFixed(2) + '%' : '-',
             item.sidebarDay2Retention ? item.sidebarDay2Retention.toFixed(2) + '%' : '-',

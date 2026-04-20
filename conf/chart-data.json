@@ -36,34 +36,64 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 450,
-                    "gameCenterNewUsers": 350,
-                    "gameCenterStartup": 250,
-                    "gameCenterSingleAvgDuration": 200,
-                    "profileSidebarDailyUsers": 80,
-                    "profileSidebarNewUsers": 50,
-                    "profileSidebarStartup": 20,
-                    "profileSidebarSingleAvgDuration": 100
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 450,
+                            "newUsers": 350,
+                            "startup": 250,
+                            "singleAvgDuration": 200
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 80,
+                            "newUsers": 50,
+                            "startup": 20,
+                            "singleAvgDuration": 100
+                        }
+                    ]
                 },
                 {
                     "date": "2026-04-08",
@@ -98,34 +128,64 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 888,
-                    "gameCenterNewUsers": 777,
-                    "gameCenterStartup": 555,
-                    "gameCenterSingleAvgDuration": 321,
-                    "profileSidebarDailyUsers": 456,
-                    "profileSidebarNewUsers": 856,
-                    "profileSidebarStartup": 159,
-                    "profileSidebarSingleAvgDuration": 357
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 888,
+                            "newUsers": 777,
+                            "startup": 555,
+                            "singleAvgDuration": 321
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 456,
+                            "newUsers": 856,
+                            "startup": 159,
+                            "singleAvgDuration": 357
+                        }
+                    ]
                 },
                 {
                     "date": "2026-04-09",
@@ -160,34 +220,64 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 120,
-                    "gameCenterNewUsers": 888,
-                    "gameCenterStartup": 423,
-                    "gameCenterSingleAvgDuration": 756,
-                    "profileSidebarDailyUsers": 157,
-                    "profileSidebarNewUsers": 963,
-                    "profileSidebarStartup": 741,
-                    "profileSidebarSingleAvgDuration": 852
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 888,
+                            "startup": 423,
+                            "singleAvgDuration": 756
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 157,
+                            "newUsers": 963,
+                            "startup": 741,
+                            "singleAvgDuration": 852
+                        }
+                    ]
                 },
                 {
                     "date": "2026-04-10",
@@ -222,34 +312,64 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 120,
-                    "gameCenterNewUsers": 120,
-                    "gameCenterStartup": 120,
-                    "gameCenterSingleAvgDuration": 120,
-                    "profileSidebarDailyUsers": 95,
-                    "profileSidebarNewUsers": 95,
-                    "profileSidebarStartup": 95,
-                    "profileSidebarSingleAvgDuration": 95
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 120,
+                            "startup": 120,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 95,
+                            "newUsers": 95,
+                            "startup": 95,
+                            "singleAvgDuration": 95
+                        }
+                    ]
                 },
                 {
                     "date": "2026-04-11",
@@ -284,34 +404,64 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 120,
-                    "gameCenterNewUsers": 120,
-                    "gameCenterStartup": 120,
-                    "gameCenterSingleAvgDuration": 120,
-                    "profileSidebarDailyUsers": 95,
-                    "profileSidebarNewUsers": 95,
-                    "profileSidebarStartup": 95,
-                    "profileSidebarSingleAvgDuration": 95
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 120,
+                            "startup": 120,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 95,
+                            "newUsers": 95,
+                            "startup": 95,
+                            "singleAvgDuration": 95
+                        }
+                    ]
                 },
                 {
                     "date": "2026-04-12",
@@ -346,34 +496,64 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 120,
-                    "gameCenterNewUsers": 456,
-                    "gameCenterStartup": 166,
-                    "gameCenterSingleAvgDuration": 755,
-                    "profileSidebarDailyUsers": 855,
-                    "profileSidebarNewUsers": 961,
-                    "profileSidebarStartup": 111,
-                    "profileSidebarSingleAvgDuration": 555
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 456,
+                            "startup": 166,
+                            "singleAvgDuration": 755
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 855,
+                            "newUsers": 961,
+                            "startup": 111,
+                            "singleAvgDuration": 555
+                        }
+                    ]
                 },
                 {
                     "date": "2026-04-13",
@@ -408,34 +588,64 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 753,
-                    "gameCenterNewUsers": 120,
-                    "gameCenterStartup": 888,
-                    "gameCenterSingleAvgDuration": 120,
-                    "profileSidebarDailyUsers": 666,
-                    "profileSidebarNewUsers": 555,
-                    "profileSidebarStartup": 777,
-                    "profileSidebarSingleAvgDuration": 95
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 753,
+                            "newUsers": 120,
+                            "startup": 888,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 666,
+                            "newUsers": 555,
+                            "startup": 777,
+                            "singleAvgDuration": 95
+                        }
+                    ]
                 },
                 {
                     "date": "2026-04-14",
@@ -470,34 +680,64 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 120,
-                    "gameCenterNewUsers": 120,
-                    "gameCenterStartup": 444,
-                    "gameCenterSingleAvgDuration": 120,
-                    "profileSidebarDailyUsers": 222,
-                    "profileSidebarNewUsers": 111,
-                    "profileSidebarStartup": 95,
-                    "profileSidebarSingleAvgDuration": 95
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 120,
+                            "newUsers": 120,
+                            "startup": 444,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 222,
+                            "newUsers": 111,
+                            "startup": 95,
+                            "singleAvgDuration": 95
+                        }
+                    ]
                 },
                 {
                     "date": "2026-04-15",
@@ -532,34 +772,64 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 900,
-                    "gameCenterNewUsers": 800,
-                    "gameCenterStartup": 210,
-                    "gameCenterSingleAvgDuration": 120,
-                    "profileSidebarDailyUsers": 200,
-                    "profileSidebarNewUsers": 500,
-                    "profileSidebarStartup": 666,
-                    "profileSidebarSingleAvgDuration": 120
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 900,
+                            "newUsers": 800,
+                            "startup": 210,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 200,
+                            "newUsers": 500,
+                            "startup": 666,
+                            "singleAvgDuration": 120
+                        }
+                    ]
                 },
                 {
                     "date": "2026-04-16",
@@ -594,34 +864,524 @@
                     "sidebarDay14Retention": 40.1,
                     "sidebarDay30Retention": 38.5,
                     "penetrationRate": 45.5,
-                    "sidebarDailyUsers": 100,
-                    "sidebarNewUsers": 100,
-                    "sidebarStartup": 100,
-                    "sidebarSingleAvgDuration": 100,
-                    "anchorCouponDailyUsers": 80,
-                    "anchorCouponNewUsers": 80,
-                    "anchorCouponStartup": 80,
-                    "anchorCouponSingleAvgDuration": 80,
-                    "directPlayDailyUsers": 90,
-                    "directPlayNewUsers": 90,
-                    "directPlayStartup": 90,
-                    "directPlaySingleAvgDuration": 90,
-                    "videoAnchorDailyUsers": 110,
-                    "videoAnchorNewUsers": 110,
-                    "videoAnchorStartup": 110,
-                    "videoAnchorSingleAvgDuration": 110,
-                    "desktopLaunchDailyUsers": 70,
-                    "desktopLaunchNewUsers": 70,
-                    "desktopLaunchStartup": 70,
-                    "desktopLaunchSingleAvgDuration": 70,
-                    "gameCenterDailyUsers": 900,
-                    "gameCenterNewUsers": 800,
-                    "gameCenterStartup": 210,
-                    "gameCenterSingleAvgDuration": 120,
-                    "profileSidebarDailyUsers": 200,
-                    "profileSidebarNewUsers": 500,
-                    "profileSidebarStartup": 666,
-                    "profileSidebarSingleAvgDuration": 120
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 900,
+                            "newUsers": 800,
+                            "startup": 210,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 200,
+                            "newUsers": 500,
+                            "startup": 666,
+                            "singleAvgDuration": 120
+                        }
+                    ]
+                },
+                {
+                    "date": "2026-04-17",
+                    "dailyUsers": 10,
+                    "newUsers": 10,
+                    "avgDuration": 10,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgDuration": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777,
+                    "totalShares": 5000,
+                    "sidebarVisitdailyUsers": 185,
+                    "sidebarVisitday1Retention": 54.62,
+                    "sidebarVisitday2Retention": 58.3,
+                    "sidebarVisitday3Retention": 65.83,
+                    "sidebarVisitday4Retention": 62.1,
+                    "sidebarVisitday5Retention": 61.5,
+                    "sidebarVisitday6Retention": 60.8,
+                    "sidebarVisitday7Retention": 60.3,
+                    "sidebarVisitday14Retention": 55.05,
+                    "sidebarVisitday30Retention": 51.62,
+                    "sidebarDay1Retention": 45.2,
+                    "sidebarDay2Retention": 48.5,
+                    "sidebarDay3Retention": 50.3,
+                    "sidebarDay4Retention": 47.8,
+                    "sidebarDay5Retention": 46.9,
+                    "sidebarDay6Retention": 45.5,
+                    "sidebarDay7Retention": 44.2,
+                    "sidebarDay14Retention": 40.1,
+                    "sidebarDay30Retention": 38.5,
+                    "penetrationRate": 45.5,
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 900,
+                            "newUsers": 800,
+                            "startup": 210,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 200,
+                            "newUsers": 500,
+                            "startup": 666,
+                            "singleAvgDuration": 120
+                        }
+                    ]
+                },
+                {
+                    "date": "2026-04-18",
+                    "dailyUsers": 10,
+                    "newUsers": 10,
+                    "avgDuration": 10,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgDuration": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777,
+                    "totalShares": 5000,
+                    "sidebarVisitdailyUsers": 185,
+                    "sidebarVisitday1Retention": 54.62,
+                    "sidebarVisitday2Retention": 58.3,
+                    "sidebarVisitday3Retention": 65.83,
+                    "sidebarVisitday4Retention": 62.1,
+                    "sidebarVisitday5Retention": 61.5,
+                    "sidebarVisitday6Retention": 60.8,
+                    "sidebarVisitday7Retention": 60.3,
+                    "sidebarVisitday14Retention": 55.05,
+                    "sidebarVisitday30Retention": 51.62,
+                    "sidebarDay1Retention": 45.2,
+                    "sidebarDay2Retention": 48.5,
+                    "sidebarDay3Retention": 50.3,
+                    "sidebarDay4Retention": 47.8,
+                    "sidebarDay5Retention": 46.9,
+                    "sidebarDay6Retention": 45.5,
+                    "sidebarDay7Retention": 44.2,
+                    "sidebarDay14Retention": 40.1,
+                    "sidebarDay30Retention": 38.5,
+                    "penetrationRate": 45.5,
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 1996,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 900,
+                            "newUsers": 800,
+                            "startup": 210,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 200,
+                            "newUsers": 500,
+                            "startup": 666,
+                            "singleAvgDuration": 120
+                        }
+                    ]
+                },
+                {
+                    "date": "2026-04-19",
+                    "dailyUsers": 10,
+                    "newUsers": 10,
+                    "avgDuration": 10,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgDuration": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777,
+                    "totalShares": 5000,
+                    "sidebarVisitdailyUsers": 185,
+                    "sidebarVisitday1Retention": 54.62,
+                    "sidebarVisitday2Retention": 58.3,
+                    "sidebarVisitday3Retention": 65.83,
+                    "sidebarVisitday4Retention": 62.1,
+                    "sidebarVisitday5Retention": 61.5,
+                    "sidebarVisitday6Retention": 60.8,
+                    "sidebarVisitday7Retention": 60.3,
+                    "sidebarVisitday14Retention": 55.05,
+                    "sidebarVisitday30Retention": 51.62,
+                    "sidebarDay1Retention": 45.2,
+                    "sidebarDay2Retention": 48.5,
+                    "sidebarDay3Retention": 50.3,
+                    "sidebarDay4Retention": 47.8,
+                    "sidebarDay5Retention": 46.9,
+                    "sidebarDay6Retention": 45.5,
+                    "sidebarDay7Retention": 44.2,
+                    "sidebarDay14Retention": 40.1,
+                    "sidebarDay30Retention": 38.5,
+                    "penetrationRate": 45.5,
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 185,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 900,
+                            "newUsers": 800,
+                            "startup": 210,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 851,
+                            "newUsers": 500,
+                            "startup": 666,
+                            "singleAvgDuration": 120
+                        }
+                    ]
+                },
+                {
+                    "date": "2026-04-20",
+                    "dailyUsers": 10,
+                    "newUsers": 10,
+                    "avgDuration": 10,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgDuration": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777,
+                    "totalShares": 5000,
+                    "sidebarVisitdailyUsers": 185,
+                    "sidebarVisitday1Retention": 54.62,
+                    "sidebarVisitday2Retention": 58.3,
+                    "sidebarVisitday3Retention": 65.83,
+                    "sidebarVisitday4Retention": 62.1,
+                    "sidebarVisitday5Retention": 61.5,
+                    "sidebarVisitday6Retention": 60.8,
+                    "sidebarVisitday7Retention": 60.3,
+                    "sidebarVisitday14Retention": 55.05,
+                    "sidebarVisitday30Retention": 51.62,
+                    "sidebarDay1Retention": 45.2,
+                    "sidebarDay2Retention": 48.5,
+                    "sidebarDay3Retention": 50.3,
+                    "sidebarDay4Retention": 47.8,
+                    "sidebarDay5Retention": 46.9,
+                    "sidebarDay6Retention": 45.5,
+                    "sidebarDay7Retention": 44.2,
+                    "sidebarDay14Retention": 40.1,
+                    "sidebarDay30Retention": 38.5,
+                    "penetrationRate": 45.5,
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 900,
+                            "newUsers": 800,
+                            "startup": 210,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 200,
+                            "newUsers": 500,
+                            "startup": 666,
+                            "singleAvgDuration": 120
+                        }
+                    ]
+                },
+                {
+                    "date": "2026-04-21",
+                    "dailyUsers": 10,
+                    "newUsers": 10,
+                    "avgDuration": 10,
+                    "sharing": 111,
+                    "startup": 222,
+                    "avgStartup": 333,
+                    "singleAvgDuration": 444,
+                    "shareSuccess": 555,
+                    "shareNewUsers": 666,
+                    "shareSuccessUsers": 777,
+                    "totalShares": 5000,
+                    "sidebarVisitdailyUsers": 185,
+                    "sidebarVisitday1Retention": 54.62,
+                    "sidebarVisitday2Retention": 58.3,
+                    "sidebarVisitday3Retention": 65.83,
+                    "sidebarVisitday4Retention": 62.1,
+                    "sidebarVisitday5Retention": 61.5,
+                    "sidebarVisitday6Retention": 60.8,
+                    "sidebarVisitday7Retention": 60.3,
+                    "sidebarVisitday14Retention": 55.05,
+                    "sidebarVisitday30Retention": 51.62,
+                    "sidebarDay1Retention": 45.2,
+                    "sidebarDay2Retention": 48.5,
+                    "sidebarDay3Retention": 50.3,
+                    "sidebarDay4Retention": 47.8,
+                    "sidebarDay5Retention": 46.9,
+                    "sidebarDay6Retention": 45.5,
+                    "sidebarDay7Retention": 44.2,
+                    "sidebarDay14Retention": 40.1,
+                    "sidebarDay30Retention": 38.5,
+                    "penetrationRate": 45.5,
+                    "douyinSourceScenes": [
+                        {
+                            "sceneId": "021036",
+                            "sceneName": "首页侧边栏-最近使用（常用小程序）",
+                            "dailyUsers": 100,
+                            "newUsers": 100,
+                            "startup": 100,
+                            "singleAvgDuration": 100
+                        },
+                        {
+                            "sceneId": "023010",
+                            "sceneName": "主播端发券-查看链接",
+                            "dailyUsers": 80,
+                            "newUsers": 80,
+                            "startup": 80,
+                            "singleAvgDuration": 80
+                        },
+                        {
+                            "sceneId": "023041",
+                            "sceneName": "直玩容器启动小游戏",
+                            "dailyUsers": 90,
+                            "newUsers": 90,
+                            "startup": 90,
+                            "singleAvgDuration": 90
+                        },
+                        {
+                            "sceneId": "023001",
+                            "sceneName": "抖音视频锚点",
+                            "dailyUsers": 110,
+                            "newUsers": 110,
+                            "startup": 110,
+                            "singleAvgDuration": 110
+                        },
+                        {
+                            "sceneId": "021020",
+                            "sceneName": "抖音桌面启动",
+                            "dailyUsers": 70,
+                            "newUsers": 70,
+                            "startup": 70,
+                            "singleAvgDuration": 70
+                        },
+                        {
+                            "sceneId": "021012",
+                            "sceneName": "抖音小游戏中心",
+                            "dailyUsers": 900,
+                            "newUsers": 800,
+                            "startup": 210,
+                            "singleAvgDuration": 120
+                        },
+                        {
+                            "sceneId": "021001",
+                            "sceneName": "抖音个人主页侧边栏",
+                            "dailyUsers": 285,
+                            "newUsers": 500,
+                            "startup": 666,
+                            "singleAvgDuration": 120
+                        }
+                    ]
                 }
             ]
         }

@@ -866,16 +866,6 @@
      */
     async function updateSourceAnalysisChart(timeRange) {
         console.log('[来源分析] 更新时间范围:', timeRange);
-        // 定义7种来源类型
-        const sourceTypes = [
-            { key: 'sidebarDailyUsers', name: '首页侧边栏-最近使用（常用小程序）' },
-            { key: 'anchorCouponDailyUsers', name: '主播端发券-查看链接' },
-            { key: 'directPlayDailyUsers', name: '直玩容器启动小游戏' },
-            { key: 'videoAnchorDailyUsers', name: '抖音视频锚点' },
-            { key: 'desktopLaunchDailyUsers', name: '抖音桌面启动' },
-            { key: 'gameCenterDailyUsers', name: '抖音小游戏中心' },
-            { key: 'profileSidebarDailyUsers', name: '抖音个人主页侧边栏' }
-        ];
 
         let multiSeriesData = [];
         let chartTitle = '';
@@ -913,20 +903,18 @@
 
             console.log('昨天的日数据:', yesterdayData);
 
-            // 4. 将每个来源的日数据按权重分配到24小时
+            // 4. 将每个来源场景的日数据按权重分配到24小时
             for (let hour = 0; hour < 24; hour++) {
                 const hourStr = String(hour).padStart(2, '0');
                 const weight = weights[hourStr] || 0;
                 const timeLabel = `${yesterdayStr} ${hourStr}:00`;
 
-                sourceTypes.forEach(source => {
-                    const dailyValue = yesterdayData[source.key] || 0;
-                    const hourlyValue = Math.round(dailyValue * weight);
-
+                yesterdayData.douyinSourceScenes.forEach(scene => {
                     multiSeriesData.push({
                         date: timeLabel,
-                        value: hourlyValue,
-                        sourceType: source.name
+                        value: Math.round(scene.dailyUsers * weight),
+                        sceneId: scene.sceneId,
+                        sceneName: scene.sceneName
                     });
                 });
             }
@@ -962,11 +950,12 @@
 
             // 构建多系列数据
             filteredData.forEach(item => {
-                sourceTypes.forEach(source => {
+                item.douyinSourceScenes.forEach(scene => {
                     multiSeriesData.push({
                         date: item.date,
-                        value: item[source.key] || 0,
-                        sourceType: source.name
+                        value: scene.dailyUsers,
+                        sceneId: scene.sceneId,
+                        sceneName: scene.sceneName
                     });
                 });
             });
@@ -1010,16 +999,20 @@
             'rgb(180 74 194)', // 紫色
         ];
 
-        // 定义来源类型（用于 hover 时的颜色映射）
-        const sourceTypeNames = [
-            '首页侧边栏-最近使用（常用小程序）',
-            '主播端发券-查看链接',
-            '直玩容器启动小游戏',
-            '抖音视频锚点',
-            '抖音桌面启动',
-            '抖音小游戏中心',
-            '抖音个人主页侧边栏'
+        // 定义来源场景 sceneId 顺序（与 colors 一一对应，用于颜色映射）
+        const sceneIdOrder = [
+            '021036', // 首页侧边栏-最近使用（常用小程序）
+            '023010', // 主播端发券-查看链接
+            '023041', // 直玩容器启动小游戏
+            '023001', // 抖音视频锚点
+            '021020', // 抖音桌面启动
+            '021012', // 抖音小游戏中心
+            '021001'  // 抖音个人主页侧边栏
         ];
+
+        // sceneId -> sceneName，用于图例/tooltip 展示
+        const sceneIdToName = {};
+        data.forEach(d => { sceneIdToName[d.sceneId] = d.sceneName; });
 
         // 判断是否为长周期场景（30天及以上）
         const isLongRange = timeRange === 30;
@@ -1030,7 +1023,7 @@
             data: [{ values: data, id: 'data' }],
             xField: 'date',
             yField: 'value',
-            seriesField: 'sourceType',
+            seriesField: 'sceneId',
             stack: false,  // 不堆叠，让线条正常显示，只有最上面的区域可见
             // 线条样式
             line: {
@@ -1048,7 +1041,7 @@
                         size: 8,
                         fill: '#ffffff',
                         stroke: (datum) => {
-                            const index = sourceTypeNames.indexOf(datum.sourceType);
+                            const index = sceneIdOrder.indexOf(datum.sceneId);
                             return colors[index >= 0 ? index : 0];
                         },
                         lineWidth: 2
@@ -1061,7 +1054,7 @@
                 style: {
                     curveType: 'monotone',
                     fill: (datum) => {
-                        const index = sourceTypeNames.indexOf(datum.sourceType);
+                        const index = sceneIdOrder.indexOf(datum.sceneId);
                         const baseColor = colors[index >= 0 ? index : 0];
                         // 提取 RGB 值并创建 rgba 格式的渐变色
                         const rgbMatch = baseColor.match(/\d+/g);
@@ -1101,8 +1094,9 @@
                 // 避免面积图的渐变半透明 fill 被图例图标继承
                 data: (items) => {
                     return items.map((item) => {
-                        const idx = sourceTypeNames.indexOf(item.label);
+                        const idx = sceneIdOrder.indexOf(item.label);
                         const solidColor = colors[idx >= 0 ? idx : 0];
+                        item.label = sceneIdToName[item.label] || item.label;
                         item.shape.fill = solidColor;
                         item.shape.fillOpacity = 1;
                         item.shape.stroke = solidColor;
@@ -1214,15 +1208,15 @@
                     },
                     content: [
                         {
-                            key: (datum) => datum.sourceType,
+                            key: (datum) => datum.sceneName,
                             value: (datum) => datum.value.toLocaleString('zh-CN'),
                             shapeType: 'square',
                             shapeFill: (datum) => {
-                                const idx = sourceTypeNames.indexOf(datum.sourceType);
+                                const idx = sceneIdOrder.indexOf(datum.sceneId);
                                 return colors[idx >= 0 ? idx : 0];
                             },
                             shapeStroke: (datum) => {
-                                const idx = sourceTypeNames.indexOf(datum.sourceType);
+                                const idx = sceneIdOrder.indexOf(datum.sceneId);
                                 return colors[idx >= 0 ? idx : 0];
                             },
                             shapeFillOpacity: 1,
@@ -1249,15 +1243,15 @@
                     },
                     content: [
                         {
-                            key: (datum) => datum.sourceType,
+                            key: (datum) => datum.sceneName,
                             value: (datum) => datum.value.toLocaleString('zh-CN'),
                             shapeType: 'square',
                             shapeFill: (datum) => {
-                                const idx = sourceTypeNames.indexOf(datum.sourceType);
+                                const idx = sceneIdOrder.indexOf(datum.sceneId);
                                 return colors[idx >= 0 ? idx : 0];
                             },
                             shapeStroke: (datum) => {
-                                const idx = sourceTypeNames.indexOf(datum.sourceType);
+                                const idx = sceneIdOrder.indexOf(datum.sceneId);
                                 return colors[idx >= 0 ? idx : 0];
                             },
                             shapeFillOpacity: 1,
