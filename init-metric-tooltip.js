@@ -190,6 +190,10 @@ function initTimeRangeButtons(containerSelector = 'body') {
         '.user-source-section': (range) => {
             window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(range);
             window.updateSourceSceneTable && window.updateSourceSceneTable(range);
+            // 抖音视频数据图/表虽然不在 .user-source-section 容器里，
+            // 但在产品层级属于"来源分析页"下，时间维度跟随联动
+            window.updateDouyinVideoChart && window.updateDouyinVideoChart(range);
+            window.updateDouyinVideoTable && window.updateDouyinVideoTable(range);
         }
     };
     const dispatch = handlersByContainer[containerSelector] || null;

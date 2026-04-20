@@ -970,13 +970,29 @@
     }
 
     /**
-     * 渲染多折线图
+     * 渲染多折线/面积图（通用）
      * @param {string} containerId - 容器ID
-     * @param {Array} data - 图表数据
+     * @param {Array} data - 图表数据，每条至少含 { date, value, [seriesField], [nameField] }
      * @param {string} title - 图表标题
      * @param {string|number} timeRange - 时间范围：'yesterday' 或 天数（7, 30等）
+     * @param {Object} [options]
+     * @param {string} [options.seriesField='sceneId']      series 区分字段名
+     * @param {string} [options.nameField='sceneName']      图例/tooltip 显示字段名
+     * @param {Array}  [options.fixedOrder]                 显式指定 series 顺序；有值则跳过 Top-N
+     * @param {boolean}[options.useWhitelist=true]          是否启用来源分析白名单过滤
+     * @param {Array}  [options.colors]                     自定义颜色数组
+     * @param {string} [options.chartInstanceKey='sourceAnalysisChartInstance']
+     * @param {string} [options.logPrefix='来源分析图表']
      */
-    function renderMultiLineChart(containerId, data, title, timeRange) {
+    function renderMultiLineChart(containerId, data, title, timeRange, options) {
+        options = options || {};
+        const seriesField = options.seriesField || 'sceneId';
+        const nameField = options.nameField || 'sceneName';
+        const fixedOrder = Array.isArray(options.fixedOrder) ? options.fixedOrder.slice() : null;
+        const useWhitelist = options.useWhitelist !== false;
+        const chartInstanceKey = options.chartInstanceKey || 'sourceAnalysisChartInstance';
+        const logPrefix = options.logPrefix || '来源分析图表';
+
         const container = document.getElementById(containerId);
         if (!container) {
             console.warn(`未找到图表容器: ${containerId}`);
@@ -984,54 +1000,57 @@
         }
 
         // 销毁旧实例
-        if (window.sourceAnalysisChartInstance) {
-            window.sourceAnalysisChartInstance.release();
+        if (window[chartInstanceKey]) {
+            window[chartInstanceKey].release();
         }
 
-        // 颜色配置（7种不同颜色）
-        const colors = [
-            'rgb(73 127 252)', // 蓝色
-            'rgb(38 194 176)', // 绿色
-            'rgb(253 166 51)', // 橙色
-            'rgb(251 218 49)', // 黄色
-            'rgb(89 194 98)', // 绿色
-            'rgb(167 218 44)', // 绿色
-            'rgb(180 74 194)', // 紫色
-        ];
+        // 颜色配置（默认 7 种）
+        const colors = Array.isArray(options.colors) && options.colors.length
+            ? options.colors.slice()
+            : [
+                'rgb(73 127 252)', // 蓝色
+                'rgb(38 194 176)', // 绿色
+                'rgb(253 166 51)', // 橙色
+                'rgb(251 218 49)', // 黄色
+                'rgb(89 194 98)', // 绿色
+                'rgb(167 218 44)', // 绿色
+                'rgb(180 74 194)', // 紫色
+            ];
 
-        // 动态计算 sceneIdOrder：
-        //   1) 用与汇总表相同的白名单收紧候选场景
-        //   2) 按 sceneId 汇总 value（与表格「dailyUsers 降序」口径一致）
-        //   3) 取汇总值最大的前 TOP_N 个 sceneId
-        // 结果数组顺序 = 颜色顺序（value 高的用第一个颜色）
-        const TOP_N = colors.length; // 7
-        const whitelist = typeof window.getSourceSceneWhitelist === 'function'
-            ? window.getSourceSceneWhitelist(timeRange)
-            : null;
-
-        // 先按白名单过滤
-        if (whitelist) {
-            data = data.filter(d => whitelist.has(d.sceneId));
+        // 计算 seriesOrder（= 颜色顺序，索引 0 对应第一个颜色）
+        let seriesOrder;
+        if (fixedOrder) {
+            // 固定顺序场景（如 UGC/PGC）：直接按 fixedOrder，数据只保留其中包含的 series
+            seriesOrder = fixedOrder;
+            data = data.filter(d => seriesOrder.includes(d[seriesField]));
+        } else {
+            // 动态 Top-N 场景（来源分析）：
+            //   1) 用与汇总表相同的白名单收紧候选场景
+            //   2) 按 seriesField 汇总 value（与表格「dailyUsers 降序」口径一致）
+            //   3) 取汇总值最大的前 TOP_N 个
+            const TOP_N = colors.length;
+            if (useWhitelist) {
+                const whitelist = typeof window.getSourceSceneWhitelist === 'function'
+                    ? window.getSourceSceneWhitelist(timeRange)
+                    : null;
+                if (whitelist) {
+                    data = data.filter(d => whitelist.has(d[seriesField]));
+                }
+            }
+            const valueBySeries = new Map();
+            data.forEach(d => {
+                valueBySeries.set(d[seriesField], (valueBySeries.get(d[seriesField]) || 0) + (d.value || 0));
+            });
+            seriesOrder = Array.from(valueBySeries.entries())
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, TOP_N)
+                .map(([k]) => k);
+            data = data.filter(d => seriesOrder.includes(d[seriesField]));
         }
 
-        // 按 sceneId 聚合 value
-        const valueBySceneId = new Map();
-        data.forEach(d => {
-            valueBySceneId.set(d.sceneId, (valueBySceneId.get(d.sceneId) || 0) + (d.value || 0));
-        });
-
-        // 取 Top-N sceneId（降序）
-        const sceneIdOrder = Array.from(valueBySceneId.entries())
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, TOP_N)
-            .map(([sceneId]) => sceneId);
-
-        // 最终只保留 Top-N 场景的数据
-        data = data.filter(d => sceneIdOrder.includes(d.sceneId));
-
-        // sceneId -> sceneName，用于图例/tooltip 展示
-        const sceneIdToName = {};
-        data.forEach(d => { sceneIdToName[d.sceneId] = d.sceneName; });
+        // seriesKey -> 展示名
+        const seriesNameMap = {};
+        data.forEach(d => { seriesNameMap[d[seriesField]] = d[nameField]; });
 
         // 判断是否为长周期场景（30天及以上）
         const isLongRange = timeRange === 30;
@@ -1042,15 +1061,15 @@
             data: [{ values: data, id: 'data' }],
             xField: 'date',
             yField: 'value',
-            seriesField: 'sceneId',
+            seriesField: seriesField,
             stack: false,  // 不堆叠，让线条正常显示，只有最上面的区域可见
             // 线条样式
             line: {
                 style: {
                     lineWidth: 2,
-                    // 线条颜色按 sceneIdOrder（value 降序）映射，和图例/面积/tooltip 保持一致
+                    // 线条颜色按 seriesOrder（value 降序/指定顺序）映射，和图例/面积/tooltip 保持一致
                     stroke: (datum) => {
-                        const idx = sceneIdOrder.indexOf(datum.sceneId);
+                        const idx = seriesOrder.indexOf(datum[seriesField]);
                         return colors[idx >= 0 ? idx : 0];
                     }
                 }
@@ -1065,7 +1084,7 @@
                         size: 8,
                         fill: '#ffffff',
                         stroke: (datum) => {
-                            const index = sceneIdOrder.indexOf(datum.sceneId);
+                            const index = seriesOrder.indexOf(datum[seriesField]);
                             return colors[index >= 0 ? index : 0];
                         },
                         lineWidth: 2
@@ -1078,7 +1097,7 @@
                 style: {
                     curveType: 'monotone',
                     fill: (datum) => {
-                        const index = sceneIdOrder.indexOf(datum.sceneId);
+                        const index = seriesOrder.indexOf(datum[seriesField]);
                         const baseColor = colors[index >= 0 ? index : 0];
                         // 提取 RGB 值并创建 rgba 格式的渐变色
                         const rgbMatch = baseColor.match(/\d+/g);
@@ -1118,19 +1137,19 @@
                 // 避免面积图的渐变半透明 fill 被图例图标继承
                 data: (items) => {
                     // 只排序 + 覆盖图标颜色/透明度，**不要修改 item.label**。
-                    // item.label 是 VChart 图例与 series 的联动 key（= sceneId），
+                    // item.label 是 VChart 图例与 series 的联动 key（= seriesField 的原始值），
                     // 改动它会导致点击图例的"显隐切换"失灵。
-                    // 展示用的中文名通过下面的 item.label.formatter 做翻译。
+                    // 展示用的中文名通过下面的 item.label.formatMethod 做翻译。
                     const ordered = [...items].sort((a, b) => {
-                        const ia = sceneIdOrder.indexOf(a.label);
-                        const ib = sceneIdOrder.indexOf(b.label);
+                        const ia = seriesOrder.indexOf(a.label);
+                        const ib = seriesOrder.indexOf(b.label);
                         const ra = ia === -1 ? Number.MAX_SAFE_INTEGER : ia;
                         const rb = ib === -1 ? Number.MAX_SAFE_INTEGER : ib;
                         return ra - rb;
                     });
 
                     return ordered.map((item) => {
-                        const idx = sceneIdOrder.indexOf(item.label);
+                        const idx = seriesOrder.indexOf(item.label);
                         const solidColor = colors[idx >= 0 ? idx : 0];
                         item.shape.fill = solidColor;
                         item.shape.fillOpacity = 1;
@@ -1147,8 +1166,8 @@
                         }
                     },
                     label: {
-                        // 仅改"显示文本"，不改底层 label（sceneId），保证点击显隐联动正常
-                        formatMethod: (text) => sceneIdToName[text] || text,
+                        // 仅改"显示文本"，不改底层 label（seriesField 原值），保证点击显隐联动正常
+                        formatMethod: (text) => seriesNameMap[text] || text,
                         style: {
                             fill: 'rgb(90 94 100)',
                             fillOpacity: 1
@@ -1245,15 +1264,15 @@
                     },
                     content: [
                         {
-                            key: (datum) => datum.sceneName,
+                            key: (datum) => datum[nameField],
                             value: (datum) => datum.value.toLocaleString('zh-CN'),
                             shapeType: 'square',
                             shapeFill: (datum) => {
-                                const idx = sceneIdOrder.indexOf(datum.sceneId);
+                                const idx = seriesOrder.indexOf(datum[seriesField]);
                                 return colors[idx >= 0 ? idx : 0];
                             },
                             shapeStroke: (datum) => {
-                                const idx = sceneIdOrder.indexOf(datum.sceneId);
+                                const idx = seriesOrder.indexOf(datum[seriesField]);
                                 return colors[idx >= 0 ? idx : 0];
                             },
                             shapeFillOpacity: 1,
@@ -1280,15 +1299,15 @@
                     },
                     content: [
                         {
-                            key: (datum) => datum.sceneName,
+                            key: (datum) => datum[nameField],
                             value: (datum) => datum.value.toLocaleString('zh-CN'),
                             shapeType: 'square',
                             shapeFill: (datum) => {
-                                const idx = sceneIdOrder.indexOf(datum.sceneId);
+                                const idx = seriesOrder.indexOf(datum[seriesField]);
                                 return colors[idx >= 0 ? idx : 0];
                             },
                             shapeStroke: (datum) => {
-                                const idx = sceneIdOrder.indexOf(datum.sceneId);
+                                const idx = seriesOrder.indexOf(datum[seriesField]);
                                 return colors[idx >= 0 ? idx : 0];
                             },
                             shapeFillOpacity: 1,
@@ -1299,11 +1318,11 @@
                     ]
                 }
             },
-            // 让 VChart 按 sceneIdOrder 顺序把 colors 分配给对应 series，
+            // 让 VChart 按 seriesOrder 顺序把 colors 分配给对应 series，
             // 避免默认按数据出现顺序分配导致颜色与图例/面积错位
             color: {
                 type: 'ordinal',
-                domain: sceneIdOrder,
+                domain: seriesOrder,
                 range: colors
             }
         };
@@ -1318,17 +1337,133 @@
                 theme: 'light'
             });
             vchart.renderAsync().then(() => {
-                console.log('✅ 来源分析图表渲染完成');
+                console.log(`✅ ${logPrefix}渲染完成`);
             }).catch(err => {
-                console.error('[来源分析图表] 渲染失败:', err);
+                console.error(`[${logPrefix}] 渲染失败:`, err);
             });
-            window.sourceAnalysisChartInstance = vchart;
+            window[chartInstanceKey] = vchart;
         } catch (error) {
-            console.error('[来源分析图表] 创建失败:', error);
+            console.error(`[${logPrefix}] 创建失败:`, error);
         }
+    }
+
+    // ==================== 抖音视频数据图表 ====================
+    // 复用 renderMultiLineChart，seriesField=type，fixedOrder=['UGC','PGC']，关白名单
+
+    const VIDEO_METRIC_NAME = {
+        newUsers: '新增用户',
+        activeUsers: '活跃用户',
+        conversionRate: '视频转化率'
+    };
+
+    /** 视频图固定的渲染 options（颜色=前两色：蓝/绿） */
+    function getVideoChartOptions() {
+        return {
+            seriesField: 'type',
+            nameField: 'displayName',
+            fixedOrder: ['UGC', 'PGC'],
+            useWhitelist: false,
+            colors: ['rgb(73 127 252)', 'rgb(38 194 176)'],
+            chartInstanceKey: 'douyinVideoChartInstance',
+            logPrefix: '抖音视频数据图表'
+        };
+    }
+
+    /** 初始化抖音视频数据图表（默认指标：新增用户） */
+    function initDouyinVideoChart() {
+        console.log('初始化抖音视频数据图表...');
+        const yesterdayBtn = document.querySelector(
+            '.user-source-section .time-range-yesterday.semi-dy-open-radio-addon-buttonRadio-checked'
+        );
+        if (yesterdayBtn) {
+            updateDouyinVideoChart('yesterday');
+        } else {
+            updateDouyinVideoChart(7);
+        }
+    }
+
+    /**
+     * 更新抖音视频数据图表
+     * @param {string|number} timeRange - 'yesterday' 或天数（7、30）
+     * @param {string} [metric='newUsers'] - 'newUsers' | 'activeUsers' | 'conversionRate'
+     */
+    async function updateDouyinVideoChart(timeRange, metric) {
+        metric = metric || 'newUsers';
+        const metricName = VIDEO_METRIC_NAME[metric] || '新增用户';
+        const chartTitle = `抖音视频数据-${metricName}`;
+        const displayNameFor = (type) => `${type}${metricName}`;
+        const chartData = [];
+
+        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
+            console.warn('[抖音视频] 未找到图表数据配置');
+            return;
+        }
+        const allData = window.chartDataConfig.overview[0].data;
+
+        if (timeRange === 'yesterday') {
+            // 昨天维度：按小时权重把当日值切分到 24 小时（与来源分析口径一致）
+            const response = await fetch('./conf/hourly-weights.json');
+            const config = await response.json();
+            const weights = config.hourlyWeights;
+
+            const yest = new Date();
+            yest.setDate(yest.getDate() - 1);
+            const yStr = `${yest.getFullYear()}-${String(yest.getMonth() + 1).padStart(2, '0')}-${String(yest.getDate()).padStart(2, '0')}`;
+            const yData = allData.find(it => it.date === yStr);
+
+            if (yData && Array.isArray(yData.douyinVideoData)) {
+                for (let h = 0; h < 24; h++) {
+                    const hs = String(h).padStart(2, '0');
+                    const w = weights[hs] || 0;
+                    const label = `${yStr} ${hs}:00`;
+                    yData.douyinVideoData.forEach(v => {
+                        const raw = Number(v[metric]) || 0;
+                        chartData.push({
+                            date: label,
+                            value: metric === 'conversionRate'
+                                ? Number((raw * w).toFixed(2))
+                                : Math.round(raw * w),
+                            type: v.type,
+                            displayName: displayNameFor(v.type)
+                        });
+                    });
+                }
+            } else {
+                console.warn('[抖音视频] 昨天无视频数据:', yStr);
+            }
+        } else {
+            // 日维度：取近 N 天的 douyinVideoData
+            const days = Number(timeRange) || 7;
+            const today = new Date(); today.setHours(0, 0, 0, 0);
+            const from = new Date(); from.setDate(from.getDate() - days); from.setHours(0, 0, 0, 0);
+
+            const filtered = allData
+                .filter(item => {
+                    const d = new Date(item.date);
+                    return d >= from && d < today;
+                })
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            filtered.forEach(item => {
+                if (!Array.isArray(item.douyinVideoData)) return;
+                item.douyinVideoData.forEach(v => {
+                    chartData.push({
+                        date: item.date,
+                        value: Number(v[metric]) || 0,
+                        type: v.type,
+                        displayName: displayNameFor(v.type)
+                    });
+                });
+            });
+        }
+
+        renderMultiLineChart('visactor_window_10', chartData, chartTitle, timeRange, getVideoChartOptions());
+        console.log('✅ 抖音视频数据图表已更新');
     }
 
     // 暴露到全局
     window.initSourceAnalysisChart = initSourceAnalysisChart;
     window.updateSourceAnalysisChart = updateSourceAnalysisChart;
+    window.initDouyinVideoChart = initDouyinVideoChart;
+    window.updateDouyinVideoChart = updateDouyinVideoChart;
 })();

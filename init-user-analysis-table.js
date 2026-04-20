@@ -1232,4 +1232,183 @@
     window.initSourceSceneTable = initSourceSceneTable;
     window.updateSourceSceneTable = updateSourceSceneTable;
     window.exportSourceSceneTable = exportSourceSceneTable;
+
+    // ==================== 抖音视频数据 · 汇总表 ====================
+    // 固定 UGC / PGC 两行，跟随来源分析时间按钮（默认：昨天）
+
+    const DOUYIN_VIDEO_TYPE_ORDER = ['UGC', 'PGC'];
+
+    /** 聚合一组 douyinVideoData 条目，按 type 合并 */
+    function aggregateVideoByType(entries) {
+        // type -> { newUsers, activeUsers, rateNumerator, rateDenominator }
+        const buckets = new Map();
+
+        entries.forEach(v => {
+            if (!v || !v.type) return;
+            const b = buckets.get(v.type) || {
+                type: v.type,
+                newUsers: 0,
+                activeUsers: 0,
+                // 视频转化率用 activeUsers 加权平均
+                rateNumerator: 0,
+                rateDenominator: 0
+            };
+            const newUsers = Number(v.newUsers) || 0;
+            const activeUsers = Number(v.activeUsers) || 0;
+            const rate = Number(v.conversionRate) || 0;
+
+            b.newUsers += newUsers;
+            b.activeUsers += activeUsers;
+            b.rateNumerator += rate * activeUsers;
+            b.rateDenominator += activeUsers;
+
+            buckets.set(v.type, b);
+        });
+
+        return Array.from(buckets.values()).map(b => ({
+            type: b.type,
+            newUsers: b.newUsers,
+            activeUsers: b.activeUsers,
+            conversionRate: b.rateDenominator > 0
+                ? b.rateNumerator / b.rateDenominator
+                : 0
+        }));
+    }
+
+    /** 按时间范围收集视频数据（已按 type 聚合） */
+    function collectVideoByTimeRange(timeRange) {
+        const config = window.chartDataConfig && window.chartDataConfig.overview;
+        if (!config) return [];
+
+        const allDays = config[0].data;
+
+        if (timeRange === 'yesterday') {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const y = yesterday.getFullYear();
+            const m = String(yesterday.getMonth() + 1).padStart(2, '0');
+            const d = String(yesterday.getDate()).padStart(2, '0');
+            const yesterdayStr = `${y}-${m}-${d}`;
+            const dayData = allDays.find(item => item.date === yesterdayStr);
+            if (!dayData || !Array.isArray(dayData.douyinVideoData)) return [];
+            // 昨天直接返回当日明细（同 type 出现多条也做一次聚合，正常不会）
+            return aggregateVideoByType(dayData.douyinVideoData);
+        }
+
+        const days = Number(timeRange) || 7;
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const from = new Date();
+        from.setDate(from.getDate() - days);
+        from.setHours(0, 0, 0, 0);
+
+        const bucket = [];
+        allDays.forEach(item => {
+            const itemDate = new Date(item.date);
+            if (itemDate >= from && itemDate < today && Array.isArray(item.douyinVideoData)) {
+                bucket.push.apply(bucket, item.douyinVideoData);
+            }
+        });
+        return aggregateVideoByType(bucket);
+    }
+
+    /** 按固定顺序（UGC、PGC）输出，缺失类型补 0 */
+    function normalizeVideoRows(rows) {
+        const map = new Map(rows.map(r => [r.type, r]));
+        return DOUYIN_VIDEO_TYPE_ORDER.map(type => map.get(type) || {
+            type,
+            newUsers: 0,
+            activeUsers: 0,
+            conversionRate: 0
+        });
+    }
+
+    function formatPercent(val) {
+        return `${(Number(val) || 0).toFixed(2)}%`;
+    }
+
+    let douyinVideoTimeRange = 'yesterday';
+    let douyinVideoTableData = [];
+
+    function renderDouyinVideoTable(timeRange) {
+        console.log(`渲染抖音视频数据汇总表... (timeRange=${timeRange})`);
+
+        const tbody = document.querySelector('#douyin-video-tbody');
+        if (!tbody) {
+            console.warn('未找到抖音视频汇总表 tbody');
+            return;
+        }
+
+        douyinVideoTimeRange = timeRange;
+        const rows = normalizeVideoRows(collectVideoByTimeRange(timeRange));
+        douyinVideoTableData = rows;
+        window.douyinVideoTableData = rows;
+
+        tbody.innerHTML = '';
+        rows.forEach((row, idx) => {
+            const typeLabel = `${row.type}数据`;
+            const newUsersText = formatNumber(row.newUsers);
+            const activeUsersText = formatNumber(row.activeUsers);
+            const rateText = formatPercent(row.conversionRate);
+
+            const tr = document.createElement('tr');
+            tr.setAttribute('role', 'row');
+            tr.setAttribute('aria-rowindex', idx + 1);
+            tr.className = 'semi-dy-open-table-row';
+            tr.setAttribute('data-row-key', idx);
+
+            tr.innerHTML = `
+                <td role="gridcell" aria-colindex="1" class="semi-dy-open-table-row-cell"
+                    title="${typeLabel}">${typeLabel}</td>
+                <td role="gridcell" aria-colindex="2" class="semi-dy-open-table-row-cell"
+                    title="${newUsersText}">${newUsersText}</td>
+                <td role="gridcell" aria-colindex="3" class="semi-dy-open-table-row-cell"
+                    title="${activeUsersText}">${activeUsersText}</td>
+                <td role="gridcell" aria-colindex="4" class="semi-dy-open-table-row-cell"
+                    title="${rateText}">${rateText}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        console.log('✅ 抖音视频数据汇总表渲染完成');
+    }
+
+    function exportDouyinVideoTable() {
+        const headers = ['数据类型', '新增用户', '活跃用户', '视频转化率'];
+        const data = window.douyinVideoTableData;
+        if (!data || data.length === 0) {
+            console.warn('没有可导出的抖音视频数据');
+            return;
+        }
+        const csvRows = [headers.join(',')];
+        data.forEach(row => {
+            csvRows.push([
+                `${row.type}数据`,
+                row.newUsers,
+                row.activeUsers,
+                formatPercent(row.conversionRate)
+            ].join(','));
+        });
+        const blob = new Blob(['\uFEFF' + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.setAttribute('href', URL.createObjectURL(blob));
+        link.setAttribute('download', '抖音视频数据汇总.csv');
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        console.log('✅ 抖音视频数据汇总表导出完成');
+    }
+
+    function initDouyinVideoTable() {
+        renderDouyinVideoTable('yesterday');
+    }
+
+    function updateDouyinVideoTable(timeRange) {
+        renderDouyinVideoTable(timeRange);
+    }
+
+    window.initDouyinVideoTable = initDouyinVideoTable;
+    window.updateDouyinVideoTable = updateDouyinVideoTable;
+    window.exportDouyinVideoTable = exportDouyinVideoTable;
 })();

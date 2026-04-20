@@ -200,6 +200,23 @@
                         setTimeout(() => window.initSourceAnalysisChart(), 250);
                     }
 
+                    // 初始化抖音视频数据图表
+                    if (typeof window.initDouyinVideoChart === 'function') {
+                        setTimeout(() => window.initDouyinVideoChart(), 280);
+                    }
+
+                    // 初始化抖音视频数据汇总表
+                    if (typeof window.initDouyinVideoTable === 'function') {
+                        setTimeout(() => {
+                            window.initDouyinVideoTable();
+                            const exportBtn = document.querySelector('.export-douyin-video-btn');
+                            if (exportBtn && typeof window.exportDouyinVideoTable === 'function') {
+                                exportBtn.addEventListener('click', window.exportDouyinVideoTable);
+                                console.log('✅ 抖音视频数据导出按钮已绑定');
+                            }
+                        }, 300);
+                    }
+
                     // 初始化实时分析图表
                     if (typeof window.initRealTimeChart === 'function') {
                         setTimeout(() => window.initRealTimeChart(), 100);

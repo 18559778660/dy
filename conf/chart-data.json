@@ -341,6 +341,20 @@
                             "startup": 48,
                             "singleAvgDuration": 80
                         }
+                    ],
+                    "douyinVideoData": [
+                        {
+                            "type": "UGC",
+                            "newUsers": 1286,
+                            "activeUsers": 5840,
+                            "conversionRate": 12.35
+                        },
+                        {
+                            "type": "PGC",
+                            "newUsers": 742,
+                            "activeUsers": 3215,
+                            "conversionRate": 8.46
+                        }
                     ]
                 },
                 {
@@ -680,6 +694,20 @@
                             "newUsers": 38,
                             "startup": 48,
                             "singleAvgDuration": 80
+                        }
+                    ],
+                    "douyinVideoData": [
+                        {
+                            "type": "UGC",
+                            "newUsers": 1286,
+                            "activeUsers": 5840,
+                            "conversionRate": 12.35
+                        },
+                        {
+                            "type": "PGC",
+                            "newUsers": 742,
+                            "activeUsers": 3215,
+                            "conversionRate": 8.46
                         }
                     ]
                 },
@@ -1021,6 +1049,20 @@
                             "startup": 48,
                             "singleAvgDuration": 80
                         }
+                    ],
+                    "douyinVideoData": [
+                        {
+                            "type": "UGC",
+                            "newUsers": 1286,
+                            "activeUsers": 5840,
+                            "conversionRate": 12.35
+                        },
+                        {
+                            "type": "PGC",
+                            "newUsers": 742,
+                            "activeUsers": 3215,
+                            "conversionRate": 8.46
+                        }
                     ]
                 },
                 {
@@ -1360,6 +1402,20 @@
                             "newUsers": 38,
                             "startup": 48,
                             "singleAvgDuration": 80
+                        }
+                    ],
+                    "douyinVideoData": [
+                        {
+                            "type": "UGC",
+                            "newUsers": 1286,
+                            "activeUsers": 5840,
+                            "conversionRate": 12.35
+                        },
+                        {
+                            "type": "PGC",
+                            "newUsers": 742,
+                            "activeUsers": 3215,
+                            "conversionRate": 8.46
                         }
                     ]
                 },
@@ -1701,6 +1757,20 @@
                             "startup": 48,
                             "singleAvgDuration": 80
                         }
+                    ],
+                    "douyinVideoData": [
+                        {
+                            "type": "UGC",
+                            "newUsers": 1286,
+                            "activeUsers": 5840,
+                            "conversionRate": 12.35
+                        },
+                        {
+                            "type": "PGC",
+                            "newUsers": 742,
+                            "activeUsers": 3215,
+                            "conversionRate": 8.46
+                        }
                     ]
                 },
                 {
@@ -2040,6 +2110,20 @@
                             "newUsers": 38,
                             "startup": 48,
                             "singleAvgDuration": 80
+                        }
+                    ],
+                    "douyinVideoData": [
+                        {
+                            "type": "UGC",
+                            "newUsers": 1286,
+                            "activeUsers": 5840,
+                            "conversionRate": 12.35
+                        },
+                        {
+                            "type": "PGC",
+                            "newUsers": 742,
+                            "activeUsers": 3215,
+                            "conversionRate": 8.46
                         }
                     ]
                 },
@@ -2381,6 +2465,20 @@
                             "startup": 48,
                             "singleAvgDuration": 80
                         }
+                    ],
+                    "douyinVideoData": [
+                        {
+                            "type": "UGC",
+                            "newUsers": 1286,
+                            "activeUsers": 5840,
+                            "conversionRate": 12.35
+                        },
+                        {
+                            "type": "PGC",
+                            "newUsers": 742,
+                            "activeUsers": 3215,
+                            "conversionRate": 8.46
+                        }
                     ]
                 },
                 {
@@ -2720,6 +2818,20 @@
                             "newUsers": 38,
                             "startup": 48,
                             "singleAvgDuration": 80
+                        }
+                    ],
+                    "douyinVideoData": [
+                        {
+                            "type": "UGC",
+                            "newUsers": 1286,
+                            "activeUsers": 5840,
+                            "conversionRate": 12.35
+                        },
+                        {
+                            "type": "PGC",
+                            "newUsers": 742,
+                            "activeUsers": 3215,
+                            "conversionRate": 8.46
                         }
                     ]
                 }
