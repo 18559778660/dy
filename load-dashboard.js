@@ -195,14 +195,13 @@
                         }, 220);
                     }
 
-                    // 初始化来源分析图表
-                    if (typeof window.initSourceAnalysisChart === 'function') {
-                        setTimeout(() => window.initSourceAnalysisChart(), 250);
-                    }
-
-                    // 初始化来源场景多选下拉（仅 UI）
+                    // 先初始化来源场景多选下拉（默认选 Top 7，置入 window._sourceSceneSelected）
+                    // 再渲染图表，保证图表读到正确的选中集合
                     if (typeof window.initSourceSceneSelect === 'function') {
-                        setTimeout(() => window.initSourceSceneSelect(), 260);
+                        setTimeout(() => window.initSourceSceneSelect(), 240);
+                    }
+                    if (typeof window.initSourceAnalysisChart === 'function') {
+                        setTimeout(() => window.initSourceAnalysisChart(), 260);
                     }
 
                     // 初始化抖音视频数据图表

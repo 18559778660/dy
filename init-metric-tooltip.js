@@ -519,6 +519,8 @@ function getCurrentSourceTimeRange() {
     if (section.querySelector('.time-range-7days.semi-dy-open-radio-addon-buttonRadio-checked')) return 7;
     return 'yesterday';
 }
+// 暴露到全局，场景下拉等模块复用
+window.getCurrentSourceTimeRange = getCurrentSourceTimeRange;
 
 // 切换"抖音视频数据"整块（图表 + 汇总表）的可见性，仅抖音 APP 显示
 function setDouyinVideoSectionVisible(visible) {
@@ -579,10 +581,10 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 window._currentAppId = value;
                 const range = getCurrentSourceTimeRange();
                 console.log('[source-app] APP 切换:', value, label, '当前时间:', range);
+                // 先重置场景选中（按新 APP 的 Top 7 默认选中），再渲染图表/表格
+                window.initSourceSceneSelect && window.initSourceSceneSelect();
                 window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(range);
                 window.updateSourceSceneTable && window.updateSourceSceneTable(range);
-                // 来源场景多选下拉：重新聚合当前 APP 的场景全集并默认全选
-                window.initSourceSceneSelect && window.initSourceSceneSelect();
                 // 抖音视频数据（图表 + 汇总表）是抖音独有，非抖音 APP 整块隐藏
                 setDouyinVideoSectionVisible(value === 'dy');
                 if (value === 'dy') {

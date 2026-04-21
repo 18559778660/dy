@@ -273,6 +273,17 @@
         }
         renderTags();
         renderPanelOptions();
+        // 联动图表：按当前选中场景重新渲染
+        notifyChartRefresh();
+    }
+
+    // 触发来源分析图表按当前选中场景重新渲染
+    function notifyChartRefresh() {
+        if (typeof window.updateSourceAnalysisChart !== 'function') return;
+        const range = (typeof window.getCurrentSourceTimeRange === 'function')
+            ? window.getCurrentSourceTimeRange()
+            : 'yesterday';
+        window.updateSourceAnalysisChart(range);
     }
 
     // ------- Toast（达到上限提示） -------

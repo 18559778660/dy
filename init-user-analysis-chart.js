@@ -971,8 +971,11 @@
             console.log('生成的日数据:', multiSeriesData.length, '条记录');
         }
 
-        // 渲染多折线图
-        renderMultiLineChart('visactor_window_9', multiSeriesData, chartTitle, timeRange);
+        // 次均游戏时长按秒存储，Y 轴/tooltip 展示为 HH:MM:SS
+        const options = metric === 'singleAvgDuration'
+            ? { valueFormatter: formatDuration }
+            : {};
+        renderMultiLineChart('visactor_window_9', multiSeriesData, chartTitle, timeRange, options);
         console.log('✅ 来源分析图表已更新');
     }
 
@@ -1045,11 +1048,16 @@
             data = data.filter(d => seriesOrder.includes(d[seriesField]));
         } else {
             // 动态 Top-N 场景（来源分析）：
-            //   1) 用与汇总表相同的白名单收紧候选场景
-            //   2) 按 seriesField 汇总 value（与表格「dailyUsers 降序」口径一致）
-            //   3) 取汇总值最大的前 TOP_N 个
+            //   · 来源多选下拉一旦初始化（Set 已存在），以它为准：包括空 Set = 明确取消全部 = 图表为空
+            //   · 未初始化时（Set 为 undefined），回退到白名单 + 默认 Top N
+            //   · 颜色顺序始终按「当前指标汇总值降序」计算，保证 top1 对应第一个颜色
             const TOP_N = colors.length;
-            if (useWhitelist) {
+            const userSelected = window._sourceSceneSelected;
+            const hasUserSelectionState = userSelected instanceof Set;
+
+            if (hasUserSelectionState) {
+                data = data.filter(d => userSelected.has(d[seriesField]));
+            } else if (useWhitelist) {
                 const whitelist = typeof window.getSourceSceneWhitelist === 'function'
                     ? window.getSourceSceneWhitelist(timeRange)
                     : null;
