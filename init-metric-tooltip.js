@@ -309,6 +309,18 @@ function initDropdownFilters() {
         ]);
     }
 
+    // 来源分析-指标下拉（活跃用户数 / 新增用户数 / 启动次数 / 次均游戏时长）
+    // value 对应 douyinSourceScenes[i] 上的字段名
+    const sourceMetricFilter = document.querySelector('.filter-source-metric');
+    if (sourceMetricFilter) {
+        createDropdownContent(sourceMetricFilter, 'semi-dy-open-select-source-metric', [
+            { value: 'dailyUsers', label: '活跃用户数' },
+            { value: 'newUsers', label: '新增用户数' },
+            { value: 'startup', label: '启动次数' },
+            { value: 'singleAvgDuration', label: '次均游戏时长' }
+        ]);
+    }
+
     // 来源分析 APP 大分类下拉（切换 APP 时，该 section 下所有图表/表格同步刷新）
     const sourceAppFilter = document.querySelector('.filter-source-app');
     if (sourceAppFilter) {
@@ -325,6 +337,9 @@ function initDropdownFilters() {
     }
     if (sourceAppFilter) {
         allFilters.push(sourceAppFilter);
+    }
+    if (sourceMetricFilter) {
+        allFilters.push(sourceMetricFilter);
     }
 
     allFilters.forEach(filter => {
@@ -397,6 +412,7 @@ function initDropdownFilters() {
         if (e.target.closest('.filter-app') ||
             e.target.closest('.filter-os') ||
             e.target.closest('.filter-video-metric') ||
+            e.target.closest('.filter-source-metric') ||
             e.target.closest('.filter-source-app') ||
             e.target.closest('.filter-source-scene') ||
             e.target.closest('.source-scene-panel') ||
@@ -549,6 +565,14 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 console.log('[video-metric] 指标切换:', value, label, '当前时间:', range);
                 if (typeof window.updateDouyinVideoChart === 'function') {
                     window.updateDouyinVideoChart(range, value);
+                }
+            } else if (tabType === 'source-metric') {
+                // 来源分析-指标切换：保持当前时间范围，只换指标
+                window._sourceAnalysisMetric = value;
+                const range = getCurrentSourceTimeRange();
+                console.log('[source-metric] 指标切换:', value, label, '当前时间:', range);
+                if (typeof window.updateSourceAnalysisChart === 'function') {
+                    window.updateSourceAnalysisChart(range, value);
                 }
             } else if (tabType === 'source-app') {
                 // 来源分析 APP 大分类切换：换数据源后，该 section 下所有图表/表格重新渲染

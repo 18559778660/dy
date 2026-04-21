@@ -864,8 +864,20 @@
      * 更新来源分析图表（通用函数）
      * @param {string|number} timeRange - 时间范围：'yesterday' 或 天数（7, 30等）
      */
-    async function updateSourceAnalysisChart(timeRange) {
-        console.log('[来源分析] 更新时间范围:', timeRange);
+    // 指标字段 → 显示名称
+    const SOURCE_METRIC_NAME = {
+        dailyUsers: '活跃用户数',
+        newUsers: '新增用户数',
+        startup: '启动次数',
+        singleAvgDuration: '次均游戏时长'
+    };
+
+    async function updateSourceAnalysisChart(timeRange, metric) {
+        // 不传 metric 时沿用当前选中（默认 dailyUsers），让切 APP / 切时间时保持指标
+        metric = metric || window._sourceAnalysisMetric || 'dailyUsers';
+        window._sourceAnalysisMetric = metric;
+        const metricName = SOURCE_METRIC_NAME[metric] || '活跃用户数';
+        console.log('[来源分析] 更新时间范围:', timeRange, '指标:', metric);
 
         let multiSeriesData = [];
         let chartTitle = '';
@@ -906,16 +918,19 @@
                 const timeLabel = `${yesterdayStr} ${hourStr}:00`;
 
                 yesterdayData.douyinSourceScenes.forEach(scene => {
+                    const raw = scene[metric] || 0;
+                    // 次均游戏时长按小时分布不适合乘权重（它是"次均"不是累计），保持原值；其它指标按权重拆
+                    const val = metric === 'singleAvgDuration' ? raw : Math.round(raw * weight);
                     multiSeriesData.push({
                         date: timeLabel,
-                        value: Math.round(scene.dailyUsers * weight),
+                        value: val,
                         sceneId: scene.sceneId,
                         sceneName: scene.sceneName
                     });
                 });
             }
 
-            chartTitle = '昨日来源分析-小时活跃用户数';
+            chartTitle = `昨日来源分析-小时${metricName}`;
             console.log('生成的小时数据:', multiSeriesData.length, '条记录');
         } else {
             // 加载指定天数的日数据
@@ -943,14 +958,16 @@
                 item.douyinSourceScenes.forEach(scene => {
                     multiSeriesData.push({
                         date: item.date,
-                        value: scene.dailyUsers,
+                        value: scene[metric] || 0,
                         sceneId: scene.sceneId,
                         sceneName: scene.sceneName
                     });
                 });
             });
 
-            chartTitle = days === 7 ? '来源分析-日活跃用户数' : `来源分析-日活跃用户数（近${days}天）`;
+            chartTitle = days === 7
+                ? `来源分析-日${metricName}`
+                : `来源分析-日${metricName}（近${days}天）`;
             console.log('生成的日数据:', multiSeriesData.length, '条记录');
         }
 

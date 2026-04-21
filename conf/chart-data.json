@@ -2881,18 +2881,18 @@
                         {
                             "sceneId": "023010",
                             "sceneName": "主播端发券-查看链接",
-                            "dailyUsers": 80,
-                            "newUsers": 80,
-                            "startup": 80,
-                            "singleAvgDuration": 80
+                            "dailyUsers": 111,
+                            "newUsers": 222,
+                            "startup": 333,
+                            "singleAvgDuration": 444
                         },
                         {
                             "sceneId": "023041",
                             "sceneName": "直玩容器启动小游戏",
-                            "dailyUsers": 90,
-                            "newUsers": 90,
-                            "startup": 90,
-                            "singleAvgDuration": 90
+                            "dailyUsers": 111,
+                            "newUsers": 222,
+                            "startup": 333,
+                            "singleAvgDuration": 444
                         },
                         {
                             "sceneId": "023001",
