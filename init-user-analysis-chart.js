@@ -1711,4 +1711,6 @@
     window.updateSourceAnalysisChart = updateSourceAnalysisChart;
     window.initDouyinVideoChart = initDouyinVideoChart;
     window.updateDouyinVideoChart = updateDouyinVideoChart;
+    // 通用多折线/面积图渲染器（其它页面如转化分析可直接复用）
+    window.renderMultiLineChart = renderMultiLineChart;
 })();

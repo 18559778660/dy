@@ -2076,7 +2076,7 @@
                           </div>
                           <div class="flex flex-row items-center">
                             <div><button
-                                class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-borderless"
+                                class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-borderless export-conversion-record-btn"
                                 type="button" aria-disabled="false"><span class="semi-dy-open-button-content"
                                   x-semi-prop="children"><span class="flex items-center"><span class="mr-1"><span
                                         role="img" aria-label="export"
@@ -2094,11 +2094,10 @@
                         </div>
                         <!-- 录屏数据卡片由 init-conversion-analysis.js 动态渲染 -->
                         <div class="grid grid-cols-5 gap-4 conversion-record-cards"></div>
+                        <!-- 录屏数据折线图由 init-conversion-analysis.js 渲染 -->
                         <div class="mt-4 w-full">
-                          <div style="position: relative; height: 305px; width: 100%; display: block;"><canvas
-                              width="1128" height="305" elementtiming="micro-game-element-timing"
-                              id="visactor_window_13"
-                              style="width: 1128px; height: 305px; display: block; cursor: inherit;"></canvas></div>
+                          <div id="visactor_window_13"
+                            style="position: relative; height: 340px; width: 100%; display: block;"></div>
                         </div>
                       </div>
                     </div>
