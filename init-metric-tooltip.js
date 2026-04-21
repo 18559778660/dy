@@ -98,6 +98,33 @@
     initPageTabs();
 })();
 
+// ==================== 全局 APP 筛选（大分类） ====================
+// 切换 APP 时，各个 updateXxx 函数通过 getCurrentAppData() 统一读取当前 APP 的数据源
+// 默认 'dy'（抖音）——HTML 里 APP 下拉默认显示"抖音"
+window._currentAppId = 'dy';
+window.getCurrentAppData = function () {
+    const overview = (window.chartDataConfig && window.chartDataConfig.overview) || [];
+    const appId = window._currentAppId || 'dy';
+    const found = overview.find(o => o && o.appId === appId);
+    return (found && found.data) || [];
+};
+
+// 来源分析 APP 下拉选项（其它页面要用同一份时直接复用这个常量）
+const SOURCE_APP_OPTIONS = [
+    { value: 'dy', label: '抖音' },
+    { value: 'dy_lite', label: '抖音极速版' },
+    { value: 'fq', label: '番茄小说' },
+    { value: 'toutiao', label: '今日头条' },
+    { value: 'toutiao_lite', label: '今日头条极速版' },
+    { value: 'dyhs', label: '抖音火山版' },
+    { value: 'mmy', label: '摸摸鱼' },
+    { value: 'dyhs_old', label: '抖音火山 - 旧版' },
+    { value: 'qsyy', label: '汽水音乐' },
+    { value: 'dypc', label: '抖音PC' },
+    { value: 'hgdj', label: '红果短剧' }
+];
+window.SOURCE_APP_OPTIONS = SOURCE_APP_OPTIONS;
+
 // Banner 关闭函数（暴露到全局供页面切换时调用）
 window.initBannerClose = initBannerClose;
 
@@ -255,19 +282,11 @@ function initDropdownFilters() {
         // 为每个筛选框生成唯一的 dropdownId
         const dropdownId = `semi-dy-open-select-app-${index}`;
 
+        // 复用 SOURCE_APP_OPTIONS（来源分析同一套）+ 前置"全部" + 该页面独有的"皮皮虾"
         createDropdownContent(appFilter, dropdownId, [
             { value: 'all', label: '全部' },
-            { value: 'dy', label: '抖音' },
-            { value: 'dy_lite', label: '抖音lite' },
-            { value: 'fq', label: '番茄小说' },
-            { value: 'toutiao', label: '今日头条' },
-            { value: 'toutiao_lite', label: '今日头条lite' },
-            { value: 'dyhs', label: '抖音火山 - 新版' },
-            { value: 'ppx', label: '皮皮虾' },
-            { value: 'mmy', label: '摸摸鱼' },
-            { value: 'dyhs_old', label: '抖音火山 - 旧版' },
-            { value: 'hgdj', label: '红果短剧' },
-            { value: 'dypc', label: '抖音PC' }
+            ...SOURCE_APP_OPTIONS,
+            { value: 'ppx', label: '皮皮虾' }
         ]);
     });
 
@@ -290,6 +309,12 @@ function initDropdownFilters() {
         ]);
     }
 
+    // 来源分析 APP 大分类下拉（切换 APP 时，该 section 下所有图表/表格同步刷新）
+    const sourceAppFilter = document.querySelector('.filter-source-app');
+    if (sourceAppFilter) {
+        createDropdownContent(sourceAppFilter, 'semi-dy-open-select-source-app', SOURCE_APP_OPTIONS);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
@@ -297,6 +322,9 @@ function initDropdownFilters() {
     }
     if (videoMetricFilter) {
         allFilters.push(videoMetricFilter);
+    }
+    if (sourceAppFilter) {
+        allFilters.push(sourceAppFilter);
     }
 
     allFilters.forEach(filter => {
@@ -369,6 +397,7 @@ function initDropdownFilters() {
         if (e.target.closest('.filter-app') ||
             e.target.closest('.filter-os') ||
             e.target.closest('.filter-video-metric') ||
+            e.target.closest('.filter-source-app') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
             e.target.closest('.time-range-30days')) {
@@ -473,6 +502,13 @@ function getCurrentSourceTimeRange() {
     return 'yesterday';
 }
 
+// 切换"抖音视频数据"整块（图表 + 汇总表）的可见性，仅抖音 APP 显示
+function setDouyinVideoSectionVisible(visible) {
+    const section = document.querySelector('.douyin-video-section');
+    if (!section) return;
+    section.style.display = visible ? '' : 'none';
+}
+
 // 绑定下拉框选项的事件（点击选中、hover 效果）
 function bindDropdownEvents(triggerElement, dropdownId) {
     const dropdown = document.getElementById(dropdownId);
@@ -511,6 +547,19 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 console.log('[video-metric] 指标切换:', value, label, '当前时间:', range);
                 if (typeof window.updateDouyinVideoChart === 'function') {
                     window.updateDouyinVideoChart(range, value);
+                }
+            } else if (tabType === 'source-app') {
+                // 来源分析 APP 大分类切换：换数据源后，该 section 下所有图表/表格重新渲染
+                window._currentAppId = value;
+                const range = getCurrentSourceTimeRange();
+                console.log('[source-app] APP 切换:', value, label, '当前时间:', range);
+                window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(range);
+                window.updateSourceSceneTable && window.updateSourceSceneTable(range);
+                // 抖音视频数据（图表 + 汇总表）是抖音独有，非抖音 APP 整块隐藏
+                setDouyinVideoSectionVisible(value === 'dy');
+                if (value === 'dy') {
+                    window.updateDouyinVideoChart && window.updateDouyinVideoChart(range);
+                    window.updateDouyinVideoTable && window.updateDouyinVideoTable(range);
                 }
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);

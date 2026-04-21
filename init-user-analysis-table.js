@@ -1029,10 +1029,8 @@
 
     /** 按 timeRange 收集场景数据（未排序、未分页） */
     function collectScenesByTimeRange(timeRange) {
-        const config = window.chartDataConfig && window.chartDataConfig.overview;
-        if (!config) return [];
-
-        const allDays = config[0].data;
+        const allDays = window.getCurrentAppData();
+        if (!allDays.length) return [];
 
         if (timeRange === 'yesterday') {
             const yesterday = new Date();
@@ -1277,10 +1275,8 @@
 
     /** 按时间范围收集视频数据（已按 type 聚合） */
     function collectVideoByTimeRange(timeRange) {
-        const config = window.chartDataConfig && window.chartDataConfig.overview;
-        if (!config) return [];
-
-        const allDays = config[0].data;
+        const allDays = window.getCurrentAppData();
+        if (!allDays.length) return [];
 
         if (timeRange === 'yesterday') {
             const yesterday = new Date();

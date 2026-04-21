@@ -887,17 +887,13 @@
 
             console.log('昨天日期:', yesterdayStr);
 
-            // 3. 从全局配置中获取昨天的日数据
-            if (!window.chartDataConfig || !window.chartDataConfig.overview) {
-                console.error('未找到图表数据配置');
-                return;
-            }
-
-            const chartConfig = window.chartDataConfig.overview[0];
-            const yesterdayData = chartConfig.data.find(item => item.date === yesterdayStr);
+            // 3. 从当前 APP 的数据源中获取昨天的日数据
+            const appData = window.getCurrentAppData();
+            const yesterdayData = appData.find(item => item.date === yesterdayStr);
 
             if (!yesterdayData) {
-                console.error('未找到昨天的数据:', yesterdayStr);
+                console.warn('[来源分析] 当前 APP 未找到昨天的数据:', yesterdayStr);
+                renderMultiLineChart('visactor_window_9', [], '来源分析-暂无数据', timeRange);
                 return;
             }
 
@@ -925,13 +921,7 @@
             // 加载指定天数的日数据
             const days = timeRange;
 
-            if (!window.chartDataConfig || !window.chartDataConfig.overview) {
-                console.warn('未找到图表数据配置');
-                return;
-            }
-
-            const chartConfig = window.chartDataConfig.overview[0];
-            const data = chartConfig.data;
+            const data = window.getCurrentAppData();
 
             // 获取指定天数的数据
             const today = new Date();
@@ -1407,11 +1397,7 @@
         const displayNameFor = (type) => `${type}${metricName}`;
         const chartData = [];
 
-        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
-            console.warn('[抖音视频] 未找到图表数据配置');
-            return;
-        }
-        const allData = window.chartDataConfig.overview[0].data;
+        const allData = window.getCurrentAppData();
 
         if (timeRange === 'yesterday') {
             // 昨天维度：按小时权重把当日值切分到 24 小时（与来源分析口径一致）
