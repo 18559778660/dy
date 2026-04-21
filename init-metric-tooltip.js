@@ -295,7 +295,9 @@ function initDropdownFilters() {
         createDropdownContent(osFilter, 'semi-dy-open-select-be2rm31', [
             { value: 'all', label: '全部' },
             { value: 'ios', label: 'ios' },
-            { value: 'android', label: 'android' }
+            { value: 'android', label: 'android' },
+            { value: 'windows', label: 'windows' },
+            { value: 'open_harmony', label: 'open_harmony' }
         ]);
     }
 
