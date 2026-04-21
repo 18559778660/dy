@@ -847,17 +847,67 @@
     function initSourceAnalysisChart() {
         console.log('初始化来源分析图表...');
 
+        // 绑定"折线图/饼图"切换（幂等）
+        bindSourceChartViewToggle();
+
         // 检查当前选中的时间范围按钮
         const yesterdayBtn = document.querySelector('.time-range-yesterday.semi-dy-open-radio-addon-buttonRadio-checked');
 
         // 根据选中的按钮加载对应的数据
         if (yesterdayBtn) {
-            console.log('[来源分析] 检测到“昨天”按钮选中，加载昨天的小时数据');
+            console.log('[来源分析] 检测到"昨天"按钮选中，加载昨天的小时数据');
             updateSourceAnalysisChart('yesterday');
         } else {
             console.log('[来源分析] 加载近7天数据');
             updateSourceAnalysisChart(7);
         }
+    }
+
+    // 绑定来源分析图表视图单选（折线图 / 饼图）
+    function bindSourceChartViewToggle() {
+        const group = document.querySelector('.source-chart-view-radio');
+        if (!group || group.dataset.viewBound === '1') return;
+        group.dataset.viewBound = '1';
+
+        const labels = group.querySelectorAll('label[data-view]');
+        labels.forEach(label => {
+            label.addEventListener('click', function (e) {
+                e.preventDefault();
+                const view = this.getAttribute('data-view');
+                if (!view || view === window._sourceChartView) return;
+                setSourceChartViewCheckedStyle(group, view);
+                window._sourceChartView = view;
+                const range = (typeof window.getCurrentSourceTimeRange === 'function')
+                    ? window.getCurrentSourceTimeRange()
+                    : 'yesterday';
+                updateSourceAnalysisChart(range);
+            });
+        });
+    }
+
+    // 同步单选按钮的 checked 样式类（Semi button-radio 要改 3 个 modifier）
+    function setSourceChartViewCheckedStyle(group, view) {
+        group.querySelectorAll('label[data-view]').forEach(label => {
+            const isTarget = label.getAttribute('data-view') === view;
+            label.classList.toggle('semi-dy-open-radio-checked', isTarget);
+            const inner = label.querySelector('.semi-dy-open-radio-inner');
+            if (inner) inner.classList.toggle('semi-dy-open-radio-inner-checked', isTarget);
+            const addon = label.querySelector('.semi-dy-open-radio-addon-buttonRadio');
+            if (addon) addon.classList.toggle('semi-dy-open-radio-addon-buttonRadio-checked', isTarget);
+            // radio dot svg 只在 checked label 里存在（Semi 原结构），为保险也同步一下
+            const innerInner = label.querySelector('.semi-dy-open-radio-inner > span:first-child');
+            if (innerInner) {
+                if (isTarget && !innerInner.querySelector('.semi-dy-open-icon-radio')) {
+                    innerInner.innerHTML = '<span role="img" aria-label="radio" '
+                        + 'class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-radio">'
+                        + '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" '
+                        + 'width="1em" height="1em" focusable="false" aria-hidden="true">'
+                        + '<circle cx="12" cy="12" r="5" fill="currentColor"></circle></svg></span>';
+                } else if (!isTarget) {
+                    innerInner.innerHTML = '';
+                }
+            }
+        });
     }
 
     /**
@@ -971,12 +1021,178 @@
             console.log('生成的日数据:', multiSeriesData.length, '条记录');
         }
 
-        // 次均游戏时长按秒存储，Y 轴/tooltip 展示为 HH:MM:SS
-        const options = metric === 'singleAvgDuration'
+        // 次均游戏时长按秒存储，折线图 Y 轴/tooltip 展示为 HH:MM:SS；饼图直接显示数字
+        const lineOptions = metric === 'singleAvgDuration'
             ? { valueFormatter: formatDuration }
             : {};
-        renderMultiLineChart('visactor_window_9', multiSeriesData, chartTitle, timeRange, options);
-        console.log('✅ 来源分析图表已更新');
+
+        // 根据当前视图（折线/饼图）选择 render 函数
+        const view = window._sourceChartView || 'line';
+        if (view === 'pie') {
+            renderScenePieChart('visactor_window_9', multiSeriesData, chartTitle, timeRange, {});
+        } else {
+            renderMultiLineChart('visactor_window_9', multiSeriesData, chartTitle, timeRange, lineOptions);
+        }
+        console.log('✅ 来源分析图表已更新，视图:', view);
+    }
+
+    /**
+     * 场景数据饼图渲染
+     *  · 复用与 renderMultiLineChart 一致的"用户选中/白名单"过滤 + "汇总值降序" 颜色映射
+     *  · 同一容器（visactor_window_9）复用 chartInstanceKey，切换时自动 release 旧实例
+     */
+    function renderScenePieChart(containerId, data, title, timeRange, options) {
+        options = options || {};
+        const seriesField = options.seriesField || 'sceneId';
+        const nameField = options.nameField || 'sceneName';
+        const useWhitelist = options.useWhitelist !== false;
+        const chartInstanceKey = options.chartInstanceKey || 'sourceAnalysisChartInstance';
+        const logPrefix = options.logPrefix || '来源分析图表';
+        const valueFormatter = typeof options.valueFormatter === 'function' ? options.valueFormatter : null;
+        const tooltipValueFormat = (v) => {
+            if (valueFormatter) return valueFormatter(v);
+            return (Number(v) || 0).toLocaleString('zh-CN');
+        };
+
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.warn(`未找到图表容器: ${containerId}`);
+            return;
+        }
+
+        // 销毁旧实例（折线图/饼图共用一个 key）
+        if (window[chartInstanceKey]) {
+            window[chartInstanceKey].release();
+            window[chartInstanceKey] = null;
+        }
+
+        const colors = [
+            'rgb(73 127 252)',  // 蓝色
+            'rgb(38 194 176)',  // 绿色
+            'rgb(253 166 51)',  // 橙色
+            'rgb(251 218 49)',  // 黄色
+            'rgb(89 194 98)',   // 绿色
+            'rgb(167 218 44)',  // 绿色
+            'rgb(180 74 194)'   // 紫色
+        ];
+        const TOP_N = colors.length;
+
+        // ---- 过滤：与折线图完全同口径 ----
+        const userSelected = window._sourceSceneSelected;
+        const hasUserSelectionState = userSelected instanceof Set;
+        if (hasUserSelectionState) {
+            data = data.filter(d => userSelected.has(d[seriesField]));
+        } else if (useWhitelist) {
+            const whitelist = typeof window.getSourceSceneWhitelist === 'function'
+                ? window.getSourceSceneWhitelist(timeRange)
+                : null;
+            if (whitelist) data = data.filter(d => whitelist.has(d[seriesField]));
+        }
+
+        // ---- 按 seriesField 聚合 value + 记 name ----
+        const nameMap = {};
+        const valueBySeries = new Map();
+        data.forEach(d => {
+            valueBySeries.set(d[seriesField], (valueBySeries.get(d[seriesField]) || 0) + (d.value || 0));
+            nameMap[d[seriesField]] = d[nameField];
+        });
+        const seriesOrder = Array.from(valueBySeries.entries())
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, TOP_N)
+            .map(([k]) => k);
+
+        const pieData = seriesOrder.map(id => ({
+            sceneId: id,
+            sceneName: nameMap[id] || id,
+            value: valueBySeries.get(id) || 0
+        }));
+        const totalValue = pieData.reduce((s, d) => s + (d.value || 0), 0);
+        const totalText = tooltipValueFormat(totalValue);
+
+        // ---- VChart pie spec ----
+        const spec = {
+            type: 'pie',
+            data: [{ id: 'data', values: pieData }],
+            categoryField: 'sceneId',
+            valueField: 'value',
+            outerRadius: 0.78,
+            innerRadius: 0.5,
+            padAngle: 0.6,
+            color: { type: 'ordinal', domain: seriesOrder, range: colors },
+            label: {
+                visible: true,
+                position: 'outside',
+                line: { visible: true, smooth: false },
+                formatMethod: (text, datum) => {
+                    const v = datum && datum.value ? datum.value : 0;
+                    const pct = totalValue > 0 ? (v / totalValue * 100).toFixed(2) : '0.00';
+                    const name = nameMap[datum.sceneId] || datum.sceneId || '';
+                    return {
+                        type: 'rich',
+                        text: [
+                            { text: `${tooltipValueFormat(v)} (${pct}%)`, fontSize: 16, fontWeight: 'bold', fill: '#1f2329' },
+                            { text: '\n' },
+                            { text: name, fontSize: 15, fill: '#86909c' }
+                        ]
+                    };
+                },
+                style: {
+                    lineHeight: 22,
+                    textBaseline: 'middle'
+                }
+            },
+            indicator: [{
+                visible: true,
+                trigger: 'none',
+                title: {
+                    visible: true,
+                    autoFit: true,
+                    style: {
+                        text: totalText,
+                        fontSize: 22,
+                        fontWeight: 'normal',
+                        fill: '#1f2329'
+                    }
+                }
+            }],
+            tooltip: {
+                mark: {
+                    title: {
+                        value: (datum) => nameMap[datum.sceneId] || datum.sceneId || ''
+                    },
+                    content: [{
+                        key: '占比',
+                        value: (datum) => {
+                            const v = datum && datum.value ? datum.value : 0;
+                            const pct = totalValue > 0 ? (v / totalValue * 100).toFixed(2) : '0.00';
+                            return `${pct}%（${tooltipValueFormat(v)}）`;
+                        }
+                    }]
+                }
+            },
+            legends: {
+                visible: true,
+                orient: 'bottom',
+                position: 'middle',
+                item: {
+                    shape: { style: { symbolType: 'circle' } },
+                    label: {
+                        formatMethod: (text) => nameMap[text] || text
+                    }
+                }
+            },
+            animation: false
+        };
+
+        const ChartClass = VChart.VChart || VChart;
+        const chart = new ChartClass(spec, {
+            dom: container,
+            width: container.offsetWidth || 1128,
+            height: container.offsetHeight || 340
+        });
+        chart.renderSync();
+        window[chartInstanceKey] = chart;
+        console.log(`✅ ${logPrefix} 饼图渲染完成，场景数:`, seriesOrder.length);
     }
 
     /**
