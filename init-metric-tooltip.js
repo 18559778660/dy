@@ -398,6 +398,8 @@ function initDropdownFilters() {
             e.target.closest('.filter-os') ||
             e.target.closest('.filter-video-metric') ||
             e.target.closest('.filter-source-app') ||
+            e.target.closest('.filter-source-scene') ||
+            e.target.closest('.source-scene-panel') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
             e.target.closest('.time-range-30days')) {
@@ -555,6 +557,8 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 console.log('[source-app] APP 切换:', value, label, '当前时间:', range);
                 window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(range);
                 window.updateSourceSceneTable && window.updateSourceSceneTable(range);
+                // 来源场景多选下拉：重新聚合当前 APP 的场景全集并默认全选
+                window.initSourceSceneSelect && window.initSourceSceneSelect();
                 // 抖音视频数据（图表 + 汇总表）是抖音独有，非抖音 APP 整块隐藏
                 setDouyinVideoSectionVisible(value === 'dy');
                 if (value === 'dy') {

@@ -200,6 +200,11 @@
                         setTimeout(() => window.initSourceAnalysisChart(), 250);
                     }
 
+                    // 初始化来源场景多选下拉（仅 UI）
+                    if (typeof window.initSourceSceneSelect === 'function') {
+                        setTimeout(() => window.initSourceSceneSelect(), 260);
+                    }
+
                     // 初始化抖音视频数据图表
                     if (typeof window.initDouyinVideoChart === 'function') {
                         setTimeout(() => window.initDouyinVideoChart(), 280);
