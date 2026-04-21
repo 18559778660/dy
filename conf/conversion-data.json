@@ -1,0 +1,64 @@
+{
+    "overview": [
+        {
+            "appId": "dy",
+            "appName": "抖音",
+            "data": [
+                {
+                    "date": "2026-04-19",
+                    "ios": {
+                        "recordPublishClicks": 5200,
+                        "recordPublishUsers": 3800,
+                        "recordPublishRate": 36.2,
+                        "recordSuccessRate": 80.1,
+                        "avgSuccessVideos": 1.9,
+                        "importDailyUsers": 2100,
+                        "importNewUsers": 520,
+                        "exportDailyUsers": 1900,
+                        "exportNewUsers": 480,
+                        "importAvgDuration": 645
+                    },
+                    "android": {
+                        "recordPublishClicks": 7145,
+                        "recordPublishUsers": 5100,
+                        "recordPublishRate": 35.1,
+                        "recordSuccessRate": 77.8,
+                        "avgSuccessVideos": 1.7,
+                        "importDailyUsers": 2900,
+                        "importNewUsers": 680,
+                        "exportDailyUsers": 2600,
+                        "exportNewUsers": 620,
+                        "importAvgDuration": 588
+                    }
+                },
+                {
+                    "date": "2026-04-20",
+                    "ios": {
+                        "recordPublishClicks": 6000,
+                        "recordPublishUsers": 400,
+                        "recordPublishRate": 36.2,
+                        "recordSuccessRate": 80.1,
+                        "avgSuccessVideos": 1.9,
+                        "importDailyUsers": 2100,
+                        "importNewUsers": 520,
+                        "exportDailyUsers": 1900,
+                        "exportNewUsers": 480,
+                        "importAvgDuration": 645
+                    },
+                    "android": {
+                        "recordPublishClicks": 7145,
+                        "recordPublishUsers": 5100,
+                        "recordPublishRate": 35.1,
+                        "recordSuccessRate": 77.8,
+                        "avgSuccessVideos": 1.7,
+                        "importDailyUsers": 2900,
+                        "importNewUsers": 680,
+                        "exportDailyUsers": 2600,
+                        "exportNewUsers": 620,
+                        "importAvgDuration": 588
+                    }
+                }
+            ]
+        }
+    ]
+}

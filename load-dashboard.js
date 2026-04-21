@@ -209,6 +209,11 @@
                         setTimeout(() => window.initDouyinVideoChart(), 280);
                     }
 
+                    // 初始化转化分析（录屏数据卡片等）
+                    if (typeof window.initConversionAnalysis === 'function') {
+                        setTimeout(() => window.initConversionAnalysis(), 290);
+                    }
+
                     // 初始化抖音视频数据汇总表
                     if (typeof window.initDouyinVideoTable === 'function') {
                         setTimeout(() => {

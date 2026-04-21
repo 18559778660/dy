@@ -221,6 +221,9 @@ function initTimeRangeButtons(containerSelector = 'body') {
             // 但在产品层级属于"来源分析页"下，时间维度跟随联动
             window.updateDouyinVideoChart && window.updateDouyinVideoChart(range);
             window.updateDouyinVideoTable && window.updateDouyinVideoTable(range);
+        },
+        '.user-transformation-section': (range) => {
+            window.updateConversionAnalysis && window.updateConversionAnalysis({ range });
         }
     };
     const dispatch = handlersByContainer[containerSelector] || null;
@@ -329,6 +332,25 @@ function initDropdownFilters() {
         createDropdownContent(sourceAppFilter, 'semi-dy-open-select-source-app', SOURCE_APP_OPTIONS);
     }
 
+    // 转化分析 APP 大分类下拉（含"全部"，后续其他页面也可复刻这一模式）
+    const transformationAppFilter = document.querySelector('.filter-transformation-app');
+    if (transformationAppFilter) {
+        createDropdownContent(transformationAppFilter, 'semi-dy-open-select-transformation-app', [
+            { value: 'all', label: '全部' },
+            ...SOURCE_APP_OPTIONS
+        ]);
+    }
+
+    // 转化分析 操作系统下拉（全部/ios/android）
+    const transformationOsFilter = document.querySelector('.filter-transformation-os');
+    if (transformationOsFilter) {
+        createDropdownContent(transformationOsFilter, 'semi-dy-open-select-transformation-os', [
+            { value: 'all', label: '全部' },
+            { value: 'ios', label: 'ios' },
+            { value: 'android', label: 'android' }
+        ]);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
@@ -342,6 +364,12 @@ function initDropdownFilters() {
     }
     if (sourceMetricFilter) {
         allFilters.push(sourceMetricFilter);
+    }
+    if (transformationAppFilter) {
+        allFilters.push(transformationAppFilter);
+    }
+    if (transformationOsFilter) {
+        allFilters.push(transformationOsFilter);
     }
 
     allFilters.forEach(filter => {
@@ -417,6 +445,8 @@ function initDropdownFilters() {
             e.target.closest('.filter-source-metric') ||
             e.target.closest('.filter-source-app') ||
             e.target.closest('.filter-source-scene') ||
+            e.target.closest('.filter-transformation-app') ||
+            e.target.closest('.filter-transformation-os') ||
             e.target.closest('.source-scene-panel') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
@@ -592,6 +622,20 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 if (value === 'dy') {
                     window.updateDouyinVideoChart && window.updateDouyinVideoChart(range);
                     window.updateDouyinVideoTable && window.updateDouyinVideoTable(range);
+                }
+            } else if (tabType === 'transformation-app') {
+                // 转化分析 APP 大分类切换：该页所有图表/表格换数据源重渲
+                window._conversionAppId = value;
+                console.log('[transformation-app] APP 切换:', value, label);
+                if (typeof window.updateConversionAnalysis === 'function') {
+                    window.updateConversionAnalysis();
+                }
+            } else if (tabType === 'transformation-os') {
+                // 转化分析 操作系统切换
+                window._conversionOs = value;
+                console.log('[transformation-os] OS 切换:', value, label);
+                if (typeof window.updateConversionAnalysis === 'function') {
+                    window.updateConversionAnalysis();
                 }
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);
