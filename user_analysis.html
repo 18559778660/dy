@@ -2156,7 +2156,8 @@
                                               rowspan="1" style="background: rgb(248, 248, 248);">人均成功发布视频数</th>
                                           </tr>
                                         </thead>
-                                        <tbody class="semi-dy-open-table-tbody">
+                                        <!-- 录屏数据详细数据表格由 init-conversion-analysis.js 动态渲染 -->
+                                        <tbody class="semi-dy-open-table-tbody conversion-record-table-body">
                                           <tr role="row" aria-rowindex="1" class="semi-dy-open-table-row"
                                             data-row-key="0">
                                             <td role="gridcell" aria-colindex="1"
@@ -2321,38 +2322,11 @@
                                       </table>
                                     </div>
                                   </div>
+                                  <!-- 录屏数据表格分页由 init-conversion-analysis.js 动态渲染 -->
                                   <div class="semi-dy-open-table-pagination-outer"><span
-                                      class="semi-dy-open-table-pagination-info">显示第 1 条-第 10 条，共 24 条</span><span
+                                      class="semi-dy-open-table-pagination-info conversion-record-table-pagination-info"></span><span
                                       class="semi-dy-open-table-pagination-wrapper">
-                                      <ul class="semi-dy-open-page">
-                                        <li role="button" aria-disabled="true" aria-label="Previous"
-                                          class="semi-dy-open-page-item semi-dy-open-page-prev semi-dy-open-page-item-disabled"
-                                          x-semi-prop="prevText"><span role="img" aria-label="chevron_left"
-                                            class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-chevron_left"><svg
-                                              viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                              width="1em" height="1em" focusable="false" aria-hidden="true">
-                                              <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M16.2782 4.23933C16.864 4.82511 16.864 5.77486 16.2782 6.36065L10.6213 12.0175L16.2782 17.6744C16.864 18.2601 16.864 19.2099 16.2782 19.7957C15.6924 20.3815 14.7426 20.3815 14.1569 19.7957L7.43934 13.0782C6.85355 12.4924 6.85355 11.5426 7.43934 10.9568L14.1569 4.23933C14.7426 3.65354 15.6924 3.65354 16.2782 4.23933Z"
-                                                fill="currentColor"></path>
-                                            </svg></span></li>
-                                        <li class="semi-dy-open-page-item semi-dy-open-page-item-active"
-                                          aria-label="Page 1" aria-current="page">1</li>
-                                        <li class="semi-dy-open-page-item" aria-label="Page 2" aria-current="false">2
-                                        </li>
-                                        <li class="semi-dy-open-page-item" aria-label="Page 3" aria-current="false">3
-                                        </li>
-                                        <li role="button" aria-disabled="false" aria-label="Next"
-                                          class="semi-dy-open-page-item semi-dy-open-page-next" x-semi-prop="nextText">
-                                          <span role="img" aria-label="chevron_right"
-                                            class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-chevron_right"><svg
-                                              viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                                              width="1em" height="1em" focusable="false" aria-hidden="true">
-                                              <path fill-rule="evenodd" clip-rule="evenodd"
-                                                d="M7.43934 19.7957C6.85355 19.2099 6.85355 18.2601 7.43934 17.6744L13.0962 12.0175L7.43934 6.36065C6.85355 5.77486 6.85355 4.82511 7.43934 4.23933C8.02513 3.65354 8.97487 3.65354 9.56066 4.23933L16.2782 10.9568C16.864 11.5426 16.864 12.4924 16.2782 13.0782L9.56066 19.7957C8.97487 20.3815 8.02513 20.3815 7.43934 19.7957Z"
-                                                fill="currentColor"></path>
-                                            </svg></span>
-                                        </li>
-                                      </ul>
+                                      <ul class="semi-dy-open-page conversion-record-table-pagination"></ul>
                                     </span></div>
                                 </div>
                               </div>

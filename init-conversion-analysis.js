@@ -401,11 +401,174 @@
     });
   }
 
+  // ==================== 录屏数据"详细数据"表格 ====================
+  // 行数据口径与折线图完全一致：
+  //   · yesterday → 24 行，时间列显示 HH:00:00（当日聚合 × 各小时权重）
+  //   · 7 / 30    → N 行，时间列显示日期（每日聚合）
+  // 每页 10 条，分页条沿用 Semi UI 的 DOM 结构
+
+  const TABLE_PAGE_SIZE = 10;
+  // chevron SVG 抠自原静态分页，保证和其它表格视觉一致
+  const SVG_CHEVRON_LEFT = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" focusable="false" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M16.2782 4.23933C16.864 4.82511 16.864 5.77486 16.2782 6.36065L10.6213 12.0175L16.2782 17.6744C16.864 18.2601 16.864 19.2099 16.2782 19.7957C15.6924 20.3815 14.7426 20.3815 14.1569 19.7957L7.43934 13.0782C6.85355 12.4924 6.85355 11.5426 7.43934 10.9568L14.1569 4.23933C14.7426 3.65354 15.6924 3.65354 16.2782 4.23933Z" fill="currentColor"></path></svg>';
+  const SVG_CHEVRON_RIGHT = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" focusable="false" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.43934 19.7957C6.85355 19.2099 6.85355 18.2601 7.43934 17.6744L13.0962 12.0175L7.43934 6.36065C6.85355 5.77486 6.85355 4.82511 7.43934 4.23933C8.02513 3.65354 8.97487 3.65354 9.56066 4.23933L16.2782 10.9568C16.864 11.5426 16.864 12.4924 16.2782 13.0782L9.56066 19.7957C8.97487 20.3815 8.02513 20.3815 7.43934 19.7957Z" fill="currentColor"></path></svg>';
+
+  let _tableRows = [];   // 整份行数据；分页只切片不重新计算
+  let _tablePage = 1;
+
+  function escapeAttr(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // 单元格显示：rate → 'xx.xx%'，decimal → 'x.xxxx'，number → 千分位整数
+  function formatTableCell(val, type) {
+    if (val === null || val === undefined || !Number.isFinite(Number(val))) return '- -';
+    const n = Number(val);
+    if (type === 'rate') return n.toFixed(2) + '%';
+    if (type === 'decimal') return n.toFixed(4);
+    return Math.round(n).toLocaleString('en-US');
+  }
+
+  // 生成所有行（未分页）：
+  //   row = { timeLabel: string, metrics: { [key]: rawNumber } }
+  function buildTableRows(apps, os, range, weights) {
+    const allDates = collectDates(apps);
+    if (!allDates.length) return [];
+
+    if (range === 'yesterday') {
+      const latest = allDates[allDates.length - 1];
+      const dayMetrics = pickMetrics(apps, os, [latest]);
+      const out = [];
+      for (let h = 0; h < 24; h++) {
+        const hs = String(h).padStart(2, '0');
+        const w = Number((weights || {})[hs]) || 0;
+        const metrics = {};
+        RECORD_METRICS.forEach(m => {
+          const raw = Number(dayMetrics[m.key]) || 0;
+          const scaled = raw * w;
+          if (m.type === 'rate') metrics[m.key] = Number(scaled.toFixed(2));
+          else if (m.type === 'decimal') metrics[m.key] = Number(scaled.toFixed(4));
+          else metrics[m.key] = Math.round(scaled);
+        });
+        out.push({ timeLabel: `${hs}:00:00`, metrics });
+      }
+      return out;
+    }
+
+    const n = range === 30 ? 30 : 7;
+    return allDates.slice(-n).map(date => {
+      const dayMetrics = pickMetrics(apps, os, [date]);
+      const metrics = {};
+      RECORD_METRICS.forEach(m => {
+        metrics[m.key] = dayMetrics[m.key];
+      });
+      return { timeLabel: date, metrics };
+    });
+  }
+
+  // 只渲染表格 tbody（当前页）+ 分页条
+  function renderRecordTableView() {
+    const tbody = document.querySelector('.conversion-record-table-body');
+    if (!tbody) return;
+
+    const total = _tableRows.length;
+    const totalPages = Math.max(1, Math.ceil(total / TABLE_PAGE_SIZE));
+    _tablePage = Math.min(Math.max(1, _tablePage), totalPages);
+
+    const start = (_tablePage - 1) * TABLE_PAGE_SIZE;
+    const end = start + TABLE_PAGE_SIZE;
+    const pageRows = _tableRows.slice(start, end);
+
+    tbody.innerHTML = pageRows.map((row, i) => {
+      const tLabel = escapeAttr(row.timeLabel);
+      const cells = [
+        `<td role="gridcell" aria-colindex="1" class="semi-dy-open-table-row-cell semi-dy-open-table-cell-fixed-left semi-dy-open-table-cell-fixed-left-last" title="${tLabel}" style="left: 0px;">${row.timeLabel}</td>`
+      ];
+      RECORD_METRICS.forEach((m, ci) => {
+        const text = formatTableCell(row.metrics[m.key], m.type);
+        cells.push(`<td role="gridcell" aria-colindex="${ci + 2}" class="semi-dy-open-table-row-cell" title="${escapeAttr(text)}">${text}</td>`);
+      });
+      return `<tr role="row" aria-rowindex="${i + 1}" class="semi-dy-open-table-row" data-row-key="${start + i}">${cells.join('')}</tr>`;
+    }).join('');
+
+    renderRecordTablePagination(total, totalPages);
+  }
+
+  function renderRecordTablePagination(total, totalPages) {
+    const infoEl = document.querySelector('.conversion-record-table-pagination-info');
+    const ul = document.querySelector('.conversion-record-table-pagination');
+    if (infoEl) {
+      const from = total === 0 ? 0 : (_tablePage - 1) * TABLE_PAGE_SIZE + 1;
+      const to = Math.min(_tablePage * TABLE_PAGE_SIZE, total);
+      infoEl.textContent = `显示第 ${from} 条-第 ${to} 条，共 ${total} 条`;
+    }
+    if (!ul) return;
+
+    const prevDisabled = _tablePage <= 1;
+    const nextDisabled = _tablePage >= totalPages;
+    const pageItems = [];
+    for (let p = 1; p <= totalPages; p++) {
+      const active = p === _tablePage;
+      pageItems.push(`<li class="semi-dy-open-page-item${active ? ' semi-dy-open-page-item-active' : ''}" aria-label="Page ${p}" aria-current="${active ? 'page' : 'false'}">${p}</li>`);
+    }
+
+    ul.innerHTML = `
+      <li role="button" aria-disabled="${prevDisabled}" aria-label="Previous" class="semi-dy-open-page-item semi-dy-open-page-prev${prevDisabled ? ' semi-dy-open-page-item-disabled' : ''}">
+        <span role="img" aria-label="chevron_left" class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-chevron_left">${SVG_CHEVRON_LEFT}</span>
+      </li>
+      ${pageItems.join('')}
+      <li role="button" aria-disabled="${nextDisabled}" aria-label="Next" class="semi-dy-open-page-item semi-dy-open-page-next${nextDisabled ? ' semi-dy-open-page-item-disabled' : ''}">
+        <span role="img" aria-label="chevron_right" class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-chevron_right">${SVG_CHEVRON_RIGHT}</span>
+      </li>
+    `;
+
+    bindTablePagination(ul);
+  }
+
+  // 事件委托挂在 ul 上（幂等）；totalPages 每次重新根据 _tableRows 计算，避免闭包过期
+  function bindTablePagination(ul) {
+    if (ul._paginationBound) return;
+    ul._paginationBound = true;
+    ul.addEventListener('click', (e) => {
+      const li = e.target.closest('.semi-dy-open-page-item');
+      if (!li || li.classList.contains('semi-dy-open-page-item-disabled')) return;
+      const totalPages = Math.max(1, Math.ceil(_tableRows.length / TABLE_PAGE_SIZE));
+      if (li.classList.contains('semi-dy-open-page-prev')) {
+        if (_tablePage > 1) { _tablePage -= 1; renderRecordTableView(); }
+      } else if (li.classList.contains('semi-dy-open-page-next')) {
+        if (_tablePage < totalPages) { _tablePage += 1; renderRecordTableView(); }
+      } else {
+        const p = parseInt(li.textContent, 10);
+        if (!Number.isNaN(p) && p !== _tablePage) { _tablePage = p; renderRecordTableView(); }
+      }
+    });
+  }
+
+  // 外层入口：读取最新 appId / os / range，重算 _tableRows，回到第 1 页再渲染
+  function renderRecordTable(opts) {
+    const tbody = document.querySelector('.conversion-record-table-body');
+    if (!tbody) return;
+
+    const appId = (opts && opts.appId) || window._conversionAppId || 'all';
+    const os = (opts && opts.os) || window._conversionOs || 'all';
+    const range = (opts && opts.range) || getCurrentRange();
+
+    const loaders = range === 'yesterday' ? [loadData(), loadHourlyWeights()] : [loadData()];
+    Promise.all(loaders).then(([json, weights]) => {
+      const apps = pickApps(json, appId);
+      _tableRows = buildTableRows(apps, os, range, weights);
+      _tablePage = 1;
+      renderRecordTableView();
+    }).catch(err => {
+      console.error('[conversion] 录屏表格数据加载失败', err);
+    });
+  }
+
   // 首次初始化（由 load-dashboard.js 在用户分析页加载完后调用）
   // opts: { appId, os, date, range, metric } —— 全部可选，缺省走全局状态/数据默认
   function initConversionAnalysis(opts) {
     renderRecordCards(opts || {});
     renderRecordChart(opts || {});
+    renderRecordTable(opts || {});
     bindExportButton();
   }
 
@@ -413,6 +576,7 @@
   function updateConversionAnalysis(opts) {
     renderRecordCards(opts || {});
     renderRecordChart(opts || {});
+    renderRecordTable(opts || {});
   }
 
   // ==================== 导出 ====================
@@ -546,6 +710,7 @@
   // 兼容老名字 / 给其他模块单独刷新某一块的入口
   window.renderConversionRecordCards = renderRecordCards;
   window.renderConversionRecordChart = renderRecordChart;
+  window.renderConversionRecordTable = renderRecordTable;
   window.exportConversionRecord = exportRecordData;
   window.bindConversionExportButton = bindExportButton;
 })();
