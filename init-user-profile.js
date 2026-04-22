@@ -165,6 +165,65 @@
     renderListTbody(tbody, rows, 'range', valueKey);
   }
 
+  // 把 aggregateList 出来的行转成 renderScenePieChart 期望的 { sceneId, sceneName, value } 结构
+  // keyField：性别用 'label'，年龄用 'range'；value 取 activeUsers / newUsers
+  function toPieData(rows, keyField, valueKey) {
+    return (rows || [])
+      .map(r => ({
+        sceneId: String(r[keyField]),
+        sceneName: String(r[keyField]),
+        value: Number(r[valueKey]) || 0
+      }))
+      .filter(d => d.value > 0);
+  }
+
+  function renderPie(containerId, pieData, logPrefix, chartInstanceKey) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    if (typeof window.renderScenePieChart !== 'function') {
+      console.warn('[user-profile] renderScenePieChart 未就绪');
+      return;
+    }
+    // 不管新数据空不空：都先 release 旧 VChart 实例 + 清空容器
+    // 原因：上一次可能塞过"暂无数据"占位 HTML，VChart 的 release 只清它自己的 DOM，不会清这段占位；
+    // 切到"有数据"时新饼图会被挤到占位之后，看起来像"切 APP 后饼图不显示"
+    if (window[chartInstanceKey]) {
+      try { window[chartInstanceKey].release(); } catch (e) { /* ignore */ }
+      window[chartInstanceKey] = null;
+    }
+    container.innerHTML = '';
+
+    if (!pieData.length) {
+      container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#86909c;font-size:13px;">暂无数据</div>';
+      return;
+    }
+    // 调用来源分析那边的通用环形图（跳过白名单/选中过滤，避免受来源分析场景态影响）
+    // 用户画像的饼图容器比来源分析窄（同一行两个并排），所以把环做小一点、label 字号也降一档，
+    // 避免"数值 (xx.xx%)"被 VChart 自动按空格折成两行
+    window.renderScenePieChart(containerId, pieData, '', 'yesterday', {
+      seriesField: 'sceneId',
+      nameField: 'sceneName',
+      useWhitelist: false,
+      skipSeriesFilter: true,
+      chartInstanceKey: chartInstanceKey,
+      logPrefix: logPrefix
+    });
+  }
+
+  function renderGenderPieChart(days, category) {
+    const valueKey = category === 'new' ? 'newUsers' : 'activeUsers';
+    const rows = aggregateList(days, 'gender', 'label', ['activeUsers', 'newUsers']);
+    const pieData = toPieData(rows, 'label', valueKey);
+    renderPie('visactor_window_15', pieData, '用户画像-性别环形图', 'userProfileGenderPie');
+  }
+
+  function renderAgePieChart(days, category) {
+    const valueKey = category === 'new' ? 'newUsers' : 'activeUsers';
+    const rows = aggregateList(days, 'age', 'range', ['activeUsers', 'newUsers']);
+    const pieData = toPieData(rows, 'range', valueKey);
+    renderPie('visactor_window_16', pieData, '用户画像-年龄环形图', 'userProfileAgePie');
+  }
+
   function renderAll(opts) {
     const appId = (opts && opts.appId) || window._profileAppId || 'dy';
     const category = (opts && opts.category) || window._profileCategory || 'active';
@@ -176,6 +235,8 @@
       const days = pickDays(app, range, anchor);
       renderGenderTable(days, category);
       renderAgeTable(days, category);
+      renderGenderPieChart(days, category);
+      renderAgePieChart(days, category);
     }).catch(err => {
       console.error('[user-profile] 数据加载失败', err);
     });

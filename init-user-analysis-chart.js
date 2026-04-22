@@ -1077,16 +1077,18 @@
         ];
         const TOP_N = colors.length;
 
-        // ---- 过滤：与折线图完全同口径 ----
-        const userSelected = window._sourceSceneSelected;
-        const hasUserSelectionState = userSelected instanceof Set;
-        if (hasUserSelectionState) {
-            data = data.filter(d => userSelected.has(d[seriesField]));
-        } else if (useWhitelist) {
-            const whitelist = typeof window.getSourceSceneWhitelist === 'function'
-                ? window.getSourceSceneWhitelist(timeRange)
-                : null;
-            if (whitelist) data = data.filter(d => whitelist.has(d[seriesField]));
+        // ---- 过滤：与折线图完全同口径（可通过 options.skipSeriesFilter 跳过，给其它页面复用时使用） ----
+        if (!options.skipSeriesFilter) {
+            const userSelected = window._sourceSceneSelected;
+            const hasUserSelectionState = userSelected instanceof Set;
+            if (hasUserSelectionState) {
+                data = data.filter(d => userSelected.has(d[seriesField]));
+            } else if (useWhitelist) {
+                const whitelist = typeof window.getSourceSceneWhitelist === 'function'
+                    ? window.getSourceSceneWhitelist(timeRange)
+                    : null;
+                if (whitelist) data = data.filter(d => whitelist.has(d[seriesField]));
+            }
         }
 
         // ---- 按 seriesField 聚合 value + 记 name ----
@@ -1713,4 +1715,6 @@
     window.updateDouyinVideoChart = updateDouyinVideoChart;
     // 通用多折线/面积图渲染器（其它页面如转化分析可直接复用）
     window.renderMultiLineChart = renderMultiLineChart;
+    // 通用环形图渲染器（用户画像等其它页面可直接复用，传 options.skipSeriesFilter: true 跳过来源分析的白名单/选中过滤）
+    window.renderScenePieChart = renderScenePieChart;
 })();
