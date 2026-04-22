@@ -18,21 +18,24 @@
                                 "importNewUsers": 420,
                                 "exportDailyUsers": 1600,
                                 "exportNewUsers": 380,
-                                "importAvgDuration": 612
+                                "importAvgDuration": 612,
+                                "reciprocalPushType": "四宫格"
                             },
                             "fourGrid": {
                                 "importDailyUsers": 900,
                                 "importNewUsers": 210,
                                 "exportDailyUsers": 820,
                                 "exportNewUsers": 195,
-                                "importAvgDuration": 540
+                                "importAvgDuration": 540,
+                                "reciprocalPushType": "单宫格"
                             },
                             "singleGrid": {
                                 "importDailyUsers": 400,
                                 "importNewUsers": 90,
                                 "exportDailyUsers": 360,
                                 "exportNewUsers": 80,
-                                "importAvgDuration": 470
+                                "importAvgDuration": 470,
+                                "reciprocalPushType": "四宫格"
                             }
                         },
                         "import": {
@@ -40,36 +43,42 @@
                                 "importDailyUsers": 1800,
                                 "importNewUsers": 420,
                                 "importAvgDuration": 612,
-                                "sourceOfConductance": "滚动的海洋球球"
+                                "sourceOfConductance": "滚动的海洋球球",
+                                "reciprocalPushType": "四宫格"
                             },
                             "fourGrid": {
                                 "importDailyUsers": 900,
                                 "importNewUsers": 210,
                                 "importAvgDuration": 540,
-                                "sourceOfConductance": "小样哪里逃"
+                                "sourceOfConductance": "小样哪里逃",
+                                "reciprocalPushType": "九宫格"
                             },
                             "singleGrid": {
                                 "importDailyUsers": 400,
                                 "importNewUsers": 90,
                                 "importAvgDuration": 470,
-                                "sourceOfConductance": "宠物二重唱"
+                                "sourceOfConductance": "宠物二重唱",
+                                "reciprocalPushType": "九宫格"
                             }
                         },
                         "export": {
                             "nineGrid": {
                                 "exportDailyUsers": 1600,
                                 "exportNewUsers": 380,
-                                "reciprocalPushPosition": "4号位"
+                                "reciprocalPushPosition": "4号位",
+                                "reciprocalPushType": "四宫格"
                             },
                             "fourGrid": {
                                 "exportDailyUsers": 820,
                                 "exportNewUsers": 195,
-                                "reciprocalPushPosition": "5号位"
+                                "reciprocalPushPosition": "5号位",
+                                "reciprocalPushType": "四宫格"
                             },
                             "singleGrid": {
                                 "exportDailyUsers": 360,
                                 "exportNewUsers": 80,
-                                "reciprocalPushPosition": "3号位"
+                                "reciprocalPushPosition": "3号位",
+                                "reciprocalPushType": "九宫格"
                             }
                         }
                     },

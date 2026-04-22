@@ -2408,8 +2408,8 @@
                         <div class="flex my-4">
                           <div class="mr-8"><span class="mr-4">维度</span>
                             <div
-                              class="semi-dy-open-radioGroup semi-dy-open-radioGroup-wrapper semi-dy-open-radioGroup-buttonRadio">
-                              <label
+                              class="semi-dy-open-radioGroup semi-dy-open-radioGroup-wrapper semi-dy-open-radioGroup-buttonRadio promotion-dimension-group">
+                              <label data-dim="overview"
                                 class="semi-dy-open-radio semi-dy-open-radio-checked semi-dy-open-radio-buttonRadioGroup semi-dy-open-radio-buttonRadioGroup-middle"><span
                                   class="semi-dy-open-radio-inner semi-dy-open-radio-inner-checked semi-dy-open-radio-inner-buttonRadio"><input
                                     type="radio" name="default" aria-labelledby="addon-e6da6od"><span class=""><span
@@ -2422,7 +2422,7 @@
                                 <div class="semi-dy-open-radio-content"><span
                                     class="semi-dy-open-radio-addon-buttonRadio semi-dy-open-radio-addon-buttonRadio-checked semi-dy-open-radio-addon-buttonRadio-middle"
                                     x-semi-prop="children" id="addon-e6da6od">转化总览</span></div>
-                              </label><label
+                              </label><label data-dim="import"
                                 class="semi-dy-open-radio semi-dy-open-radio-buttonRadioGroup semi-dy-open-radio-buttonRadioGroup-middle"><span
                                   class="semi-dy-open-radio-inner semi-dy-open-radio-inner-buttonRadio"><input
                                     type="radio" name="default" aria-labelledby="addon-a5dmh6v"><span
@@ -2430,7 +2430,7 @@
                                 <div class="semi-dy-open-radio-content"><span
                                     class="semi-dy-open-radio-addon-buttonRadio semi-dy-open-radio-addon-buttonRadio-middle"
                                     x-semi-prop="children" id="addon-a5dmh6v">导入分析</span></div>
-                              </label><label
+                              </label><label data-dim="export"
                                 class="semi-dy-open-radio semi-dy-open-radio-buttonRadioGroup semi-dy-open-radio-buttonRadioGroup-middle"><span
                                   class="semi-dy-open-radio-inner semi-dy-open-radio-inner-buttonRadio"><input
                                     type="radio" name="default" aria-labelledby="addon-2w0dwl6"><span
@@ -2444,7 +2444,8 @@
                           <div><span class="mr-4">互推位类型</span>
                             <div role="combobox" aria-disabled="false" aria-expanded="false"
                               aria-controls="semi-dy-open-select-o4dk3fi" aria-haspopup="listbox" aria-label="selected"
-                              class="semi-dy-open-select w-40 semi-dy-open-select-single" id="t5etxe1" tabindex="0"
+                              class="semi-dy-open-select w-40 semi-dy-open-select-single filter-promotion-grid"
+                              data-tab="promotion-grid" id="t5etxe1" tabindex="0"
                               aria-activedescendant="t5etxe1-option-0" data-popupid="swmowqu">
                               <div class="semi-dy-open-select-selection">
                                 <div class="semi-dy-open-select-content-wrapper"><span
@@ -2515,29 +2516,8 @@
                                               导入用户人均游戏时长</th>
                                           </tr>
                                         </thead>
-                                        <tbody class="semi-dy-open-table-tbody">
-                                          <tr role="row" aria-rowindex="1" class="semi-dy-open-table-row"
-                                            data-row-key="0">
-                                            <td role="gridcell" aria-colindex="1"
-                                              class="semi-dy-open-table-row-cell semi-dy-open-table-cell-fixed-left semi-dy-open-table-cell-fixed-left-last"
-                                              title="2026-04-07" style="left: 0px;">2026-04-07</td>
-                                            <td role="gridcell" aria-colindex="2" class="semi-dy-open-table-row-cell"
-                                              title="抖音">抖音</td>
-                                            <td role="gridcell" aria-colindex="3" class="semi-dy-open-table-row-cell"
-                                              title="九宫格">九宫格</td>
-                                            <td role="gridcell" aria-colindex="4" class="semi-dy-open-table-row-cell"
-                                              title="1">1</td>
-                                            <td role="gridcell" aria-colindex="5" class="semi-dy-open-table-row-cell"
-                                              title="0">0</td>
-                                            <td role="gridcell" aria-colindex="6" class="semi-dy-open-table-row-cell"
-                                              title="0">0</td>
-                                            <td role="gridcell" aria-colindex="7" class="semi-dy-open-table-row-cell"
-                                              title="0">0</td>
-                                            <td role="gridcell" aria-colindex="8"
-                                              class="semi-dy-open-table-row-cell semi-dy-open-table-cell-fixed-right semi-dy-open-table-cell-fixed-right-first"
-                                              title="00:00:02" style="right: 0px;">00:00:02</td>
-                                          </tr>
-                                        </tbody>
+                                        <!-- 互推数据表格 tbody 由 init-conversion-analysis.js 动态渲染 -->
+                                        <tbody class="semi-dy-open-table-tbody conversion-promotion-table-body"></tbody>
                                       </table>
                                     </div>
                                   </div>

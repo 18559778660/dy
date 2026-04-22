@@ -351,6 +351,18 @@ function initDropdownFilters() {
         ]);
     }
 
+    // 转化分析 - 互推数据表格 - 互推位类型下拉（全部 / 九宫格 / 四宫格 / 单宫格）
+    // 目前仅做 UI 交互，数据联动后续再接
+    const promotionGridFilter = document.querySelector('.filter-promotion-grid');
+    if (promotionGridFilter) {
+        createDropdownContent(promotionGridFilter, 'semi-dy-open-select-promotion-grid', [
+            { value: 'all', label: '全部' },
+            { value: 'nineGrid', label: '九宫格' },
+            { value: 'fourGrid', label: '四宫格' },
+            { value: 'singleGrid', label: '单宫格' }
+        ]);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
@@ -370,6 +382,9 @@ function initDropdownFilters() {
     }
     if (transformationOsFilter) {
         allFilters.push(transformationOsFilter);
+    }
+    if (promotionGridFilter) {
+        allFilters.push(promotionGridFilter);
     }
 
     allFilters.forEach(filter => {
@@ -447,6 +462,7 @@ function initDropdownFilters() {
             e.target.closest('.filter-source-scene') ||
             e.target.closest('.filter-transformation-app') ||
             e.target.closest('.filter-transformation-os') ||
+            e.target.closest('.filter-promotion-grid') ||
             e.target.closest('.source-scene-panel') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
@@ -636,6 +652,13 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 console.log('[transformation-os] OS 切换:', value, label);
                 if (typeof window.updateConversionAnalysis === 'function') {
                     window.updateConversionAnalysis();
+                }
+            } else if (tabType === 'promotion-grid') {
+                // 互推数据表格 - 互推位类型筛选：只影响表格，不重渲整页其它模块
+                window._conversionPromotionGrid = value;
+                console.log('[promotion-grid] 互推位类型切换:', value, label);
+                if (typeof window.renderConversionPromotionTable === 'function') {
+                    window.renderConversionPromotionTable();
                 }
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);

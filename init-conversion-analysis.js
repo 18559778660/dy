@@ -60,6 +60,10 @@
   if (typeof window._conversionPromotionMetric === 'undefined') {
     window._conversionPromotionMetric = PROMOTION_METRICS[0].key;
   }
+  // 互推表格当前选中的"互推位类型"筛选值：'all' | 'nineGrid' | 'fourGrid' | 'singleGrid'
+  if (typeof window._conversionPromotionGrid === 'undefined') {
+    window._conversionPromotionGrid = 'all';
+  }
 
   let _dataCache = null;
   let _weightsCache = null;
@@ -458,6 +462,112 @@
     });
   }
 
+  // ==================== 互推数据"详细数据"表格 ====================
+  // 维度 = 转化总览：每条行 = (日期 × app × 互推位)
+  //   · 取 dayItem.{ios|android}.overview[gridKey] 作为行数据
+  //   · os='all' 时 ios + android 的同 gridKey 走 aggregate 合并（SUM_KEYS 累加，其余平均）
+  //   · range=yesterday → 最新一天；7/30 → 最近 N 天
+  // 其它维度（导入分析 / 导出分析）、互推位类型下拉筛选 —— 本轮先不接
+  const PROMOTION_GRID_KEYS = ['nineGrid', 'fourGrid', 'singleGrid'];
+  const PROMOTION_GRID_LABELS = {
+    nineGrid: '九宫格',
+    fourGrid: '四宫格',
+    singleGrid: '单宫格'
+  };
+
+  // 单个 (app, date, gridKey, os) → 合并后的 overview 指标对象（没有数据返回 null）
+  function pickPromotionOverviewRow(app, date, gridKey, os) {
+    const day = (app.data || []).find(d => d.date === date);
+    if (!day) return null;
+    const branches = [];
+    if (os === 'ios' || os === 'all') {
+      const ov = day.ios && day.ios.overview && day.ios.overview[gridKey];
+      if (ov) branches.push(ov);
+    }
+    if (os === 'android' || os === 'all') {
+      const ov = day.android && day.android.overview && day.android.overview[gridKey];
+      if (ov) branches.push(ov);
+    }
+    if (!branches.length) return null;
+    return aggregate(branches);
+  }
+
+  function buildPromotionTableRows(apps, os, range, gridFilter) {
+    const allDates = collectDates(apps);
+    if (!allDates.length) return [];
+    const n = range === 30 ? 30 : range === 7 ? 7 : 1;
+    const dates = allDates.slice(-n);
+    // 互推位类型筛选：'all' 展开三种，否则只渲染指定 grid
+    const gridKeys = (gridFilter && gridFilter !== 'all' && PROMOTION_GRID_KEYS.includes(gridFilter))
+      ? [gridFilter]
+      : PROMOTION_GRID_KEYS;
+    const rows = [];
+    // 日期倒序（最新在上），同日期下按 app 顺序，每 app 展开筛选后的互推位
+    dates.slice().reverse().forEach(date => {
+      apps.forEach(app => {
+        gridKeys.forEach(gk => {
+          const m = pickPromotionOverviewRow(app, date, gk, os);
+          if (!m) return;
+          rows.push({
+            date,
+            appName: app.appName || app.appId,
+            gridLabel: PROMOTION_GRID_LABELS[gk],
+            importDailyUsers: m.importDailyUsers,
+            importNewUsers: m.importNewUsers,
+            exportDailyUsers: m.exportDailyUsers,
+            exportNewUsers: m.exportNewUsers,
+            importAvgDuration: m.importAvgDuration
+          });
+        });
+      });
+    });
+    return rows;
+  }
+
+  function renderPromotionTable(opts) {
+    const tbody = document.querySelector('.conversion-promotion-table-body');
+    if (!tbody) {
+      console.warn('[conversion] 未找到 .conversion-promotion-table-body');
+      return;
+    }
+    const appId = (opts && opts.appId) || window._conversionAppId || 'all';
+    const os = (opts && opts.os) || window._conversionOs || 'all';
+    const range = (opts && opts.range) || getCurrentRange();
+    const gridFilter = (opts && opts.grid) || window._conversionPromotionGrid || 'all';
+
+    loadData().then(json => {
+      const apps = pickApps(json, appId);
+      const rows = buildPromotionTableRows(apps, os, range, gridFilter);
+      if (!rows.length) {
+        tbody.innerHTML = '';
+        return;
+      }
+      tbody.innerHTML = rows.map((r, i) => {
+        const d = escapeAttr(r.date);
+        const appTxt = escapeAttr(r.appName);
+        const g = escapeAttr(r.gridLabel);
+        const c1 = formatTableCell(r.importDailyUsers, 'number');
+        const c2 = formatTableCell(r.importNewUsers, 'number');
+        const c3 = formatTableCell(r.exportDailyUsers, 'number');
+        const c4 = formatTableCell(r.exportNewUsers, 'number');
+        const c5 = formatTableCell(r.importAvgDuration, 'duration');
+        return `<tr role="row" aria-rowindex="${i + 1}" class="semi-dy-open-table-row" data-row-key="${i}">` +
+          `<td role="gridcell" aria-colindex="1" class="semi-dy-open-table-row-cell semi-dy-open-table-cell-fixed-left semi-dy-open-table-cell-fixed-left-last" title="${d}" style="left: 0px;">${r.date}</td>` +
+          `<td role="gridcell" aria-colindex="2" class="semi-dy-open-table-row-cell" title="${appTxt}">${r.appName}</td>` +
+          `<td role="gridcell" aria-colindex="3" class="semi-dy-open-table-row-cell" title="${g}">${r.gridLabel}</td>` +
+          `<td role="gridcell" aria-colindex="4" class="semi-dy-open-table-row-cell" title="${escapeAttr(c1)}">${c1}</td>` +
+          `<td role="gridcell" aria-colindex="5" class="semi-dy-open-table-row-cell" title="${escapeAttr(c2)}">${c2}</td>` +
+          `<td role="gridcell" aria-colindex="6" class="semi-dy-open-table-row-cell" title="${escapeAttr(c3)}">${c3}</td>` +
+          `<td role="gridcell" aria-colindex="7" class="semi-dy-open-table-row-cell" title="${escapeAttr(c4)}">${c4}</td>` +
+          `<td role="gridcell" aria-colindex="8" class="semi-dy-open-table-row-cell semi-dy-open-table-cell-fixed-right semi-dy-open-table-cell-fixed-right-first" title="${escapeAttr(c5)}" style="right: 0px;">${c5}</td>` +
+          `</tr>`;
+      }).join('');
+      console.log(`[conversion] 互推表格已渲染，appId=${appId}, os=${os}, range=${range}, grid=${gridFilter}, rows=${rows.length}`);
+    }).catch(err => {
+      console.error('[conversion] 互推表格数据加载失败', err);
+    });
+  }
+
   // ==================== 录屏数据折线图 ====================
   // 折线图沿用 window.renderMultiLineChart（来源分析同款），区别仅在：
   //   · seriesField='metricKey' + fixedOrder=[当前指标] —— 单条线
@@ -594,12 +704,13 @@
     return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // 单元格显示：rate → 'xx.xx%'，decimal → 'x.xxxx'，number → 千分位整数
+  // 单元格显示：rate → 'xx.xx%'，decimal → 'x.xxxx'，duration → 'HH:MM:SS'，number → 千分位整数
   function formatTableCell(val, type) {
     if (val === null || val === undefined || !Number.isFinite(Number(val))) return '- -';
     const n = Number(val);
     if (type === 'rate') return n.toFixed(2) + '%';
     if (type === 'decimal') return n.toFixed(4);
+    if (type === 'duration') return formatValue(n, 'duration');
     return Math.round(n).toLocaleString('en-US');
   }
 
@@ -746,6 +857,8 @@
     renderRecordTable(opts || {});
     renderPromotionCards(opts || {});
     renderPromotionChart(opts || {});
+    renderPromotionTable(opts || {});
+    initPromotionDimensionRadio();
     bindExportButton();
   }
 
@@ -756,6 +869,40 @@
     renderRecordTable(opts || {});
     renderPromotionCards(opts || {});
     renderPromotionChart(opts || {});
+    renderPromotionTable(opts || {});
+  }
+
+  // ==================== 互推表格维度 radio（转化总览 / 导入分析 / 导出分析）====================
+  // 当前仅切换视觉状态（和其它 button-radio 的三个 class 保持一致），数据联动后续再接
+  function initPromotionDimensionRadio() {
+    const group = document.querySelector('.promotion-dimension-group');
+    if (!group || group._dimBound) return;
+    group._dimBound = true;
+
+    group.addEventListener('click', (e) => {
+      const label = e.target.closest('label[data-dim]');
+      if (!label || !group.contains(label)) return;
+
+      // 切换 label / inner / addon 三处 checked 样式（与 Semi button-radio 的视觉规则保持一致）
+      group.querySelectorAll('label[data-dim]').forEach(el => {
+        el.classList.remove('semi-dy-open-radio-checked');
+        const innerEl = el.querySelector('.semi-dy-open-radio-inner');
+        if (innerEl) innerEl.classList.remove('semi-dy-open-radio-inner-checked');
+        const addonEl = el.querySelector('.semi-dy-open-radio-addon-buttonRadio');
+        if (addonEl) addonEl.classList.remove('semi-dy-open-radio-addon-buttonRadio-checked');
+      });
+
+      label.classList.add('semi-dy-open-radio-checked');
+      const innerEl = label.querySelector('.semi-dy-open-radio-inner');
+      if (innerEl) innerEl.classList.add('semi-dy-open-radio-inner-checked');
+      const addonEl = label.querySelector('.semi-dy-open-radio-addon-buttonRadio');
+      if (addonEl) addonEl.classList.add('semi-dy-open-radio-addon-buttonRadio-checked');
+
+      const dim = label.getAttribute('data-dim');
+      window._conversionPromotionDim = dim;
+      console.log('[promotion-dim] 维度切换:', dim);
+      // 数据联动占位：后续接上 renderPromotionTable 支持 import/export 维度时在此调用
+    });
   }
 
   // ==================== 导出 ====================
@@ -892,6 +1039,8 @@
   window.renderConversionRecordTable = renderRecordTable;
   window.renderConversionPromotionCards = renderPromotionCards;
   window.renderConversionPromotionChart = renderPromotionChart;
+  window.renderConversionPromotionTable = renderPromotionTable;
+  window.initPromotionDimensionRadio = initPromotionDimensionRadio;
   window.exportConversionRecord = exportRecordData;
   window.bindConversionExportButton = bindExportButton;
 })();
