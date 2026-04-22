@@ -5,57 +5,120 @@
             "appName": "抖音",
             "data": [
                 {
-                    "date": "2026-04-19",
+                    "date": "2026-04-20",
                     "ios": {
                         "recordPublishClicks": 5200,
                         "recordPublishUsers": 3800,
                         "recordPublishRate": 36.2,
                         "recordSuccessRate": 80.1,
                         "avgSuccessVideos": 1.9,
-                        "importDailyUsers": 2100,
-                        "importNewUsers": 520,
-                        "exportDailyUsers": 1900,
-                        "exportNewUsers": 480,
-                        "importAvgDuration": 645
+                        "overview": {
+                            "nineGrid": {
+                                "importDailyUsers": 1800,
+                                "importNewUsers": 420,
+                                "exportDailyUsers": 1600,
+                                "exportNewUsers": 380,
+                                "importAvgDuration": 612
+                            },
+                            "fourGrid": {
+                                "importDailyUsers": 900,
+                                "importNewUsers": 210,
+                                "exportDailyUsers": 820,
+                                "exportNewUsers": 195,
+                                "importAvgDuration": 540
+                            },
+                            "singleGrid": {
+                                "importDailyUsers": 400,
+                                "importNewUsers": 90,
+                                "exportDailyUsers": 360,
+                                "exportNewUsers": 80,
+                                "importAvgDuration": 470
+                            }
+                        },
+                        "import": {
+                            "nineGrid": {
+                                "importDailyUsers": 1800,
+                                "importNewUsers": 420,
+                                "importAvgDuration": 612,
+                                "sourceOfConductance": "滚动的海洋球球"
+                            },
+                            "fourGrid": {
+                                "importDailyUsers": 900,
+                                "importNewUsers": 210,
+                                "importAvgDuration": 540,
+                                "sourceOfConductance": "小样哪里逃"
+                            },
+                            "singleGrid": {
+                                "importDailyUsers": 400,
+                                "importNewUsers": 90,
+                                "importAvgDuration": 470,
+                                "sourceOfConductance": "宠物二重唱"
+                            }
+                        },
+                        "export": {
+                            "nineGrid": {
+                                "exportDailyUsers": 1600,
+                                "exportNewUsers": 380,
+                                "reciprocalPushPosition": "4号位"
+                            },
+                            "fourGrid": {
+                                "exportDailyUsers": 820,
+                                "exportNewUsers": 195,
+                                "reciprocalPushPosition": "5号位"
+                            },
+                            "singleGrid": {
+                                "exportDailyUsers": 360,
+                                "exportNewUsers": 80,
+                                "reciprocalPushPosition": "3号位"
+                            }
+                        }
                     },
                     "android": {
                         "recordPublishClicks": 7145,
                         "recordPublishUsers": 5100,
                         "recordPublishRate": 35.1,
                         "recordSuccessRate": 77.8,
-                        "avgSuccessVideos": 1.7,
-                        "importDailyUsers": 2900,
-                        "importNewUsers": 680,
-                        "exportDailyUsers": 2600,
-                        "exportNewUsers": 620,
-                        "importAvgDuration": 588
+                        "avgSuccessVideos": 1.7
                     }
                 },
                 {
-                    "date": "2026-04-20",
+                    "date": "2026-04-21",
                     "ios": {
                         "recordPublishClicks": 6000,
                         "recordPublishUsers": 400,
                         "recordPublishRate": 36.2,
                         "recordSuccessRate": 80.1,
                         "avgSuccessVideos": 1.9,
-                        "importDailyUsers": 2100,
-                        "importNewUsers": 520,
-                        "exportDailyUsers": 1900,
-                        "exportNewUsers": 480,
-                        "importAvgDuration": 645
+                        "overview": {
+                            "nineGrid": {
+                                "importDailyUsers": 1,
+                                "importNewUsers": 1,
+                                "exportDailyUsers": 1,
+                                "exportNewUsers": 1,
+                                "importAvgDuration": 1
+                            },
+                            "fourGrid": {
+                                "importDailyUsers": 1,
+                                "importNewUsers": 1,
+                                "exportDailyUsers": 1,
+                                "exportNewUsers": 1,
+                                "importAvgDuration": 1
+                            },
+                            "singleGrid": {
+                                "importDailyUsers": 1,
+                                "importNewUsers": 1,
+                                "exportDailyUsers": 1,
+                                "exportNewUsers": 1,
+                                "importAvgDuration": 1
+                            }
+                        }
                     },
                     "android": {
                         "recordPublishClicks": 7145,
                         "recordPublishUsers": 5100,
                         "recordPublishRate": 35.1,
                         "recordSuccessRate": 77.8,
-                        "avgSuccessVideos": 1.7,
-                        "importDailyUsers": 2900,
-                        "importNewUsers": 680,
-                        "exportDailyUsers": 2600,
-                        "exportNewUsers": 620,
-                        "importAvgDuration": 588
+                        "avgSuccessVideos": 1.7
                     }
                 }
             ]
@@ -65,57 +128,97 @@
             "appName": "抖音极速版",
             "data": [
                 {
-                    "date": "2026-04-19",
+                    "date": "2026-04-20",
                     "ios": {
-                        "recordPublishClicks": 1,
-                        "recordPublishUsers": 1,
+                        "recordPublishClicks": 5200,
+                        "recordPublishUsers": 3800,
                         "recordPublishRate": 36.2,
                         "recordSuccessRate": 80.1,
                         "avgSuccessVideos": 1.9,
-                        "importDailyUsers": 2100,
-                        "importNewUsers": 520,
-                        "exportDailyUsers": 1900,
-                        "exportNewUsers": 480,
-                        "importAvgDuration": 645
+                        "overview": {
+                            "nineGrid": {
+                                "importDailyUsers": 1800,
+                                "importNewUsers": 420,
+                                "exportDailyUsers": 1600,
+                                "exportNewUsers": 380,
+                                "importAvgDuration": 612
+                            },
+                            "fourGrid": {
+                                "importDailyUsers": 900,
+                                "importNewUsers": 210,
+                                "exportDailyUsers": 820,
+                                "exportNewUsers": 195,
+                                "importAvgDuration": 540
+                            },
+                            "singleGrid": {
+                                "importDailyUsers": 400,
+                                "importNewUsers": 90,
+                                "exportDailyUsers": 360,
+                                "exportNewUsers": 80,
+                                "importAvgDuration": 470
+                            }
+                        },
+                        "import": {
+                            "nineGrid": {
+                                "importDailyUsers": 1800,
+                                "importNewUsers": 420,
+                                "importAvgDuration": 612,
+                                "source_of_conductance": "滚动的海洋球球"
+                            },
+                            "fourGrid": {
+                                "importDailyUsers": 900,
+                                "importNewUsers": 210,
+                                "importAvgDuration": 540,
+                                "source_of_conductance": "小样哪里逃"
+                            },
+                            "singleGrid": {
+                                "importDailyUsers": 400,
+                                "importNewUsers": 90,
+                                "importAvgDuration": 470,
+                                "source_of_conductance": "宠物二重唱"
+                            }
+                        },
+                        "export": {
+                            "nineGrid": {
+                                "exportDailyUsers": 1600,
+                                "exportNewUsers": 380,
+                                "reciprocal_push_position": "4号位"
+                            },
+                            "fourGrid": {
+                                "exportDailyUsers": 820,
+                                "exportNewUsers": 195,
+                                "reciprocal_push_position": "5号位"
+                            },
+                            "singleGrid": {
+                                "exportDailyUsers": 360,
+                                "exportNewUsers": 80,
+                                "reciprocal_push_position": "3号位"
+                            }
+                        }
                     },
                     "android": {
                         "recordPublishClicks": 7145,
                         "recordPublishUsers": 5100,
                         "recordPublishRate": 35.1,
                         "recordSuccessRate": 77.8,
-                        "avgSuccessVideos": 1.7,
-                        "importDailyUsers": 2900,
-                        "importNewUsers": 680,
-                        "exportDailyUsers": 2600,
-                        "exportNewUsers": 620,
-                        "importAvgDuration": 588
+                        "avgSuccessVideos": 1.7
                     }
                 },
                 {
-                    "date": "2026-04-20",
+                    "date": "2026-04-21",
                     "ios": {
-                        "recordPublishClicks": 2,
-                        "recordPublishUsers": 2,
+                        "recordPublishClicks": 6000,
+                        "recordPublishUsers": 400,
                         "recordPublishRate": 36.2,
                         "recordSuccessRate": 80.1,
-                        "avgSuccessVideos": 1.9,
-                        "importDailyUsers": 2100,
-                        "importNewUsers": 520,
-                        "exportDailyUsers": 1900,
-                        "exportNewUsers": 480,
-                        "importAvgDuration": 645
+                        "avgSuccessVideos": 1.9
                     },
                     "android": {
                         "recordPublishClicks": 7145,
                         "recordPublishUsers": 5100,
                         "recordPublishRate": 35.1,
                         "recordSuccessRate": 77.8,
-                        "avgSuccessVideos": 1.7,
-                        "importDailyUsers": 2900,
-                        "importNewUsers": 680,
-                        "exportDailyUsers": 2600,
-                        "exportNewUsers": 620,
-                        "importAvgDuration": 588
+                        "avgSuccessVideos": 1.7
                     }
                 }
             ]

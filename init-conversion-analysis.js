@@ -27,6 +27,17 @@
     { key: 'avgSuccessVideos', label: '人均成功发布视频数', type: 'decimal' }
   ];
 
+  // 互推数据指标配置
+  // 指标值 = ios/android 分支下 overview.{nineGrid + fourGrid + singleGrid} 累加
+  // （flattenBranch 已把 overview 三个 grid 合并后铺到分支顶层，这里直接按 key 取）
+  const PROMOTION_METRICS = [
+    { key: 'importDailyUsers', label: '导入-活跃用户数', type: 'number' },
+    { key: 'importNewUsers', label: '导入-新增用户数', type: 'number' },
+    { key: 'exportDailyUsers', label: '导出-活跃用户数', type: 'number' },
+    { key: 'exportNewUsers', label: '导出-新增用户数', type: 'number' },
+    { key: 'importAvgDuration', label: '导入用户人均游戏时长', type: 'duration' }
+  ];
+
   // "累加型"字段：合并多个 os / 多个 app 时直接相加
   // 其它（比率、人均）按算术平均合并
   const SUM_KEYS = new Set([
@@ -44,6 +55,10 @@
   // 录屏折线图当前选中的指标（默认第一个：点击发布录屏次数）
   if (typeof window._conversionRecordMetric === 'undefined') {
     window._conversionRecordMetric = RECORD_METRICS[0].key;
+  }
+  // 互推折线图当前选中的指标（默认第一个：导入-活跃用户数）
+  if (typeof window._conversionPromotionMetric === 'undefined') {
+    window._conversionPromotionMetric = PROMOTION_METRICS[0].key;
   }
 
   let _dataCache = null;
@@ -87,14 +102,32 @@
     return [...set].sort((a, b) => String(a).localeCompare(String(b)));
   }
 
+  // 把一个 ios / android 分支"扁平化"：把 overview.{nineGrid, fourGrid, singleGrid}
+  // 三个格子用同一份 aggregate 规则（SUM_KEYS 累加，其余取平均）合成后，补到分支顶层。
+  // 互推 5 个指标就是在这里铺平的，取的时候和录屏指标同级，pickMetrics 无需区分。
+  function flattenBranch(branch) {
+    if (!branch || typeof branch !== 'object') return branch;
+    const out = Object.assign({}, branch);
+    const ov = branch.overview;
+    if (ov && typeof ov === 'object') {
+      const grids = [];
+      ['nineGrid', 'fourGrid', 'singleGrid'].forEach(k => {
+        if (ov[k] && typeof ov[k] === 'object') grids.push(ov[k]);
+      });
+      const merged = aggregate(grids);
+      Object.keys(merged).forEach(k => { out[k] = merged[k]; });
+    }
+    return out;
+  }
+
   // 从 day 项按 os 取分支：ios / android / all(两者都要)
   function pickOsBranches(dayItem, os) {
     if (!dayItem) return [];
-    if (os === 'ios') return dayItem.ios ? [dayItem.ios] : [];
-    if (os === 'android') return dayItem.android ? [dayItem.android] : [];
+    if (os === 'ios') return dayItem.ios ? [flattenBranch(dayItem.ios)] : [];
+    if (os === 'android') return dayItem.android ? [flattenBranch(dayItem.android)] : [];
     const out = [];
-    if (dayItem.ios) out.push(dayItem.ios);
-    if (dayItem.android) out.push(dayItem.android);
+    if (dayItem.ios) out.push(flattenBranch(dayItem.ios));
+    if (dayItem.android) out.push(flattenBranch(dayItem.android));
     return out;
   }
 
@@ -170,6 +203,13 @@
     const num = Number(val);
     if (type === 'rate') return num.toFixed(2) + '%';
     if (type === 'decimal') return num.toFixed(4);
+    if (type === 'duration') {
+      const s = Math.max(0, Math.round(num));
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = s % 60;
+      return [h, m, sec].map(n => String(n).padStart(2, '0')).join(':');
+    }
     return Math.round(num).toLocaleString('en-US');
   }
 
@@ -284,6 +324,140 @@
     });
   }
 
+  // ==================== 互推数据卡片 ====================
+  // 和录屏卡片同一套数据链路（pickApps → collectDates → sliceWindow → pickMetrics），
+  // 只是指标清单换成 PROMOTION_METRICS；点击卡片会切换下方互推折线图的当前指标
+  function bindPromotionCardsClick(container) {
+    if (container._promotionClickBound) return;
+    container._promotionClickBound = true;
+    container.addEventListener('click', (e) => {
+      const cardEl = e.target.closest('[data-metric-key]');
+      if (!cardEl || !container.contains(cardEl)) return;
+      const key = cardEl.getAttribute('data-metric-key');
+      if (!key || key === window._conversionPromotionMetric) return;
+      window._conversionPromotionMetric = key;
+      container.querySelectorAll('[data-metric-key] .omg-metric-card-bordered-checked')
+        .forEach(el => el.classList.remove('omg-metric-card-bordered-checked'));
+      const inner = cardEl.querySelector('.omg-metric-card');
+      if (inner) inner.classList.add('omg-metric-card-bordered-checked');
+      renderPromotionChart();
+    });
+  }
+
+  function renderPromotionCards(opts) {
+    const container = document.querySelector('.conversion-promotion-cards');
+    if (!container) {
+      console.warn('[conversion] 未找到 .conversion-promotion-cards 容器');
+      return;
+    }
+
+    loadData().then(json => {
+      const appId = (opts && opts.appId) || window._conversionAppId || 'all';
+      const os = (opts && opts.os) || window._conversionOs || 'all';
+      const range = (opts && opts.range) || getCurrentRange();
+      const apps = pickApps(json, appId);
+
+      if (apps.length === 0) {
+        container.innerHTML = '<div class="p-4 text-text-2">暂无数据</div>';
+        return;
+      }
+
+      const dates = collectDates(apps);
+      if (dates.length === 0) {
+        container.innerHTML = '<div class="p-4 text-text-2">暂无数据</div>';
+        return;
+      }
+
+      const { currDates, prevDates, compareLabel } = sliceWindow(dates, range);
+      const currMetrics = pickMetrics(apps, os, currDates);
+      const prevMetrics = pickMetrics(apps, os, prevDates);
+      const activeMetric = window._conversionPromotionMetric || PROMOTION_METRICS[0].key;
+
+      const html = PROMOTION_METRICS.map(m => {
+        const valueText = formatValue(currMetrics[m.key], m.type);
+        const compare = calcCompare(currMetrics[m.key], prevMetrics[m.key]);
+        return buildCardHtml(m, valueText, compareLabel, compare, m.key === activeMetric);
+      }).join('');
+
+      container.innerHTML = html;
+      bindPromotionCardsClick(container);
+      console.log(`[conversion] 互推卡片已渲染，appId=${appId}, os=${os}, range=${range}, metric=${activeMetric}`);
+    }).catch(err => {
+      console.error('[conversion] 互推数据加载失败', err);
+      container.innerHTML = '<div class="p-4 text-text-2">数据加载失败</div>';
+    });
+  }
+
+  // ==================== 互推数据折线图 ====================
+  // 复用 renderMultiLineChart，口径和录屏图完全一致：
+  //   · yesterday → 当日聚合值 × 小时权重，24 个点
+  //   · 7 / 30    → 每天一个点，取 N 天
+  // 与录屏图的差异只在：容器 id / chartInstanceKey / 当前 metric 读 _conversionPromotionMetric
+  function renderPromotionChart(opts) {
+    const container = document.getElementById('visactor_window_14');
+    if (!container) {
+      console.warn('[conversion] 未找到图表容器 visactor_window_14');
+      return;
+    }
+    if (typeof window.renderMultiLineChart !== 'function') {
+      console.warn('[conversion] window.renderMultiLineChart 尚未加载，跳过图表渲染');
+      return;
+    }
+
+    const appId = (opts && opts.appId) || window._conversionAppId || 'all';
+    const os = (opts && opts.os) || window._conversionOs || 'all';
+    const range = (opts && opts.range) || getCurrentRange();
+    const metricKey = (opts && opts.metric) || window._conversionPromotionMetric || PROMOTION_METRICS[0].key;
+    window._conversionPromotionMetric = metricKey;
+    const metric = PROMOTION_METRICS.find(m => m.key === metricKey) || PROMOTION_METRICS[0];
+
+    const loaders = range === 'yesterday'
+      ? [loadData(), loadHourlyWeights()]
+      : [loadData()];
+
+    Promise.all(loaders).then(([json, weights]) => {
+      const apps = pickApps(json, appId);
+      if (apps.length === 0) {
+        container.innerHTML = '<div class="p-4 text-text-2">暂无数据</div>';
+        return;
+      }
+
+      const allDates = collectDates(apps);
+      if (allDates.length === 0) return;
+
+      let chartData;
+      if (range === 'yesterday') {
+        const latest = allDates[allDates.length - 1];
+        chartData = buildChartSeriesHourly(apps, os, latest, metric, weights || {});
+      } else {
+        const n = range === 30 ? 30 : 7;
+        chartData = buildChartSeriesDaily(apps, os, allDates.slice(-n), metric);
+      }
+
+      const renderOpts = {
+        seriesField: 'metricKey',
+        nameField: 'metricName',
+        fixedOrder: [metric.key],
+        useWhitelist: false,
+        colors: ['rgb(73 127 252)'],
+        chartInstanceKey: 'conversionPromotionChartInstance',
+        logPrefix: '互推数据图表'
+      };
+      const formatter = getMetricFormatter(metric.type);
+      if (formatter) renderOpts.valueFormatter = formatter;
+
+      window.renderMultiLineChart(
+        'visactor_window_14',
+        chartData,
+        `互推数据-${metric.label}`,
+        range,
+        renderOpts
+      );
+    }).catch(err => {
+      console.error('[conversion] 互推图表数据加载失败', err);
+    });
+  }
+
   // ==================== 录屏数据折线图 ====================
   // 折线图沿用 window.renderMultiLineChart（来源分析同款），区别仅在：
   //   · seriesField='metricKey' + fixedOrder=[当前指标] —— 单条线
@@ -332,6 +506,7 @@
   function getMetricFormatter(type) {
     if (type === 'rate') return v => (Number(v) || 0).toFixed(2) + '%';
     if (type === 'decimal') return v => (Number(v) || 0).toFixed(4);
+    if (type === 'duration') return v => formatValue(v, 'duration');
     return null; // number 走 renderMultiLineChart 的默认（千分位）
   }
 
@@ -569,6 +744,8 @@
     renderRecordCards(opts || {});
     renderRecordChart(opts || {});
     renderRecordTable(opts || {});
+    renderPromotionCards(opts || {});
+    renderPromotionChart(opts || {});
     bindExportButton();
   }
 
@@ -577,6 +754,8 @@
     renderRecordCards(opts || {});
     renderRecordChart(opts || {});
     renderRecordTable(opts || {});
+    renderPromotionCards(opts || {});
+    renderPromotionChart(opts || {});
   }
 
   // ==================== 导出 ====================
@@ -711,6 +890,8 @@
   window.renderConversionRecordCards = renderRecordCards;
   window.renderConversionRecordChart = renderRecordChart;
   window.renderConversionRecordTable = renderRecordTable;
+  window.renderConversionPromotionCards = renderPromotionCards;
+  window.renderConversionPromotionChart = renderPromotionChart;
   window.exportConversionRecord = exportRecordData;
   window.bindConversionExportButton = bindExportButton;
 })();
