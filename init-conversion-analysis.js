@@ -530,7 +530,9 @@
       console.warn('[conversion] 未找到 .conversion-promotion-table-body');
       return;
     }
-    const appId = (opts && opts.appId) || window._conversionAppId || 'all';
+    // 互推表格不跟随顶部"APP"大下拉框，始终按全部 APP 汇总
+    // （OS / 时间范围 / 互推位类型仍然生效）
+    const appId = 'all';
     const os = (opts && opts.os) || window._conversionOs || 'all';
     const range = (opts && opts.range) || getCurrentRange();
     const gridFilter = (opts && opts.grid) || window._conversionPromotionGrid || 'all';
