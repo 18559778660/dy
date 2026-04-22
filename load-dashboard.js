@@ -214,6 +214,11 @@
                         setTimeout(() => window.initConversionAnalysis(), 290);
                     }
 
+                    // 初始化用户画像（性别 / 年龄表）
+                    if (typeof window.initUserProfile === 'function') {
+                        setTimeout(() => window.initUserProfile(), 295);
+                    }
+
                     // 初始化抖音视频数据汇总表
                     if (typeof window.initDouyinVideoTable === 'function') {
                         setTimeout(() => {

@@ -224,6 +224,9 @@ function initTimeRangeButtons(containerSelector = 'body') {
         },
         '.user-transformation-section': (range) => {
             window.updateConversionAnalysis && window.updateConversionAnalysis({ range });
+        },
+        '.user-gender-section': (range) => {
+            window.updateUserProfile && window.updateUserProfile({ range });
         }
     };
     const dispatch = handlersByContainer[containerSelector] || null;
@@ -363,6 +366,21 @@ function initDropdownFilters() {
         ]);
     }
 
+    // 用户画像 APP 大分类下拉（沿用来源分析同一套 APP 列表，不含"全部"——用户画像按单 APP 查看）
+    const profileAppFilter = document.querySelector('.filter-profile-app');
+    if (profileAppFilter) {
+        createDropdownContent(profileAppFilter, 'semi-dy-open-select-profile-app', SOURCE_APP_OPTIONS);
+    }
+
+    // 用户画像 分类下拉（活跃用户 / 新增用户）—— 对应 JSON 里的 activeXxx / newXxx 字段
+    const profileCategoryFilter = document.querySelector('.filter-profile-category');
+    if (profileCategoryFilter) {
+        createDropdownContent(profileCategoryFilter, 'semi-dy-open-select-profile-category', [
+            { value: 'active', label: '活跃用户' },
+            { value: 'new', label: '新增用户' }
+        ]);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
@@ -385,6 +403,12 @@ function initDropdownFilters() {
     }
     if (promotionGridFilter) {
         allFilters.push(promotionGridFilter);
+    }
+    if (profileAppFilter) {
+        allFilters.push(profileAppFilter);
+    }
+    if (profileCategoryFilter) {
+        allFilters.push(profileCategoryFilter);
     }
 
     allFilters.forEach(filter => {
@@ -463,6 +487,8 @@ function initDropdownFilters() {
             e.target.closest('.filter-transformation-app') ||
             e.target.closest('.filter-transformation-os') ||
             e.target.closest('.filter-promotion-grid') ||
+            e.target.closest('.filter-profile-app') ||
+            e.target.closest('.filter-profile-category') ||
             e.target.closest('.source-scene-panel') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
@@ -659,6 +685,20 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 console.log('[promotion-grid] 互推位类型切换:', value, label);
                 if (typeof window.renderConversionPromotionTable === 'function') {
                     window.renderConversionPromotionTable();
+                }
+            } else if (tabType === 'profile-app') {
+                // 用户画像 APP 大分类切换：该页所有表格换数据源重渲
+                window._profileAppId = value;
+                console.log('[profile-app] APP 切换:', value, label);
+                if (typeof window.updateUserProfile === 'function') {
+                    window.updateUserProfile();
+                }
+            } else if (tabType === 'profile-category') {
+                // 用户画像 分类切换（活跃/新增）：同一份数据切换字段即可
+                window._profileCategory = value;
+                console.log('[profile-category] 分类切换:', value, label);
+                if (typeof window.updateUserProfile === 'function') {
+                    window.updateUserProfile();
                 }
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);

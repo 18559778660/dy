@@ -2567,7 +2567,8 @@
                               class="condition-filter-item-title-LaiYXX">APP</span>
                             <div role="combobox" aria-disabled="false" aria-expanded="false"
                               aria-controls="semi-dy-open-select-kl9pglr" aria-haspopup="listbox" aria-label="selected"
-                              class="semi-dy-open-select condition-filter-item-choice-a3OOs9 semi-dy-open-select-single semi-dy-open-select-filterable"
+                              class="semi-dy-open-select condition-filter-item-choice-a3OOs9 semi-dy-open-select-single semi-dy-open-select-filterable filter-profile-app"
+                              data-tab="profile-app"
                               id="v6qz9mx" tabindex="0" aria-activedescendant="v6qz9mx-option-0" data-popupid="h8jcw6f"
                               style="width: 200px; height: 32px;">
                               <div class="semi-dy-open-select-selection">
@@ -2591,7 +2592,8 @@
                               class="condition-filter-item-title-LaiYXX">分类</span>
                             <div role="combobox" aria-disabled="false" aria-expanded="false"
                               aria-controls="semi-dy-open-select-20bxvp7" aria-haspopup="listbox" aria-label="selected"
-                              class="semi-dy-open-select condition-filter-item-choice-a3OOs9 semi-dy-open-select-single semi-dy-open-select-filterable"
+                              class="semi-dy-open-select condition-filter-item-choice-a3OOs9 semi-dy-open-select-single semi-dy-open-select-filterable filter-profile-category"
+                              data-tab="profile-category"
                               id="9b104e1" tabindex="0" aria-activedescendant="9b104e1-option-0" data-popupid="lzx3ubs"
                               style="width: 200px; height: 32px;">
                               <div class="semi-dy-open-select-selection">
@@ -2661,22 +2663,8 @@
                                                   rowspan="1" style="background: rgb(248, 248, 248);">用户数</th>
                                               </tr>
                                             </thead>
-                                            <tbody class="semi-dy-open-table-tbody">
-                                              <tr role="row" aria-rowindex="1" class="semi-dy-open-table-row"
-                                                data-row-key="0">
-                                                <td role="gridcell" aria-colindex="1"
-                                                  class="semi-dy-open-table-row-cell" title="男">男</td>
-                                                <td role="gridcell" aria-colindex="2"
-                                                  class="semi-dy-open-table-row-cell">17401</td>
-                                              </tr>
-                                              <tr role="row" aria-rowindex="2" class="semi-dy-open-table-row"
-                                                data-row-key="1">
-                                                <td role="gridcell" aria-colindex="1"
-                                                  class="semi-dy-open-table-row-cell" title="女">女</td>
-                                                <td role="gridcell" aria-colindex="2"
-                                                  class="semi-dy-open-table-row-cell">10848</td>
-                                              </tr>
-                                            </tbody>
+                                            <!-- 性别分布表格内容由 init-user-profile.js 动态渲染 -->
+                                            <tbody class="semi-dy-open-table-tbody user-profile-gender-tbody"></tbody>
                                           </table>
                                         </div>
                                       </div>
@@ -2735,50 +2723,8 @@
                                                   rowspan="1" style="background: rgb(248, 248, 248);">用户数</th>
                                               </tr>
                                             </thead>
-                                            <tbody class="semi-dy-open-table-tbody">
-                                              <tr role="row" aria-rowindex="1" class="semi-dy-open-table-row"
-                                                data-row-key="0">
-                                                <td role="gridcell" aria-colindex="1"
-                                                  class="semi-dy-open-table-row-cell" title="18-23岁">18-23岁</td>
-                                                <td role="gridcell" aria-colindex="2"
-                                                  class="semi-dy-open-table-row-cell">6378</td>
-                                              </tr>
-                                              <tr role="row" aria-rowindex="2" class="semi-dy-open-table-row"
-                                                data-row-key="1">
-                                                <td role="gridcell" aria-colindex="1"
-                                                  class="semi-dy-open-table-row-cell" title="24-30岁">24-30岁</td>
-                                                <td role="gridcell" aria-colindex="2"
-                                                  class="semi-dy-open-table-row-cell">9138</td>
-                                              </tr>
-                                              <tr role="row" aria-rowindex="3" class="semi-dy-open-table-row"
-                                                data-row-key="2">
-                                                <td role="gridcell" aria-colindex="1"
-                                                  class="semi-dy-open-table-row-cell" title="31-40岁">31-40岁</td>
-                                                <td role="gridcell" aria-colindex="2"
-                                                  class="semi-dy-open-table-row-cell">9368</td>
-                                              </tr>
-                                              <tr role="row" aria-rowindex="4" class="semi-dy-open-table-row"
-                                                data-row-key="3">
-                                                <td role="gridcell" aria-colindex="1"
-                                                  class="semi-dy-open-table-row-cell" title="41-50岁">41-50岁</td>
-                                                <td role="gridcell" aria-colindex="2"
-                                                  class="semi-dy-open-table-row-cell">1315</td>
-                                              </tr>
-                                              <tr role="row" aria-rowindex="5" class="semi-dy-open-table-row"
-                                                data-row-key="4">
-                                                <td role="gridcell" aria-colindex="1"
-                                                  class="semi-dy-open-table-row-cell" title="50岁以上">50岁以上</td>
-                                                <td role="gridcell" aria-colindex="2"
-                                                  class="semi-dy-open-table-row-cell">345</td>
-                                              </tr>
-                                              <tr role="row" aria-rowindex="6" class="semi-dy-open-table-row"
-                                                data-row-key="5">
-                                                <td role="gridcell" aria-colindex="1"
-                                                  class="semi-dy-open-table-row-cell" title="未知">未知</td>
-                                                <td role="gridcell" aria-colindex="2"
-                                                  class="semi-dy-open-table-row-cell">1705</td>
-                                              </tr>
-                                            </tbody>
+                                            <!-- 年龄分布表格内容由 init-user-profile.js 动态渲染 -->
+                                            <tbody class="semi-dy-open-table-tbody user-profile-age-tbody"></tbody>
                                           </table>
                                         </div>
                                       </div>
