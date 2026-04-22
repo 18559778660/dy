@@ -2369,7 +2369,7 @@
                           </div>
                           <div class="flex flex-row items-center">
                             <div><button
-                                class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-borderless"
+                                class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-borderless export-conversion-promotion-btn"
                                 type="button" aria-disabled="false"><span class="semi-dy-open-button-content"
                                   x-semi-prop="children"><span class="flex items-center"><span role="img"
                                       aria-label="export"
@@ -2472,52 +2472,11 @@
                                 <div class="semi-dy-open-table-scroll-position-left">
                                   <div class="semi-dy-open-table-container">
                                     <div class="semi-dy-open-table-body" style="overflow: auto;">
+                                      <!-- 互推数据表格（colgroup / thead / tbody）由 init-conversion-analysis.js 动态渲染：
+                                           根据维度 radio (转化总览 / 导入分析 / 导出分析) 切换列结构 -->
                                       <table role="grid" aria-rowcount="1" aria-colcount="8"
-                                        class="semi-dy-open-table semi-dy-open-table-fixed" style="width: 1324px;">
-                                        <colgroup class="semi-dy-open-table-colgroup">
-                                          <col class="semi-dy-open-table-col" style="width: 150px; min-width: 150px;">
-                                          <col class="semi-dy-open-table-col" style="width: 150px; min-width: 150px;">
-                                          <col class="semi-dy-open-table-col" style="width: 150px; min-width: 150px;">
-                                          <col class="semi-dy-open-table-col">
-                                          <col class="semi-dy-open-table-col">
-                                          <col class="semi-dy-open-table-col">
-                                          <col class="semi-dy-open-table-col">
-                                          <col class="semi-dy-open-table-col">
-                                        </colgroup>
-                                        <thead class="semi-dy-open-table-thead">
-                                          <tr role="row" aria-rowindex="1" class="semi-dy-open-table-row">
-                                            <th role="columnheader" aria-colindex="1"
-                                              class="semi-dy-open-table-row-head semi-dy-open-table-cell-fixed-left semi-dy-open-table-cell-fixed-left-last"
-                                              colspan="1" title="日期" rowspan="1"
-                                              style="background: rgb(248, 248, 248); position: sticky; left: 0px;">日期
-                                            </th>
-                                            <th role="columnheader" aria-colindex="2"
-                                              class="semi-dy-open-table-row-head" colspan="1" title="App" rowspan="1"
-                                              style="background: rgb(248, 248, 248);">App</th>
-                                            <th role="columnheader" aria-colindex="3"
-                                              class="semi-dy-open-table-row-head" colspan="1" title="互推位" rowspan="1"
-                                              style="background: rgb(248, 248, 248);">互推位</th>
-                                            <th role="columnheader" aria-colindex="4"
-                                              class="semi-dy-open-table-row-head" colspan="1" title="导入-活跃用户数"
-                                              rowspan="1" style="background: rgb(248, 248, 248);">导入-活跃用户数</th>
-                                            <th role="columnheader" aria-colindex="5"
-                                              class="semi-dy-open-table-row-head" colspan="1" title="导入-新增用户数"
-                                              rowspan="1" style="background: rgb(248, 248, 248);">导入-新增用户数</th>
-                                            <th role="columnheader" aria-colindex="6"
-                                              class="semi-dy-open-table-row-head" colspan="1" title="导出-活跃用户数"
-                                              rowspan="1" style="background: rgb(248, 248, 248);">导出-活跃用户数</th>
-                                            <th role="columnheader" aria-colindex="7"
-                                              class="semi-dy-open-table-row-head" colspan="1" title="导出-新增用户数"
-                                              rowspan="1" style="background: rgb(248, 248, 248);">导出-新增用户数</th>
-                                            <th role="columnheader" aria-colindex="8"
-                                              class="semi-dy-open-table-row-head semi-dy-open-table-cell-fixed-right semi-dy-open-table-cell-fixed-right-first"
-                                              colspan="1" title="导入用户人均游戏时长" rowspan="1"
-                                              style="background: rgb(248, 248, 248); position: sticky; right: 0px;">
-                                              导入用户人均游戏时长</th>
-                                          </tr>
-                                        </thead>
-                                        <!-- 互推数据表格 tbody 由 init-conversion-analysis.js 动态渲染 -->
-                                        <tbody class="semi-dy-open-table-tbody conversion-promotion-table-body"></tbody>
+                                        class="semi-dy-open-table semi-dy-open-table-fixed conversion-promotion-table"
+                                        style="width: 100%;"></table>
                                       </table>
                                     </div>
                                   </div>

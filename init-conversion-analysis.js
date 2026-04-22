@@ -64,6 +64,10 @@
   if (typeof window._conversionPromotionGrid === 'undefined') {
     window._conversionPromotionGrid = 'all';
   }
+  // 互推表格当前选中的"维度"：'overview' | 'import' | 'export'
+  if (typeof window._conversionPromotionDim === 'undefined') {
+    window._conversionPromotionDim = 'overview';
+  }
 
   let _dataCache = null;
   let _weightsCache = null;
@@ -463,11 +467,12 @@
   }
 
   // ==================== 互推数据"详细数据"表格 ====================
-  // 维度 = 转化总览：每条行 = (日期 × app × 互推位)
-  //   · 取 dayItem.{ios|android}.overview[gridKey] 作为行数据
-  //   · os='all' 时 ios + android 的同 gridKey 走 aggregate 合并（SUM_KEYS 累加，其余平均）
-  //   · range=yesterday → 最新一天；7/30 → 最近 N 天
-  // 其它维度（导入分析 / 导出分析）、互推位类型下拉筛选 —— 本轮先不接
+  // 每条行 = (日期 × app × 互推位)，列结构随"维度"切换：
+  //   · 转化总览（overview）→ dayItem.{ios|android}.overview[gridKey]
+  //   · 导入分析（import）  → dayItem.{ios|android}.import[gridKey]  （多一列 导量来源）
+  //   · 导出分析（export）  → dayItem.{ios|android}.export[gridKey]  （多一列 互推位置）
+  // 合并规则：os='all' 时 ios + android 走 aggregate（SUM_KEYS 累加 / 其余平均）；
+  //          字符串字段（导量来源 / 互推位置）aggregate 会跳过，取第一个非空分支的值补回。
   const PROMOTION_GRID_KEYS = ['nineGrid', 'fourGrid', 'singleGrid'];
   const PROMOTION_GRID_LABELS = {
     nineGrid: '九宫格',
@@ -475,96 +480,169 @@
     singleGrid: '单宫格'
   };
 
-  // 单个 (app, date, gridKey, os) → 合并后的 overview 指标对象（没有数据返回 null）
-  function pickPromotionOverviewRow(app, date, gridKey, os) {
+  // 三种维度的列配置：顺序即展示顺序；fixedLeft / fixedRight 用于 sticky 样式
+  const DIMENSION_COLUMNS = {
+    overview: [
+      { key: 'date', label: '日期', type: 'text', width: 150, fixedLeft: true },
+      { key: 'appName', label: 'App', type: 'text', width: 150 },
+      { key: 'gridLabel', label: '互推位', type: 'text', width: 150 },
+      { key: 'importDailyUsers', label: '导入-活跃用户数', type: 'number' },
+      { key: 'importNewUsers', label: '导入-新增用户数', type: 'number' },
+      { key: 'exportDailyUsers', label: '导出-活跃用户数', type: 'number' },
+      { key: 'exportNewUsers', label: '导出-新增用户数', type: 'number' },
+      { key: 'importAvgDuration', label: '导入用户人均游戏时长', type: 'duration', fixedRight: true }
+    ],
+    import: [
+      { key: 'date', label: '日期', type: 'text', width: 150, fixedLeft: true },
+      { key: 'appName', label: 'App', type: 'text', width: 150 },
+      { key: 'gridLabel', label: '互推位', type: 'text', width: 150 },
+      { key: 'sourceOfConductance', label: '导量来源', type: 'text' },
+      { key: 'importDailyUsers', label: '导入-活跃用户数', type: 'number' },
+      { key: 'importNewUsers', label: '导入-新增用户数', type: 'number' },
+      { key: 'importAvgDuration', label: '导入用户人均游戏时长', type: 'duration', fixedRight: true }
+    ],
+    export: [
+      { key: 'date', label: '日期', type: 'text', width: 150, fixedLeft: true },
+      { key: 'appName', label: 'App', type: 'text', width: 150 },
+      { key: 'gridLabel', label: '互推位', type: 'text', width: 150 },
+      { key: 'reciprocalPushPosition', label: '互推位置', type: 'text' },
+      { key: 'exportDailyUsers', label: '导出-活跃用户数', type: 'number' },
+      { key: 'exportNewUsers', label: '导出-新增用户数', type: 'number', fixedRight: true }
+    ]
+  };
+  const DIM_TO_SECTION = { overview: 'overview', import: 'import', export: 'export' };
+
+  // 从 day 的 {ios|android}[section][gridKey] 合并出一行数据；字符串字段取第一个非空值
+  function pickPromotionSectionRow(app, date, gridKey, os, section) {
     const day = (app.data || []).find(d => d.date === date);
     if (!day) return null;
     const branches = [];
     if (os === 'ios' || os === 'all') {
-      const ov = day.ios && day.ios.overview && day.ios.overview[gridKey];
-      if (ov) branches.push(ov);
+      const s = day.ios && day.ios[section] && day.ios[section][gridKey];
+      if (s) branches.push(s);
     }
     if (os === 'android' || os === 'all') {
-      const ov = day.android && day.android.overview && day.android.overview[gridKey];
-      if (ov) branches.push(ov);
+      const s = day.android && day.android[section] && day.android[section][gridKey];
+      if (s) branches.push(s);
     }
     if (!branches.length) return null;
-    return aggregate(branches);
+    const merged = aggregate(branches);
+    // aggregate 只合并数值，字符串字段（导量来源 / 互推位置）这里补回
+    branches.forEach(b => {
+      Object.keys(b).forEach(k => {
+        if (typeof b[k] === 'string' && b[k] !== '' && merged[k] === undefined) {
+          merged[k] = b[k];
+        }
+      });
+    });
+    return merged;
   }
 
-  function buildPromotionTableRows(apps, os, range, gridFilter) {
+  function buildPromotionTableRows(apps, os, range, gridFilter, dim) {
     const allDates = collectDates(apps);
     if (!allDates.length) return [];
     const n = range === 30 ? 30 : range === 7 ? 7 : 1;
     const dates = allDates.slice(-n);
-    // 互推位类型筛选：'all' 展开三种，否则只渲染指定 grid
     const gridKeys = (gridFilter && gridFilter !== 'all' && PROMOTION_GRID_KEYS.includes(gridFilter))
       ? [gridFilter]
       : PROMOTION_GRID_KEYS;
+    const section = DIM_TO_SECTION[dim] || 'overview';
     const rows = [];
     // 日期倒序（最新在上），同日期下按 app 顺序，每 app 展开筛选后的互推位
     dates.slice().reverse().forEach(date => {
       apps.forEach(app => {
         gridKeys.forEach(gk => {
-          const m = pickPromotionOverviewRow(app, date, gk, os);
+          const m = pickPromotionSectionRow(app, date, gk, os, section);
           if (!m) return;
-          rows.push({
+          rows.push(Object.assign({
             date,
             appName: app.appName || app.appId,
-            gridLabel: PROMOTION_GRID_LABELS[gk],
-            importDailyUsers: m.importDailyUsers,
-            importNewUsers: m.importNewUsers,
-            exportDailyUsers: m.exportDailyUsers,
-            exportNewUsers: m.exportNewUsers,
-            importAvgDuration: m.importAvgDuration
-          });
+            gridLabel: PROMOTION_GRID_LABELS[gk]
+          }, m));
         });
       });
     });
     return rows;
   }
 
+  // 把一个 col 配置对象转成 th / td 的 class + style 片段（共用，保证左右 sticky 的三个 class 始终一致）
+  function buildPromotionCellAttrs(col, isHead) {
+    const baseCls = isHead ? 'semi-dy-open-table-row-head' : 'semi-dy-open-table-row-cell';
+    const cls = [baseCls];
+    // 统一禁止换行，列宽不够时出现横向滚动（外层已有 overflow: auto）
+    const style = ['white-space: nowrap;'];
+    if (col.fixedLeft) {
+      cls.push('semi-dy-open-table-cell-fixed-left', 'semi-dy-open-table-cell-fixed-left-last');
+      if (isHead) style.push('background: rgb(248, 248, 248);', 'position: sticky;', 'left: 0px;');
+      else style.push('left: 0px;');
+    } else if (col.fixedRight) {
+      cls.push('semi-dy-open-table-cell-fixed-right', 'semi-dy-open-table-cell-fixed-right-first');
+      if (isHead) style.push('background: rgb(248, 248, 248);', 'position: sticky;', 'right: 0px;');
+      else style.push('right: 0px;');
+    } else if (isHead) {
+      style.push('background: rgb(248, 248, 248);');
+    }
+    return { cls: cls.join(' '), style: style.join(' ') };
+  }
+
+  function formatPromotionCell(val, type) {
+    if (type === 'text') {
+      if (val === null || val === undefined || val === '') return '- -';
+      return String(val);
+    }
+    return formatTableCell(val, type);
+  }
+
   function renderPromotionTable(opts) {
-    const tbody = document.querySelector('.conversion-promotion-table-body');
-    if (!tbody) {
-      console.warn('[conversion] 未找到 .conversion-promotion-table-body');
+    const tableEl = document.querySelector('.conversion-promotion-table');
+    if (!tableEl) {
+      console.warn('[conversion] 未找到 .conversion-promotion-table');
       return;
     }
     // 互推表格不跟随顶部"APP"大下拉框，始终按全部 APP 汇总
-    // （OS / 时间范围 / 互推位类型仍然生效）
+    // （OS / 时间范围 / 互推位类型 / 维度 仍然生效）
     const appId = 'all';
     const os = (opts && opts.os) || window._conversionOs || 'all';
     const range = (opts && opts.range) || getCurrentRange();
     const gridFilter = (opts && opts.grid) || window._conversionPromotionGrid || 'all';
+    const dim = (opts && opts.dim) || window._conversionPromotionDim || 'overview';
+    const cols = DIMENSION_COLUMNS[dim] || DIMENSION_COLUMNS.overview;
 
     loadData().then(json => {
       const apps = pickApps(json, appId);
-      const rows = buildPromotionTableRows(apps, os, range, gridFilter);
-      if (!rows.length) {
-        tbody.innerHTML = '';
-        return;
-      }
-      tbody.innerHTML = rows.map((r, i) => {
-        const d = escapeAttr(r.date);
-        const appTxt = escapeAttr(r.appName);
-        const g = escapeAttr(r.gridLabel);
-        const c1 = formatTableCell(r.importDailyUsers, 'number');
-        const c2 = formatTableCell(r.importNewUsers, 'number');
-        const c3 = formatTableCell(r.exportDailyUsers, 'number');
-        const c4 = formatTableCell(r.exportNewUsers, 'number');
-        const c5 = formatTableCell(r.importAvgDuration, 'duration');
-        return `<tr role="row" aria-rowindex="${i + 1}" class="semi-dy-open-table-row" data-row-key="${i}">` +
-          `<td role="gridcell" aria-colindex="1" class="semi-dy-open-table-row-cell semi-dy-open-table-cell-fixed-left semi-dy-open-table-cell-fixed-left-last" title="${d}" style="left: 0px;">${r.date}</td>` +
-          `<td role="gridcell" aria-colindex="2" class="semi-dy-open-table-row-cell" title="${appTxt}">${r.appName}</td>` +
-          `<td role="gridcell" aria-colindex="3" class="semi-dy-open-table-row-cell" title="${g}">${r.gridLabel}</td>` +
-          `<td role="gridcell" aria-colindex="4" class="semi-dy-open-table-row-cell" title="${escapeAttr(c1)}">${c1}</td>` +
-          `<td role="gridcell" aria-colindex="5" class="semi-dy-open-table-row-cell" title="${escapeAttr(c2)}">${c2}</td>` +
-          `<td role="gridcell" aria-colindex="6" class="semi-dy-open-table-row-cell" title="${escapeAttr(c3)}">${c3}</td>` +
-          `<td role="gridcell" aria-colindex="7" class="semi-dy-open-table-row-cell" title="${escapeAttr(c4)}">${c4}</td>` +
-          `<td role="gridcell" aria-colindex="8" class="semi-dy-open-table-row-cell semi-dy-open-table-cell-fixed-right semi-dy-open-table-cell-fixed-right-first" title="${escapeAttr(c5)}" style="right: 0px;">${c5}</td>` +
-          `</tr>`;
+      const rows = buildPromotionTableRows(apps, os, range, gridFilter, dim);
+
+      const colHtml = cols.map(c => c.width
+        ? `<col class="semi-dy-open-table-col" style="width: ${c.width}px; min-width: ${c.width}px;">`
+        : `<col class="semi-dy-open-table-col">`
+      ).join('');
+
+      const thHtml = cols.map((c, i) => {
+        const { cls, style } = buildPromotionCellAttrs(c, true);
+        const titleAttr = escapeAttr(c.label);
+        const styleAttr = style ? ` style="${style}"` : '';
+        return `<th role="columnheader" aria-colindex="${i + 1}" class="${cls}" colspan="1" title="${titleAttr}" rowspan="1"${styleAttr}>${c.label}</th>`;
       }).join('');
-      console.log(`[conversion] 互推表格已渲染，appId=${appId}, os=${os}, range=${range}, grid=${gridFilter}, rows=${rows.length}`);
+
+      const bodyHtml = rows.map((r, ri) => {
+        const tds = cols.map((c, ci) => {
+          const display = formatPromotionCell(r[c.key], c.type);
+          const { cls, style } = buildPromotionCellAttrs(c, false);
+          const styleAttr = style ? ` style="${style}"` : '';
+          return `<td role="gridcell" aria-colindex="${ci + 1}" class="${cls}" title="${escapeAttr(display)}"${styleAttr}>${display}</td>`;
+        }).join('');
+        return `<tr role="row" aria-rowindex="${ri + 1}" class="semi-dy-open-table-row" data-row-key="${ri}">${tds}</tr>`;
+      }).join('');
+
+      tableEl.setAttribute('aria-colcount', String(cols.length));
+      tableEl.innerHTML =
+        `<colgroup class="semi-dy-open-table-colgroup">${colHtml}</colgroup>` +
+        `<thead class="semi-dy-open-table-thead">` +
+        `<tr role="row" aria-rowindex="1" class="semi-dy-open-table-row">${thHtml}</tr>` +
+        `</thead>` +
+        `<tbody class="semi-dy-open-table-tbody conversion-promotion-table-body">${bodyHtml}</tbody>`;
+
+      console.log(`[conversion] 互推表格已渲染，dim=${dim}, os=${os}, range=${range}, grid=${gridFilter}, rows=${rows.length}`);
     }).catch(err => {
       console.error('[conversion] 互推表格数据加载失败', err);
     });
@@ -862,6 +940,7 @@
     renderPromotionTable(opts || {});
     initPromotionDimensionRadio();
     bindExportButton();
+    bindPromotionExportButton();
   }
 
   // 顶层下拉（APP / OS / 时间范围）切换后调用，读取全局状态重新渲染
@@ -903,7 +982,7 @@
       const dim = label.getAttribute('data-dim');
       window._conversionPromotionDim = dim;
       console.log('[promotion-dim] 维度切换:', dim);
-      // 数据联动占位：后续接上 renderPromotionTable 支持 import/export 维度时在此调用
+      renderPromotionTable();
     });
   }
 
@@ -1033,6 +1112,72 @@
     });
   }
 
+  // 互推数据表格的 CSV 单元格格式：在 formatForCsv 的基础上补 text / duration
+  function formatPromotionForCsv(val, type) {
+    if (type === 'text') {
+      if (val === null || val === undefined) return '';
+      return String(val);
+    }
+    if (type === 'duration') {
+      if (val === null || val === undefined || !Number.isFinite(Number(val))) return '';
+      return formatValue(Number(val), 'duration');
+    }
+    return formatForCsv(val, type);
+  }
+
+  const PROMOTION_DIM_LABELS = {
+    overview: '转化总览',
+    import: '导入分析',
+    export: '导出分析'
+  };
+
+  function exportPromotionData() {
+    // 与页面表格保持一致：不受顶部 App 大下拉框影响，始终按 appId = 'all' 汇总；
+    // OS / 时间范围 / 互推位类型 / 维度 均与当前页面状态一致
+    const appId = 'all';
+    const os = window._conversionOs || 'all';
+    const range = getCurrentRange();
+    const gridFilter = window._conversionPromotionGrid || 'all';
+    const dim = window._conversionPromotionDim || 'overview';
+    const cols = DIMENSION_COLUMNS[dim] || DIMENSION_COLUMNS.overview;
+
+    loadData().then(json => {
+      const apps = pickApps(json, appId);
+      if (!apps.length) {
+        console.warn('[conversion] 互推数据无可导出数据');
+        return;
+      }
+      const rows = buildPromotionTableRows(apps, os, range, gridFilter, dim);
+      if (!rows.length) {
+        console.warn('[conversion] 互推数据无可导出数据');
+        return;
+      }
+
+      const headers = cols.map(c => c.label);
+      const csvRows = [headers];
+      rows.forEach(r => {
+        csvRows.push(cols.map(c => formatPromotionForCsv(r[c.key], c.type)));
+      });
+
+      const dimLabel = PROMOTION_DIM_LABELS[dim] || PROMOTION_DIM_LABELS.overview;
+      const fileName = `互推数据.csv`;
+      downloadCsv(csvRows, fileName);
+      console.log(`✅ [conversion] 互推数据已导出：${fileName}`);
+    }).catch(err => {
+      console.error('[conversion] 互推导出失败', err);
+    });
+  }
+
+  function bindPromotionExportButton() {
+    const btn = document.querySelector('.export-conversion-promotion-btn');
+    if (!btn || btn._exportBound) return;
+    btn._exportBound = true;
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      exportPromotionData();
+    });
+  }
+
   window.initConversionAnalysis = initConversionAnalysis;
   window.updateConversionAnalysis = updateConversionAnalysis;
   // 兼容老名字 / 给其他模块单独刷新某一块的入口
@@ -1045,4 +1190,6 @@
   window.initPromotionDimensionRadio = initPromotionDimensionRadio;
   window.exportConversionRecord = exportRecordData;
   window.bindConversionExportButton = bindExportButton;
+  window.exportConversionPromotion = exportPromotionData;
+  window.bindConversionPromotionExportButton = bindPromotionExportButton;
 })();
