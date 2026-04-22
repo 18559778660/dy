@@ -1,0 +1,686 @@
+{
+    "userProfile": [
+        {
+            "appId": "dy",
+            "appName": "抖音",
+            "data": [
+                {
+                    "date": "2026-04-20",
+                    "gender": [
+                        {
+                            "label": "男",
+                            "activeUsers": 12000,
+                            "newUsers": 3200
+                        },
+                        {
+                            "label": "女",
+                            "activeUsers": 9800,
+                            "newUsers": 2600
+                        }
+                    ],
+                    "age": [
+                        {
+                            "range": "18-23岁",
+                            "activeUsers": 5600,
+                            "newUsers": 1600
+                        },
+                        {
+                            "range": "24-30岁",
+                            "activeUsers": 7200,
+                            "newUsers": 1900
+                        },
+                        {
+                            "range": "31-40岁",
+                            "activeUsers": 5800,
+                            "newUsers": 1400
+                        },
+                        {
+                            "range": "41-50岁",
+                            "activeUsers": 2100,
+                            "newUsers": 580
+                        },
+                        {
+                            "range": "50岁以上",
+                            "activeUsers": 780,
+                            "newUsers": 220
+                        },
+                        {
+                            "range": "未知",
+                            "activeUsers": 520,
+                            "newUsers": 180
+                        }
+                    ],
+                    "region": [
+                        {
+                            "province": "广东",
+                            "activeVisitors": 5200,
+                            "newVisitors": 1400,
+                            "cities": [
+                                {
+                                    "city": "深圳",
+                                    "activeVisitors": 2100,
+                                    "newVisitors": 600
+                                },
+                                {
+                                    "city": "广州",
+                                    "activeVisitors": 1800,
+                                    "newVisitors": 500
+                                },
+                                {
+                                    "city": "东莞",
+                                    "activeVisitors": 700,
+                                    "newVisitors": 180
+                                },
+                                {
+                                    "city": "佛山",
+                                    "activeVisitors": 600,
+                                    "newVisitors": 120
+                                }
+                            ]
+                        },
+                        {
+                            "province": "浙江",
+                            "activeVisitors": 3100,
+                            "newVisitors": 820,
+                            "cities": [
+                                {
+                                    "city": "杭州",
+                                    "activeVisitors": 1500,
+                                    "newVisitors": 400
+                                },
+                                {
+                                    "city": "宁波",
+                                    "activeVisitors": 900,
+                                    "newVisitors": 250
+                                },
+                                {
+                                    "city": "温州",
+                                    "activeVisitors": 700,
+                                    "newVisitors": 170
+                                }
+                            ]
+                        },
+                        {
+                            "province": "江苏",
+                            "activeVisitors": 2800,
+                            "newVisitors": 760,
+                            "cities": [
+                                {
+                                    "city": "南京",
+                                    "activeVisitors": 1200,
+                                    "newVisitors": 320
+                                },
+                                {
+                                    "city": "苏州",
+                                    "activeVisitors": 1000,
+                                    "newVisitors": 280
+                                },
+                                {
+                                    "city": "无锡",
+                                    "activeVisitors": 600,
+                                    "newVisitors": 160
+                                }
+                            ]
+                        },
+                        {
+                            "province": "北京",
+                            "activeVisitors": 2400,
+                            "newVisitors": 620,
+                            "cities": [
+                                {
+                                    "city": "北京",
+                                    "activeVisitors": 2400,
+                                    "newVisitors": 620
+                                }
+                            ]
+                        },
+                        {
+                            "province": "上海",
+                            "activeVisitors": 2200,
+                            "newVisitors": 580,
+                            "cities": [
+                                {
+                                    "city": "上海",
+                                    "activeVisitors": 2200,
+                                    "newVisitors": 580
+                                }
+                            ]
+                        },
+                        {
+                            "province": "四川",
+                            "activeVisitors": 1900,
+                            "newVisitors": 490,
+                            "cities": [
+                                {
+                                    "city": "成都",
+                                    "activeVisitors": 1400,
+                                    "newVisitors": 340
+                                },
+                                {
+                                    "city": "绵阳",
+                                    "activeVisitors": 300,
+                                    "newVisitors": 90
+                                },
+                                {
+                                    "city": "德阳",
+                                    "activeVisitors": 200,
+                                    "newVisitors": 60
+                                }
+                            ]
+                        },
+                        {
+                            "province": "山东",
+                            "activeVisitors": 1800,
+                            "newVisitors": 470,
+                            "cities": [
+                                {
+                                    "city": "青岛",
+                                    "activeVisitors": 800,
+                                    "newVisitors": 210
+                                },
+                                {
+                                    "city": "济南",
+                                    "activeVisitors": 700,
+                                    "newVisitors": 180
+                                },
+                                {
+                                    "city": "烟台",
+                                    "activeVisitors": 300,
+                                    "newVisitors": 80
+                                }
+                            ]
+                        },
+                        {
+                            "province": "河南",
+                            "activeVisitors": 1700,
+                            "newVisitors": 450,
+                            "cities": [
+                                {
+                                    "city": "郑州",
+                                    "activeVisitors": 900,
+                                    "newVisitors": 240
+                                },
+                                {
+                                    "city": "洛阳",
+                                    "activeVisitors": 500,
+                                    "newVisitors": 130
+                                },
+                                {
+                                    "city": "开封",
+                                    "activeVisitors": 300,
+                                    "newVisitors": 80
+                                }
+                            ]
+                        },
+                        {
+                            "province": "湖北",
+                            "activeVisitors": 1500,
+                            "newVisitors": 400,
+                            "cities": [
+                                {
+                                    "city": "武汉",
+                                    "activeVisitors": 900,
+                                    "newVisitors": 240
+                                },
+                                {
+                                    "city": "宜昌",
+                                    "activeVisitors": 350,
+                                    "newVisitors": 100
+                                },
+                                {
+                                    "city": "襄阳",
+                                    "activeVisitors": 250,
+                                    "newVisitors": 60
+                                }
+                            ]
+                        },
+                        {
+                            "province": "福建",
+                            "activeVisitors": 1400,
+                            "newVisitors": 370,
+                            "cities": [
+                                {
+                                    "city": "厦门",
+                                    "activeVisitors": 600,
+                                    "newVisitors": 160
+                                },
+                                {
+                                    "city": "福州",
+                                    "activeVisitors": 500,
+                                    "newVisitors": 130
+                                },
+                                {
+                                    "city": "泉州",
+                                    "activeVisitors": 300,
+                                    "newVisitors": 80
+                                }
+                            ]
+                        },
+                        {
+                            "province": "湖南",
+                            "activeVisitors": 1300,
+                            "newVisitors": 340,
+                            "cities": [
+                                {
+                                    "city": "长沙",
+                                    "activeVisitors": 700,
+                                    "newVisitors": 180
+                                },
+                                {
+                                    "city": "株洲",
+                                    "activeVisitors": 350,
+                                    "newVisitors": 90
+                                },
+                                {
+                                    "city": "衡阳",
+                                    "activeVisitors": 250,
+                                    "newVisitors": 70
+                                }
+                            ]
+                        },
+                        {
+                            "province": "安徽",
+                            "activeVisitors": 1200,
+                            "newVisitors": 320,
+                            "cities": [
+                                {
+                                    "city": "合肥",
+                                    "activeVisitors": 600,
+                                    "newVisitors": 160
+                                },
+                                {
+                                    "city": "芜湖",
+                                    "activeVisitors": 350,
+                                    "newVisitors": 100
+                                },
+                                {
+                                    "city": "马鞍山",
+                                    "activeVisitors": 250,
+                                    "newVisitors": 60
+                                }
+                            ]
+                        },
+                        {
+                            "province": "河北",
+                            "activeVisitors": 1150,
+                            "newVisitors": 310,
+                            "cities": [
+                                {
+                                    "city": "石家庄",
+                                    "activeVisitors": 550,
+                                    "newVisitors": 150
+                                },
+                                {
+                                    "city": "唐山",
+                                    "activeVisitors": 350,
+                                    "newVisitors": 100
+                                },
+                                {
+                                    "city": "保定",
+                                    "activeVisitors": 250,
+                                    "newVisitors": 60
+                                }
+                            ]
+                        },
+                        {
+                            "province": "辽宁",
+                            "activeVisitors": 1100,
+                            "newVisitors": 290,
+                            "cities": [
+                                {
+                                    "city": "沈阳",
+                                    "activeVisitors": 500,
+                                    "newVisitors": 130
+                                },
+                                {
+                                    "city": "大连",
+                                    "activeVisitors": 450,
+                                    "newVisitors": 120
+                                },
+                                {
+                                    "city": "鞍山",
+                                    "activeVisitors": 150,
+                                    "newVisitors": 40
+                                }
+                            ]
+                        },
+                        {
+                            "province": "陕西",
+                            "activeVisitors": 1000,
+                            "newVisitors": 270,
+                            "cities": [
+                                {
+                                    "city": "西安",
+                                    "activeVisitors": 700,
+                                    "newVisitors": 190
+                                },
+                                {
+                                    "city": "咸阳",
+                                    "activeVisitors": 180,
+                                    "newVisitors": 50
+                                },
+                                {
+                                    "city": "宝鸡",
+                                    "activeVisitors": 120,
+                                    "newVisitors": 30
+                                }
+                            ]
+                        },
+                        {
+                            "province": "江西",
+                            "activeVisitors": 900,
+                            "newVisitors": 240,
+                            "cities": [
+                                {
+                                    "city": "南昌",
+                                    "activeVisitors": 450,
+                                    "newVisitors": 120
+                                },
+                                {
+                                    "city": "赣州",
+                                    "activeVisitors": 280,
+                                    "newVisitors": 75
+                                },
+                                {
+                                    "city": "九江",
+                                    "activeVisitors": 170,
+                                    "newVisitors": 45
+                                }
+                            ]
+                        },
+                        {
+                            "province": "重庆",
+                            "activeVisitors": 850,
+                            "newVisitors": 230,
+                            "cities": [
+                                {
+                                    "city": "重庆",
+                                    "activeVisitors": 850,
+                                    "newVisitors": 230
+                                }
+                            ]
+                        },
+                        {
+                            "province": "广西",
+                            "activeVisitors": 800,
+                            "newVisitors": 220,
+                            "cities": [
+                                {
+                                    "city": "南宁",
+                                    "activeVisitors": 400,
+                                    "newVisitors": 110
+                                },
+                                {
+                                    "city": "柳州",
+                                    "activeVisitors": 250,
+                                    "newVisitors": 70
+                                },
+                                {
+                                    "city": "桂林",
+                                    "activeVisitors": 150,
+                                    "newVisitors": 40
+                                }
+                            ]
+                        },
+                        {
+                            "province": "天津",
+                            "activeVisitors": 780,
+                            "newVisitors": 210,
+                            "cities": [
+                                {
+                                    "city": "天津",
+                                    "activeVisitors": 780,
+                                    "newVisitors": 210
+                                }
+                            ]
+                        },
+                        {
+                            "province": "黑龙江",
+                            "activeVisitors": 700,
+                            "newVisitors": 190,
+                            "cities": [
+                                {
+                                    "city": "哈尔滨",
+                                    "activeVisitors": 450,
+                                    "newVisitors": 120
+                                },
+                                {
+                                    "city": "齐齐哈尔",
+                                    "activeVisitors": 150,
+                                    "newVisitors": 40
+                                },
+                                {
+                                    "city": "大庆",
+                                    "activeVisitors": 100,
+                                    "newVisitors": 30
+                                }
+                            ]
+                        },
+                        {
+                            "province": "云南",
+                            "activeVisitors": 680,
+                            "newVisitors": 180,
+                            "cities": [
+                                {
+                                    "city": "昆明",
+                                    "activeVisitors": 400,
+                                    "newVisitors": 110
+                                },
+                                {
+                                    "city": "大理",
+                                    "activeVisitors": 150,
+                                    "newVisitors": 40
+                                },
+                                {
+                                    "city": "丽江",
+                                    "activeVisitors": 130,
+                                    "newVisitors": 30
+                                }
+                            ]
+                        },
+                        {
+                            "province": "山西",
+                            "activeVisitors": 620,
+                            "newVisitors": 170,
+                            "cities": [
+                                {
+                                    "city": "太原",
+                                    "activeVisitors": 350,
+                                    "newVisitors": 95
+                                },
+                                {
+                                    "city": "大同",
+                                    "activeVisitors": 160,
+                                    "newVisitors": 45
+                                },
+                                {
+                                    "city": "临汾",
+                                    "activeVisitors": 110,
+                                    "newVisitors": 30
+                                }
+                            ]
+                        },
+                        {
+                            "province": "贵州",
+                            "activeVisitors": 580,
+                            "newVisitors": 150,
+                            "cities": [
+                                {
+                                    "city": "贵阳",
+                                    "activeVisitors": 350,
+                                    "newVisitors": 90
+                                },
+                                {
+                                    "city": "遵义",
+                                    "activeVisitors": 140,
+                                    "newVisitors": 40
+                                },
+                                {
+                                    "city": "安顺",
+                                    "activeVisitors": 90,
+                                    "newVisitors": 20
+                                }
+                            ]
+                        },
+                        {
+                            "province": "吉林",
+                            "activeVisitors": 500,
+                            "newVisitors": 140,
+                            "cities": [
+                                {
+                                    "city": "长春",
+                                    "activeVisitors": 300,
+                                    "newVisitors": 85
+                                },
+                                {
+                                    "city": "吉林",
+                                    "activeVisitors": 120,
+                                    "newVisitors": 35
+                                },
+                                {
+                                    "city": "四平",
+                                    "activeVisitors": 80,
+                                    "newVisitors": 20
+                                }
+                            ]
+                        },
+                        {
+                            "province": "内蒙古",
+                            "activeVisitors": 450,
+                            "newVisitors": 120,
+                            "cities": [
+                                {
+                                    "city": "呼和浩特",
+                                    "activeVisitors": 220,
+                                    "newVisitors": 60
+                                },
+                                {
+                                    "city": "包头",
+                                    "activeVisitors": 150,
+                                    "newVisitors": 40
+                                },
+                                {
+                                    "city": "鄂尔多斯",
+                                    "activeVisitors": 80,
+                                    "newVisitors": 20
+                                }
+                            ]
+                        },
+                        {
+                            "province": "新疆",
+                            "activeVisitors": 400,
+                            "newVisitors": 110,
+                            "cities": [
+                                {
+                                    "city": "乌鲁木齐",
+                                    "activeVisitors": 250,
+                                    "newVisitors": 70
+                                },
+                                {
+                                    "city": "喀什",
+                                    "activeVisitors": 100,
+                                    "newVisitors": 30
+                                },
+                                {
+                                    "city": "伊犁",
+                                    "activeVisitors": 50,
+                                    "newVisitors": 10
+                                }
+                            ]
+                        },
+                        {
+                            "province": "甘肃",
+                            "activeVisitors": 350,
+                            "newVisitors": 95,
+                            "cities": [
+                                {
+                                    "city": "兰州",
+                                    "activeVisitors": 220,
+                                    "newVisitors": 60
+                                },
+                                {
+                                    "city": "天水",
+                                    "activeVisitors": 90,
+                                    "newVisitors": 25
+                                },
+                                {
+                                    "city": "嘉峪关",
+                                    "activeVisitors": 40,
+                                    "newVisitors": 10
+                                }
+                            ]
+                        },
+                        {
+                            "province": "海南",
+                            "activeVisitors": 300,
+                            "newVisitors": 85,
+                            "cities": [
+                                {
+                                    "city": "海口",
+                                    "activeVisitors": 180,
+                                    "newVisitors": 50
+                                },
+                                {
+                                    "city": "三亚",
+                                    "activeVisitors": 90,
+                                    "newVisitors": 25
+                                },
+                                {
+                                    "city": "儋州",
+                                    "activeVisitors": 30,
+                                    "newVisitors": 10
+                                }
+                            ]
+                        },
+                        {
+                            "province": "宁夏",
+                            "activeVisitors": 220,
+                            "newVisitors": 60,
+                            "cities": [
+                                {
+                                    "city": "银川",
+                                    "activeVisitors": 150,
+                                    "newVisitors": 40
+                                },
+                                {
+                                    "city": "石嘴山",
+                                    "activeVisitors": 50,
+                                    "newVisitors": 15
+                                },
+                                {
+                                    "city": "吴忠",
+                                    "activeVisitors": 20,
+                                    "newVisitors": 5
+                                }
+                            ]
+                        },
+                        {
+                            "province": "香港",
+                            "activeVisitors": 180,
+                            "newVisitors": 50,
+                            "cities": [
+                                {
+                                    "city": "香港",
+                                    "activeVisitors": 180,
+                                    "newVisitors": 50
+                                }
+                            ]
+                        },
+                        {
+                            "province": "澳门",
+                            "activeVisitors": 80,
+                            "newVisitors": 22,
+                            "cities": [
+                                {
+                                    "city": "澳门",
+                                    "activeVisitors": 80,
+                                    "newVisitors": 22
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
