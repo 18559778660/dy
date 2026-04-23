@@ -240,6 +240,65 @@
     window.renderUserProfileRegionMap('visactor_window_17', values);
   }
 
+  // 把所有省的 cities 摊平成一个城市数组，相同城市名跨省/跨天累加
+  // （目前数据每个城市只属于一个省，但跨天/跨日聚合还是要靠这个）
+  function aggregateCities(days, valueKeys) {
+    const map = new Map();
+    days.forEach(day => {
+      ((day && day.region) || []).forEach(prov => {
+        ((prov && prov.cities) || []).forEach(c => {
+          if (!c || !c.city) return;
+          if (!map.has(c.city)) {
+            const seed = { city: c.city };
+            valueKeys.forEach(vk => { seed[vk] = 0; });
+            map.set(c.city, seed);
+          }
+          const target = map.get(c.city);
+          valueKeys.forEach(vk => {
+            target[vk] += Number(c[vk]) || 0;
+          });
+        });
+      });
+    });
+    return Array.from(map.values());
+  }
+
+  // 地域分布表：根据 _profileRegionDim 切换"省份 / 城市"，按 visitors 倒序展示
+  function renderRegionTable(days, category, dim) {
+    const tbody = document.querySelector('.user-profile-region-tbody');
+    if (!tbody) {
+      console.warn('[user-profile] 未找到 .user-profile-region-tbody');
+      return;
+    }
+    const headTh = document.querySelector('.user-profile-region-head-th');
+    const valueKey = category === 'new' ? 'newVisitors' : 'activeVisitors';
+
+    let rows;
+    let labelKey;
+    if (dim === 'city') {
+      rows = aggregateCities(days, ['activeVisitors', 'newVisitors']);
+      labelKey = 'city';
+      if (headTh) {
+        headTh.textContent = '城市';
+        headTh.setAttribute('title', '城市');
+      }
+    } else {
+      rows = aggregateList(days, 'region', 'province', ['activeVisitors', 'newVisitors']);
+      labelKey = 'province';
+      if (headTh) {
+        headTh.textContent = '省份';
+        headTh.setAttribute('title', '省份');
+      }
+    }
+
+    rows.sort((a, b) => (Number(b[valueKey]) || 0) - (Number(a[valueKey]) || 0));
+    renderListTbody(tbody, rows, labelKey, valueKey);
+  }
+
+  // 缓存最近一次 renderAll 拿到的 days/category，给 tab 切换时复用，避免再 fetch + filter
+  let _lastDays = null;
+  let _lastCategory = 'active';
+
   function renderAll(opts) {
     const appId = (opts && opts.appId) || window._profileAppId || 'dy';
     const category = (opts && opts.category) || window._profileCategory || 'active';
@@ -249,11 +308,14 @@
       const anchor = getAnchorDate(json);
       const app = pickApp(json, appId);
       const days = pickDays(app, range, anchor);
+      _lastDays = days;
+      _lastCategory = category;
       renderGenderTable(days, category);
       renderAgeTable(days, category);
       renderGenderPieChart(days, category);
       renderAgePieChart(days, category);
       renderRegionMap(days, category);
+      renderRegionTable(days, category, window._profileRegionDim || 'province');
     }).catch(err => {
       console.error('[user-profile] 数据加载失败', err);
     });
@@ -291,6 +353,10 @@
     });
     window._profileRegionDim = targetLabel.getAttribute('data-region-dim') || 'province';
     console.log('[user-profile] 地域维度切换:', window._profileRegionDim);
+    // 切 tab 时不重新拉数据，直接用 renderAll 缓存的 days 重渲表格
+    if (_lastDays) {
+      renderRegionTable(_lastDays, _lastCategory, window._profileRegionDim);
+    }
   }
 
   function initRegionDimTabs() {

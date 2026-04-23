@@ -33,6 +33,18 @@
     '维吾尔自治区', '壮族自治区', '回族自治区', '特别行政区',
     '自治区', '省', '市'
   ];
+  // 业务暂不统计的省份（user-profile-data.json 里就没这三个的数据）
+  // hover 时 tooltip 显示"短名 不展示"，区别于"普通省 0"
+  const NON_SUPPORT_FULL = new Set(['西藏自治区', '青海省', '台湾省']);
+
+  // 全名截短：'新疆维吾尔自治区' → '新疆'，'广东省' → '广东'，'北京市' → '北京'
+  function toShortName(full) {
+    if (!full) return '';
+    for (const s of NAME_SUFFIXES) {
+      if (full.endsWith(s)) return full.slice(0, -s.length);
+    }
+    return full;
+  }
 
   let _registerPromise = null;
   let _shortToFull = null;
@@ -86,7 +98,7 @@
     }));
   }
 
-  function buildMapSpec(mapValues) {
+  function buildMapSpec(mapValues, isEmpty) {
     const maxVal = mapValues.reduce((m, d) => Math.max(m, d.value || 0), 0) || 1;
     return {
       type: 'map',
@@ -95,6 +107,7 @@
       nameField: 'name',
       valueField: 'value',
       nameProperty: 'name',
+      // 空数据时关掉 hover 描边和 roam，省得用户去 hover 一片"0"得不到任何信息
       region: [{ roam: false }],
       animation: false,
       area: {
@@ -109,13 +122,16 @@
             return `rgb(${rgb.join(',')})`;
           },
           stroke: '#ffffff',
-          lineWidth: 0.5
+          lineWidth: 0.5,
+          // hover 显示小手指针
+          cursor: 'pointer'
         },
         state: {
           hover: {
             stroke: '#165dff',
             lineWidth: 1,
-            fillOpacity: 0.85
+            fillOpacity: 0.85,
+            cursor: 'pointer'
           }
         }
       },
@@ -123,17 +139,41 @@
         visible: false
       },
       tooltip: {
+        // 空数据时关掉 tooltip —— 否则 hover 任意省都弹"0"，没意义
+        visible: !isEmpty,
+        // 字体颜色调浅一档；默认是接近黑（#1d2129）
+        style: {
+          titleLabel: {
+            fontColor: '#4e5969',
+            fontSize: 12,
+            fontWeight: 'normal'
+          }
+        },
         mark: {
+          // 官方风格：单行字符串"短名 数字" / "短名 不展示"
+          // 把整段拼到 title，content 留空数组，自然就是单行展示
           title: {
-            value: (datum) => (datum && datum.name) || ''
-          },
-          content: [{
-            key: '访问人数',
             value: (datum) => {
-              const v = (datum && datum.value) || 0;
-              return (Number(v) || 0).toLocaleString('en-US');
+              if (!datum) return '';
+              // ⚠ VChart map series 的 datum 有两种形态：
+              //   1. 命中 mapValues 的 data 行 → { name: '广东省', value: 5200 }
+              //   2. 未命中（如西藏被 .filter(value>0) 过滤掉）→ 直接是 GeoJSON feature
+              //      → 名字在 datum.properties.name，value 是 undefined
+              const fullName = datum.name
+                || (datum.properties && datum.properties.name)
+                || '';
+              if (!fullName) return '';
+              const shortName = toShortName(fullName);
+              const v = datum.value;
+              const hasValue = v !== undefined && v !== null && Number(v) > 0;
+              // NON_SUPPORT 三省 + 任何"无数据"的省，统一显示"短名 不展示"
+              if (NON_SUPPORT_FULL.has(fullName) || !hasValue) {
+                return `${shortName} 不展示`;
+              }
+              return `${shortName} ${(Number(v) || 0).toLocaleString('en-US')}`;
             }
-          }]
+          },
+          content: []
         }
       },
       legends: {
@@ -169,12 +209,12 @@
       container.innerHTML = '';
 
       const mapValues = normalizeValues(values);
-      if (!mapValues.length) {
-        container.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#86909c;font-size:13px;">暂无数据</div>';
-        return;
-      }
+      const isEmpty = mapValues.length === 0;
 
-      const spec = buildMapSpec(mapValues);
+      // ⚠ 即使空数据也要渲染地图底图（所有省走 fill <= 0 → 灰白底色）。
+      // 否则把容器换成纯文字 div，flex-1 列因为内部 intrinsic 宽度从 canvas(~536px) 退化成
+      // 几十像素的中文，整列被压扁，右侧城市表会塌过来。
+      const spec = buildMapSpec(mapValues, isEmpty);
       const chart = new ChartClass(spec, {
         dom: container,
         width: container.offsetWidth || 536,
@@ -182,11 +222,24 @@
       });
       chart.renderSync();
       window[CHART_KEY] = chart;
+
+      // 空数据时叠一层 absolute 定位的"暂无数据"浮层，地图底图依然占住 flex-1 的宽度
+      if (isEmpty) {
+        const overlay = document.createElement('div');
+        overlay.className = 'region-map-empty-overlay';
+        overlay.style.cssText =
+          'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;' +
+          'color:#86909c;font-size:13px;pointer-events:none;background:rgba(255,255,255,0.5);';
+        overlay.textContent = '暂无数据';
+        container.appendChild(overlay);
+      }
       console.log('✅ 用户画像-地域地图渲染完成，省份数:', mapValues.length);
     }).catch(err => {
       console.error('[region-map] 渲染失败:', err);
+      // error 分支同理：保持容器最低尺寸，避免布局塌陷
+      container.style.minHeight = (container.offsetHeight || 305) + 'px';
       container.innerHTML =
-        '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#f53f3f;font-size:13px;">' +
+        '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#f53f3f;font-size:13px;">' +
         '地图加载失败（' + (err && err.message ? err.message : 'unknown') + '）</div>';
     });
   }
