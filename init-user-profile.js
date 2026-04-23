@@ -21,6 +21,8 @@
 
   if (typeof window._profileAppId === 'undefined') window._profileAppId = 'dy';
   if (typeof window._profileCategory === 'undefined') window._profileCategory = 'active';
+  // 地域 tab 维度（省份 / 城市）—— 目前只做 UI 切换，数据渲染后续再接
+  if (typeof window._profileRegionDim === 'undefined') window._profileRegionDim = 'province';
 
   let _dataCache = null;
   function loadData() {
@@ -242,8 +244,56 @@
     });
   }
 
+  // -----------------------------------------------------------------------------
+  // 地域 tab（省份 / 城市）—— 只做 UI 切换
+  // -----------------------------------------------------------------------------
+  // Semi 风格的 "checked" 视觉由 3 层 class 驱动 + 1 个真实 svg 圆点：
+  //   label 加 .semi-dy-open-radio-checked
+  //   inner 加 .semi-dy-open-radio-inner-checked
+  //   addon 加 .semi-dy-open-radio-addon-buttonRadio-checked
+  //   圆点是 <span class="semi-dy-open-icon-radio"><svg>...</svg></span>，需要随选中态搬到对应 label
+  const REGION_RADIO_ICON_HTML =
+    '<span role="img" aria-label="radio" class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-radio">' +
+    '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" focusable="false" aria-hidden="true">' +
+    '<circle cx="12" cy="12" r="5" fill="currentColor"></circle>' +
+    '</svg></span>';
+
+  function applyRegionDimChecked(targetLabel) {
+    const group = targetLabel && targetLabel.closest('.user-profile-region-dim-group');
+    if (!group) return;
+    group.querySelectorAll('label[data-region-dim]').forEach(label => {
+      const isTarget = label === targetLabel;
+      label.classList.toggle('semi-dy-open-radio-checked', isTarget);
+      const inner = label.querySelector('.semi-dy-open-radio-inner');
+      if (inner) inner.classList.toggle('semi-dy-open-radio-inner-checked', isTarget);
+      const addon = label.querySelector('.semi-dy-open-radio-addon-buttonRadio');
+      if (addon) addon.classList.toggle('semi-dy-open-radio-addon-buttonRadio-checked', isTarget);
+      const input = label.querySelector('input[type="radio"]');
+      if (input) input.checked = isTarget;
+      // 圆点 icon 的 holder：inner 下、紧跟 input 后面的那个空 span
+      const iconHolder = inner && inner.querySelector('input ~ span');
+      if (iconHolder) iconHolder.innerHTML = isTarget ? REGION_RADIO_ICON_HTML : '';
+    });
+    window._profileRegionDim = targetLabel.getAttribute('data-region-dim') || 'province';
+    console.log('[user-profile] 地域维度切换:', window._profileRegionDim);
+  }
+
+  function initRegionDimTabs() {
+    const group = document.querySelector('.user-profile-region-dim-group');
+    if (!group) return;
+    if (group._regionDimBound) return;
+    group._regionDimBound = true;
+    group.querySelectorAll('label[data-region-dim]').forEach(label => {
+      label.addEventListener('click', (e) => {
+        e.preventDefault();
+        applyRegionDimChecked(label);
+      });
+    });
+  }
+
   function initUserProfile(opts) {
     renderAll(opts || {});
+    initRegionDimTabs();
   }
 
   function updateUserProfile(opts) {
@@ -254,4 +304,5 @@
   window.updateUserProfile = updateUserProfile;
   window.renderUserProfileGenderTable = (opts) => renderAll(opts || {});
   window.renderUserProfileAgeTable = (opts) => renderAll(opts || {});
+  window.initUserProfileRegionDimTabs = initRegionDimTabs;
 })();
