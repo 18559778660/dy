@@ -612,9 +612,11 @@
 
   <!-- 用户画像 -->
   <script src="./init-user-profile.js"></script>
+  <!-- 用户画像-地域地图（依赖 VChart.registerMap，所以只能用完整版 index.js 而非 index.min.js） -->
+  <script src="./init-user-profile-region-map.js"></script>
 
-  <!-- VChart 图表库 -->
-  <script src="./node_modules/@visactor/vchart/build/index.min.js"></script>
+  <!-- VChart 图表库（完整版，含地图/registerMap 能力，比 index.min.js 大约多几百 KB） -->
+  <script src="./node_modules/@visactor/vchart/build/index.js"></script>
   <script src="./init-chart.js"></script>
 </body>
 

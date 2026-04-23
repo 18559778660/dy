@@ -226,6 +226,20 @@
     renderPie('visactor_window_16', pieData, '用户画像-年龄环形图', 'userProfileAgePie');
   }
 
+  // 地域地图：聚合 region 列表的 activeVisitors / newVisitors，按 province 合并
+  function renderRegionMap(days, category) {
+    if (typeof window.renderUserProfileRegionMap !== 'function') {
+      console.warn('[user-profile] renderUserProfileRegionMap 未就绪，跳过地图渲染');
+      return;
+    }
+    const valueKey = category === 'new' ? 'newVisitors' : 'activeVisitors';
+    const rows = aggregateList(days, 'region', 'province', ['activeVisitors', 'newVisitors']);
+    const values = rows
+      .map(r => ({ name: r.province, value: Number(r[valueKey]) || 0 }))
+      .filter(r => r.value > 0);
+    window.renderUserProfileRegionMap('visactor_window_17', values);
+  }
+
   function renderAll(opts) {
     const appId = (opts && opts.appId) || window._profileAppId || 'dy';
     const category = (opts && opts.category) || window._profileCategory || 'active';
@@ -239,6 +253,7 @@
       renderAgeTable(days, category);
       renderGenderPieChart(days, category);
       renderAgePieChart(days, category);
+      renderRegionMap(days, category);
     }).catch(err => {
       console.error('[user-profile] 数据加载失败', err);
     });
