@@ -381,6 +381,15 @@ function initDropdownFilters() {
         ]);
     }
 
+    // 终端分析 分类下拉（活跃用户 / 新增用户）—— 与用户画像同结构，独立一份避免互相干扰
+    const terminalCategoryFilter = document.querySelector('.filter-terminal-category');
+    if (terminalCategoryFilter) {
+        createDropdownContent(terminalCategoryFilter, 'semi-dy-open-select-terminal-category', [
+            { value: 'active', label: '活跃用户' },
+            { value: 'new', label: '新增用户' }
+        ]);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
@@ -409,6 +418,9 @@ function initDropdownFilters() {
     }
     if (profileCategoryFilter) {
         allFilters.push(profileCategoryFilter);
+    }
+    if (terminalCategoryFilter) {
+        allFilters.push(terminalCategoryFilter);
     }
 
     allFilters.forEach(filter => {
@@ -489,6 +501,7 @@ function initDropdownFilters() {
             e.target.closest('.filter-promotion-grid') ||
             e.target.closest('.filter-profile-app') ||
             e.target.closest('.filter-profile-category') ||
+            e.target.closest('.filter-terminal-category') ||
             e.target.closest('.source-scene-panel') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
@@ -699,6 +712,13 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 console.log('[profile-category] 分类切换:', value, label);
                 if (typeof window.updateUserProfile === 'function') {
                     window.updateUserProfile();
+                }
+            } else if (tabType === 'terminal-category') {
+                // 终端分析 分类切换（活跃/新增）—— 数据/渲染逻辑后续接入，先把状态存到 window 上
+                window._terminalCategory = value;
+                console.log('[terminal-category] 分类切换:', value, label);
+                if (typeof window.updateTerminalAnalysis === 'function') {
+                    window.updateTerminalAnalysis();
                 }
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);
