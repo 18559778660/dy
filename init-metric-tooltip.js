@@ -390,6 +390,15 @@ function initDropdownFilters() {
         ]);
     }
 
+    // 终端分析 APP 下拉（含“全部”）
+    const terminalAppFilter = document.querySelector('.filter-terminal-app');
+    if (terminalAppFilter) {
+        createDropdownContent(terminalAppFilter, 'semi-dy-open-select-terminal-app', [
+            { value: 'all', label: '全部' },
+            ...SOURCE_APP_OPTIONS
+        ]);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
@@ -421,6 +430,9 @@ function initDropdownFilters() {
     }
     if (terminalCategoryFilter) {
         allFilters.push(terminalCategoryFilter);
+    }
+    if (terminalAppFilter) {
+        allFilters.push(terminalAppFilter);
     }
 
     allFilters.forEach(filter => {
@@ -502,6 +514,7 @@ function initDropdownFilters() {
             e.target.closest('.filter-profile-app') ||
             e.target.closest('.filter-profile-category') ||
             e.target.closest('.filter-terminal-category') ||
+            e.target.closest('.filter-terminal-app') ||
             e.target.closest('.source-scene-panel') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
@@ -521,7 +534,60 @@ function initDropdownFilters() {
         });
     });
 
+    initTerminalModelViewRadio();
+
     console.log('✅ 下拉筛选框初始化完成');
+}
+
+// 终端分析 · 机型分布：分布图 / 数据列表（Semi button-radio 需同步 label / inner / addon 的 checked 类）
+function setTerminalModelViewCheckedStyle(group, view) {
+    group.querySelectorAll('label[data-view]').forEach(label => {
+        const isTarget = label.getAttribute('data-view') === view;
+        label.classList.toggle('semi-dy-open-radio-checked', isTarget);
+        const inner = label.querySelector('.semi-dy-open-radio-inner');
+        if (inner) inner.classList.toggle('semi-dy-open-radio-inner-checked', isTarget);
+        const addon = label.querySelector('.semi-dy-open-radio-addon-buttonRadio');
+        if (addon) addon.classList.toggle('semi-dy-open-radio-addon-buttonRadio-checked', isTarget);
+        // inner 子节点顺序为 input + span（与来源分析一致），用相邻兄弟选择器避免误选
+        const innerInner = label.querySelector('.semi-dy-open-radio-inner > input + span');
+        if (innerInner) {
+            if (isTarget && !innerInner.querySelector('.semi-dy-open-icon-radio')) {
+                innerInner.innerHTML = '<span role="img" aria-label="radio" '
+                    + 'class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-radio">'
+                    + '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" '
+                    + 'width="1em" height="1em" focusable="false" aria-hidden="true">'
+                    + '<circle cx="12" cy="12" r="5" fill="currentColor"></circle></svg></span>';
+            } else if (!isTarget) {
+                innerInner.innerHTML = '';
+            }
+        }
+        const input = label.querySelector('input[type="radio"]');
+        if (input) input.checked = isTarget;
+    });
+}
+
+function initTerminalModelViewRadio() {
+    const group = document.querySelector('.terminal-model-view-radio');
+    if (!group || group.dataset.viewBound === '1') return;
+    group.dataset.viewBound = '1';
+
+    if (window._terminalModelView == null) {
+        window._terminalModelView = 'distribution';
+    }
+    setTerminalModelViewCheckedStyle(group, window._terminalModelView);
+
+    group.querySelectorAll('label[data-view]').forEach(label => {
+        label.addEventListener('click', function (e) {
+            e.preventDefault();
+            const view = this.getAttribute('data-view');
+            if (!view || view === window._terminalModelView) return;
+            setTerminalModelViewCheckedStyle(group, view);
+            window._terminalModelView = view;
+            if (typeof window.updateTerminalAnalysis === 'function') {
+                window.updateTerminalAnalysis();
+            }
+        });
+    });
 }
 
 // 创建下拉内容
@@ -717,6 +783,13 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 // 终端分析 分类切换（活跃/新增）—— 数据/渲染逻辑后续接入，先把状态存到 window 上
                 window._terminalCategory = value;
                 console.log('[terminal-category] 分类切换:', value, label);
+                if (typeof window.updateTerminalAnalysis === 'function') {
+                    window.updateTerminalAnalysis();
+                }
+            } else if (tabType === 'terminal-app') {
+                // 终端分析 APP 切换
+                window._terminalAppId = value;
+                console.log('[terminal-app] APP 切换:', value, label);
                 if (typeof window.updateTerminalAnalysis === 'function') {
                     window.updateTerminalAnalysis();
                 }
