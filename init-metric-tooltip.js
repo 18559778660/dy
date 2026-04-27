@@ -227,6 +227,9 @@ function initTimeRangeButtons(containerSelector = 'body') {
         },
         '.user-gender-section': (range) => {
             window.updateUserProfile && window.updateUserProfile({ range });
+        },
+        '.user-terminal-section': (range) => {
+            window.updateTerminalAnalysis && window.updateTerminalAnalysis({ range });
         }
     };
     const dispatch = handlersByContainer[containerSelector] || null;

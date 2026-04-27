@@ -219,6 +219,10 @@
                         setTimeout(() => window.initUserProfile(), 295);
                     }
 
+                    if (typeof window.initTerminalAnalysis === 'function') {
+                        setTimeout(() => window.initTerminalAnalysis(), 320);
+                    }
+
                     // 初始化抖音视频数据汇总表
                     if (typeof window.initDouyinVideoTable === 'function') {
                         setTimeout(() => {
