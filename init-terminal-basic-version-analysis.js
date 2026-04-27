@@ -1,40 +1,40 @@
-// 终端分析 · 客户端版本分布（柱形图 + 数据列表 + 导出）
-// 数据源：conf/terminal-model-data_brand_client_version.json
-//   顶层：terminalClientVersionDistribution[]
-//   每日：clientVersions[]，字段 version / activeUsers / newUsers
+// 终端分析 · 基础库版本分布（柱形图 + 数据列表 + 导出）
+// 数据源：conf/terminal-model-data_brand_basic_version.json
+//   顶层：terminalBasicVersionDistribution[]
+//   每日：basicVersions[]，字段 version / activeUsers / newUsers
 //
-// 全局状态（与机型、品牌独立）：
-//   window._terminalClientVersionAppId      —— 'all' | appId   默认 'all'
-//   window._terminalClientVersionModelView —— 'distribution' | 'table'
-// 与机型/品牌共用：window._terminalCategory、时间范围 .user-terminal-section
+// 全局状态（独立）：
+//   window._terminalBasicVersionAppId      —— 'all' | appId   默认 'all'
+//   window._terminalBasicVersionModelView —— 'distribution' | 'table'
+// 共用：window._terminalCategory、时间范围 .user-terminal-section
 //
-// 对外：window.initTerminalClientVersionAnalysis()、window.updateTerminalClientVersionAnalysis(opts?)
-//       window.exportTerminalClientVersionDistribution()
+// 对外：window.initTerminalBasicVersionAnalysis()、window.updateTerminalBasicVersionAnalysis(opts?)
+//       window.exportTerminalBasicVersionDistribution()
 (function () {
   'use strict';
 
-  const DATA_URL = './conf/terminal-model-data_brand_client_version.json';
-  const CHART_KEY = 'terminalClientVersionChartInstance';
+  const DATA_URL = './conf/terminal-model-data_brand_basic_version.json';
+  const CHART_KEY = 'terminalBasicVersionChartInstance';
 
-  if (typeof window._terminalClientVersionAppId === 'undefined') {
-    window._terminalClientVersionAppId = 'all';
+  if (typeof window._terminalBasicVersionAppId === 'undefined') {
+    window._terminalBasicVersionAppId = 'all';
   }
-  if (typeof window._terminalClientVersionModelView === 'undefined') {
-    window._terminalClientVersionModelView = 'distribution';
+  if (typeof window._terminalBasicVersionModelView === 'undefined') {
+    window._terminalBasicVersionModelView = 'distribution';
   }
 
   let _dataCache = null;
 
-  function clientVersionAppList(json) {
+  function basicVersionAppList(json) {
     if (!json) return [];
-    return json.terminalClientVersionDistribution || [];
+    return json.terminalBasicVersionDistribution || [];
   }
 
   function loadData() {
     if (_dataCache) return Promise.resolve(_dataCache);
     return fetch(DATA_URL)
       .then(res => {
-        if (!res.ok) throw new Error(`加载客户端版本数据失败: ${res.status}`);
+        if (!res.ok) throw new Error(`加载基础库版本数据失败: ${res.status}`);
         return res.json();
       })
       .then(json => {
@@ -52,13 +52,13 @@
   }
 
   function pickApp(json, appId) {
-    const list = clientVersionAppList(json);
+    const list = basicVersionAppList(json);
     return list.find(a => a && a.appId === appId) || null;
   }
 
   function getAnchorDate(json) {
     let max = null;
-    clientVersionAppList(json).forEach(app => {
+    basicVersionAppList(json).forEach(app => {
       (app.data || []).forEach(d => {
         if (d && d.date && (max === null || d.date > max)) max = d.date;
       });
@@ -110,7 +110,7 @@
     if (!anchor) return [];
     let daySlices = [];
     if (appId === 'all') {
-      clientVersionAppList(json).forEach(app => {
+      basicVersionAppList(json).forEach(app => {
         if (!app || !app.appId) return;
         daySlices = daySlices.concat(pickDays(app, range, anchor));
       });
@@ -119,7 +119,7 @@
       daySlices = pickDays(app, range, anchor);
     }
     if (!daySlices.length) return [];
-    return aggregateList(daySlices, 'clientVersions', 'version', ['activeUsers', 'newUsers']);
+    return aggregateList(daySlices, 'basicVersions', 'version', ['activeUsers', 'newUsers']);
   }
 
   function versionRowsAsModelRows(rows) {
@@ -159,20 +159,20 @@
     return s;
   }
 
-  function exportTerminalClientVersionDistribution() {
+  function exportTerminalBasicVersionDistribution() {
     loadData()
       .then(json => {
         const range = getCurrentRange();
         const anchor = getAnchorDate(json);
-        const appId = window._terminalClientVersionAppId != null ? window._terminalClientVersionAppId : 'all';
+        const appId = window._terminalBasicVersionAppId != null ? window._terminalBasicVersionAppId : 'all';
         const category = window._terminalCategory === 'new' ? 'new' : 'active';
         const rows = versionRowsAsModelRows(getVersionRows(json, appId, range, anchor));
         const { list, total } = rowsToChartValues(rows, category);
         if (!list.length) {
-          console.warn('[terminal-client-version] 暂无数据可导出');
+          console.warn('[terminal-basic-version] 暂无数据可导出');
           return;
         }
-        const header = ['客户端版本', '用户数', '占比'].map(escapeCsvCell).join(',');
+        const header = ['基础库版本', '用户数', '占比'].map(escapeCsvCell).join(',');
         const lines = [header];
         list.forEach(r => {
           const pct = total ? ((r.value / total) * 100).toFixed(2) : '0.00';
@@ -189,33 +189,33 @@
         const now = new Date();
         const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
         link.href = url;
-        link.download = `客户端版本分布_${dateStr}.csv`;
+        link.download = `基础库版本分布_${dateStr}.csv`;
         link.style.visibility = 'hidden';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-        console.log('✅ 客户端版本分布已导出:', link.download);
+        console.log('✅ 基础库版本分布已导出:', link.download);
       })
       .catch(err => {
-        console.error('[terminal-client-version] 导出失败:', err);
+        console.error('[terminal-basic-version] 导出失败:', err);
       });
   }
 
-  function bindTerminalClientVersionExportButton() {
-    const btn = document.querySelector('.export-terminal-client-version-btn');
-    if (!btn || btn.dataset.terminalClientVersionExportBound === '1') return;
-    btn.dataset.terminalClientVersionExportBound = '1';
+  function bindTerminalBasicVersionExportButton() {
+    const btn = document.querySelector('.export-terminal-basic-version-btn');
+    if (!btn || btn.dataset.terminalBasicVersionExportBound === '1') return;
+    btn.dataset.terminalBasicVersionExportBound = '1';
     btn.addEventListener('click', function (e) {
       e.preventDefault();
-      exportTerminalClientVersionDistribution();
+      exportTerminalBasicVersionDistribution();
     });
   }
 
   function disconnectChartResize(container) {
-    if (container && container._terminalClientVersionBarRo) {
-      try { container._terminalClientVersionBarRo.disconnect(); } catch (e) { /* ignore */ }
-      container._terminalClientVersionBarRo = null;
+    if (container && container._terminalBasicVersionBarRo) {
+      try { container._terminalBasicVersionBarRo.disconnect(); } catch (e) { /* ignore */ }
+      container._terminalBasicVersionBarRo = null;
     }
   }
 
@@ -248,7 +248,7 @@
 
     const spec = {
       type: 'bar',
-      data: [{ id: 'clientVersionBar', values: valuesWithSeries }],
+      data: [{ id: 'basicVersionBar', values: valuesWithSeries }],
       xField: 'model',
       yField: 'value',
       seriesField: 'metricLegend',
@@ -316,10 +316,10 @@
       } catch (e) { /* ignore */ }
     });
     ro.observe(container);
-    container._terminalClientVersionBarRo = ro;
+    container._terminalBasicVersionBarRo = ro;
   }
 
-  function renderClientVersionTable(wrap, modelRows, category) {
+  function renderBasicVersionTable(wrap, modelRows, category) {
     const { list, total } = rowsToChartValues(modelRows, category);
     if (!list.length) {
       wrap.innerHTML =
@@ -339,22 +339,22 @@
       const rank = i + 1;
       return (
         '<tr class="semi-dy-open-table-row" role="row">' +
-        `<td class="semi-dy-open-table-row-cell terminal-client-version-td" style="${cell}">${rank}</td>` +
-        `<td class="semi-dy-open-table-row-cell terminal-client-version-td" style="${cell}">${escapeHtml(r.model)}</td>` +
-        `<td class="semi-dy-open-table-row-cell terminal-client-version-td" style="${cell}">${Number(r.value).toLocaleString('en-US')}</td>` +
-        `<td class="semi-dy-open-table-row-cell terminal-client-version-td" style="${cell}">${pct}%</td>` +
+        `<td class="semi-dy-open-table-row-cell terminal-basic-version-td" style="${cell}">${rank}</td>` +
+        `<td class="semi-dy-open-table-row-cell terminal-basic-version-td" style="${cell}">${escapeHtml(r.model)}</td>` +
+        `<td class="semi-dy-open-table-row-cell terminal-basic-version-td" style="${cell}">${Number(r.value).toLocaleString('en-US')}</td>` +
+        `<td class="semi-dy-open-table-row-cell terminal-basic-version-td" style="${cell}">${pct}%</td>` +
         '</tr>'
       );
     }).join('');
     wrap.innerHTML =
       '<div class="semi-dy-open-table-wrapper">' +
       '<div class="semi-dy-open-table-body" style="max-height:288px;overflow-y:auto;overflow-x:auto;">' +
-      '<table class="semi-dy-open-table terminal-client-version-fixed-table" ' +
+      '<table class="semi-dy-open-table terminal-basic-version-fixed-table" ' +
       'style="width:100%;table-layout:fixed;border-collapse:collapse;">' +
       '<colgroup><col style="width:25%"><col style="width:25%"><col style="width:25%"><col style="width:25%"></colgroup>' +
       '<thead class="semi-dy-open-table-thead"><tr role="row" class="semi-dy-open-table-row">' +
       `<th class="semi-dy-open-table-row-head" style="${thSticky}">序号</th>` +
-      `<th class="semi-dy-open-table-row-head" style="${thSticky}">客户端版本</th>` +
+      `<th class="semi-dy-open-table-row-head" style="${thSticky}">基础库版本</th>` +
       `<th class="semi-dy-open-table-row-head" style="${thSticky}">用户数</th>` +
       `<th class="semi-dy-open-table-row-head" style="${thSticky}">占比</th>` +
       '</tr></thead>' +
@@ -362,7 +362,7 @@
       '</table></div></div>';
   }
 
-  function setTerminalClientVersionViewCheckedStyle(group, view) {
+  function setTerminalBasicVersionViewCheckedStyle(group, view) {
     group.querySelectorAll('label[data-view]').forEach(label => {
       const isTarget = label.getAttribute('data-view') === view;
       label.classList.toggle('semi-dy-open-radio-checked', isTarget);
@@ -387,34 +387,34 @@
     });
   }
 
-  function initTerminalClientVersionModelViewRadio() {
-    const group = document.querySelector('.terminal-client-version-view-radio');
+  function initTerminalBasicVersionModelViewRadio() {
+    const group = document.querySelector('.terminal-basic-version-view-radio');
     if (!group || group.dataset.viewBound === '1') return;
     group.dataset.viewBound = '1';
 
-    if (window._terminalClientVersionModelView == null) {
-      window._terminalClientVersionModelView = 'distribution';
+    if (window._terminalBasicVersionModelView == null) {
+      window._terminalBasicVersionModelView = 'distribution';
     }
-    setTerminalClientVersionViewCheckedStyle(group, window._terminalClientVersionModelView);
+    setTerminalBasicVersionViewCheckedStyle(group, window._terminalBasicVersionModelView);
 
     group.querySelectorAll('label[data-view]').forEach(label => {
       label.addEventListener('click', function (e) {
         e.preventDefault();
         const view = this.getAttribute('data-view');
-        if (!view || view === window._terminalClientVersionModelView) return;
-        setTerminalClientVersionViewCheckedStyle(group, view);
-        window._terminalClientVersionModelView = view;
-        updateTerminalClientVersionAnalysis();
+        if (!view || view === window._terminalBasicVersionModelView) return;
+        setTerminalBasicVersionViewCheckedStyle(group, view);
+        window._terminalBasicVersionModelView = view;
+        updateTerminalBasicVersionAnalysis();
       });
     });
   }
 
-  function updateTerminalClientVersionAnalysis(opts) {
-    const chartWrap = document.getElementById('terminal-client-version-chart-wrap');
-    const chartDom = document.getElementById('terminal-client-version-chart');
-    const tableWrap = document.getElementById('terminal-client-version-table-wrap');
+  function updateTerminalBasicVersionAnalysis(opts) {
+    const chartWrap = document.getElementById('terminal-basic-version-chart-wrap');
+    const chartDom = document.getElementById('terminal-basic-version-chart');
+    const tableWrap = document.getElementById('terminal-basic-version-table-wrap');
     if (!chartWrap || !chartDom || !tableWrap) {
-      console.warn('[terminal-client-version] 未找到客户端版本分布容器');
+      console.warn('[terminal-basic-version] 未找到基础库版本分布容器');
       return;
     }
 
@@ -423,9 +423,9 @@
     loadData()
       .then(json => {
         const anchor = getAnchorDate(json);
-        const appId = window._terminalClientVersionAppId != null ? window._terminalClientVersionAppId : 'all';
+        const appId = window._terminalBasicVersionAppId != null ? window._terminalBasicVersionAppId : 'all';
         const category = window._terminalCategory === 'new' ? 'new' : 'active';
-        const view = window._terminalClientVersionModelView || 'distribution';
+        const view = window._terminalBasicVersionModelView || 'distribution';
 
         const modelRows = versionRowsAsModelRows(getVersionRows(json, appId, range, anchor));
 
@@ -433,7 +433,7 @@
           chartWrap.style.display = 'none';
           tableWrap.style.display = 'block';
           releaseChart(chartDom);
-          renderClientVersionTable(tableWrap, modelRows, category);
+          renderBasicVersionTable(tableWrap, modelRows, category);
           return;
         }
 
@@ -444,21 +444,21 @@
         renderBarChart(chartDom, list);
       })
       .catch(err => {
-        console.error('[terminal-client-version] 更新失败:', err);
+        console.error('[terminal-basic-version] 更新失败:', err);
         releaseChart(chartDom);
         chartDom.innerHTML =
           '<div style="height:288px;display:flex;align-items:center;justify-content:center;color:#f53f3f;font-size:13px;">数据加载失败</div>';
       });
   }
 
-  function initTerminalClientVersionAnalysis() {
-    initTerminalClientVersionModelViewRadio();
-    updateTerminalClientVersionAnalysis();
-    bindTerminalClientVersionExportButton();
-    console.log('✅ 终端分析 · 客户端版本分布初始化完成');
+  function initTerminalBasicVersionAnalysis() {
+    initTerminalBasicVersionModelViewRadio();
+    updateTerminalBasicVersionAnalysis();
+    bindTerminalBasicVersionExportButton();
+    console.log('✅ 终端分析 · 基础库版本分布初始化完成');
   }
 
-  window.updateTerminalClientVersionAnalysis = updateTerminalClientVersionAnalysis;
-  window.initTerminalClientVersionAnalysis = initTerminalClientVersionAnalysis;
-  window.exportTerminalClientVersionDistribution = exportTerminalClientVersionDistribution;
+  window.updateTerminalBasicVersionAnalysis = updateTerminalBasicVersionAnalysis;
+  window.initTerminalBasicVersionAnalysis = initTerminalBasicVersionAnalysis;
+  window.exportTerminalBasicVersionDistribution = exportTerminalBasicVersionDistribution;
 })();

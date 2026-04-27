@@ -232,6 +232,7 @@ function initTimeRangeButtons(containerSelector = 'body') {
             window.updateTerminalAnalysis && window.updateTerminalAnalysis({ range });
             window.updateTerminalBrandAnalysis && window.updateTerminalBrandAnalysis({ range });
             window.updateTerminalClientVersionAnalysis && window.updateTerminalClientVersionAnalysis({ range });
+            window.updateTerminalBasicVersionAnalysis && window.updateTerminalBasicVersionAnalysis({ range });
         }
     };
     const dispatch = handlersByContainer[containerSelector] || null;
@@ -422,6 +423,14 @@ function initDropdownFilters() {
         ]);
     }
 
+    const terminalBasicVersionAppFilter = document.querySelector('.filter-terminal-basic-version-app');
+    if (terminalBasicVersionAppFilter) {
+        createDropdownContent(terminalBasicVersionAppFilter, 'semi-dy-open-select-terminal-basic-version-app', [
+            { value: 'all', label: '全部' },
+            ...SOURCE_APP_OPTIONS
+        ]);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
@@ -462,6 +471,9 @@ function initDropdownFilters() {
     }
     if (terminalClientVersionAppFilter) {
         allFilters.push(terminalClientVersionAppFilter);
+    }
+    if (terminalBasicVersionAppFilter) {
+        allFilters.push(terminalBasicVersionAppFilter);
     }
 
     allFilters.forEach(filter => {
@@ -546,6 +558,7 @@ function initDropdownFilters() {
             e.target.closest('.filter-terminal-app') ||
             e.target.closest('.filter-terminal-brand-app') ||
             e.target.closest('.filter-terminal-client-version-app') ||
+            e.target.closest('.filter-terminal-basic-version-app') ||
             e.target.closest('.source-scene-panel') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
@@ -823,6 +836,9 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 if (typeof window.updateTerminalClientVersionAnalysis === 'function') {
                     window.updateTerminalClientVersionAnalysis();
                 }
+                if (typeof window.updateTerminalBasicVersionAnalysis === 'function') {
+                    window.updateTerminalBasicVersionAnalysis();
+                }
             } else if (tabType === 'terminal-app') {
                 // 终端分析 APP 切换
                 window._terminalAppId = value;
@@ -842,6 +858,12 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 console.log('[terminal-client-version-app] APP 切换:', value, label);
                 if (typeof window.updateTerminalClientVersionAnalysis === 'function') {
                     window.updateTerminalClientVersionAnalysis();
+                }
+            } else if (tabType === 'terminal-basic-version-app') {
+                window._terminalBasicVersionAppId = value;
+                console.log('[terminal-basic-version-app] APP 切换:', value, label);
+                if (typeof window.updateTerminalBasicVersionAnalysis === 'function') {
+                    window.updateTerminalBasicVersionAnalysis();
                 }
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);

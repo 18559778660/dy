@@ -1,0 +1,316 @@
+{
+  "terminalBasicVersionDistribution": [
+    {
+      "appId": "dy",
+      "appName": "抖音",
+      "data": [
+        {
+          "date": "2026-04-25",
+          "basicVersions": [
+            {
+              "version": "4.11.0.3",
+              "activeUsers": 11800,
+              "activeRatio": 0.118,
+              "newUsers": 2650,
+              "newRatio": 0.132
+            },
+            {
+              "version": "4.12.0.1",
+              "activeUsers": 15200,
+              "activeRatio": 0.152,
+              "newUsers": 3100,
+              "newRatio": 0.155
+            },
+            {
+              "version": "4.11.0.5",
+              "activeUsers": 10900,
+              "activeRatio": 0.109,
+              "newUsers": 1980,
+              "newRatio": 0.099
+            },
+            {
+              "version": "4.12.0.3",
+              "activeUsers": 777,
+              "activeRatio": 0.131,
+              "newUsers": 2840,
+              "newRatio": 0.142
+            },
+            {
+              "version": "4.10.0.2",
+              "activeUsers": 555,
+              "activeRatio": 0.101,
+              "newUsers": 2260,
+              "newRatio": 0.113
+            },
+            {
+              "version": "4.5.0.4",
+              "activeUsers": 988,
+              "activeRatio": 0.092,
+              "newUsers": 1820,
+              "newRatio": 0.091
+            },
+            {
+              "version": "4.9.0.3",
+              "activeUsers": 12,
+              "activeRatio": 0.086,
+              "newUsers": 1680,
+              "newRatio": 0.084
+            },
+            {
+              "version": "4.4.0.4",
+              "activeUsers": 567,
+              "activeRatio": 0.079,
+              "newUsers": 1540,
+              "newRatio": 0.077
+            },
+            {
+              "version": "4.6.0.7",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            },
+            {
+              "version": "4.7.0.6",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            }
+          ]
+        },
+        {
+          "date": "2026-04-26",
+          "basicVersions": [
+            {
+              "version": "4.11.0.3",
+              "activeUsers": 11800,
+              "activeRatio": 0.118,
+              "newUsers": 2650,
+              "newRatio": 0.132
+            },
+            {
+              "version": "4.12.0.1",
+              "activeUsers": 15200,
+              "activeRatio": 0.152,
+              "newUsers": 3100,
+              "newRatio": 0.155
+            },
+            {
+              "version": "4.11.0.5",
+              "activeUsers": 10900,
+              "activeRatio": 0.109,
+              "newUsers": 1980,
+              "newRatio": 0.099
+            },
+            {
+              "version": "4.12.0.3",
+              "activeUsers": 777,
+              "activeRatio": 0.131,
+              "newUsers": 2840,
+              "newRatio": 0.142
+            },
+            {
+              "version": "4.10.0.2",
+              "activeUsers": 555,
+              "activeRatio": 0.101,
+              "newUsers": 2260,
+              "newRatio": 0.113
+            },
+            {
+              "version": "4.5.0.4",
+              "activeUsers": 988,
+              "activeRatio": 0.092,
+              "newUsers": 1820,
+              "newRatio": 0.091
+            },
+            {
+              "version": "4.9.0.3",
+              "activeUsers": 12,
+              "activeRatio": 0.086,
+              "newUsers": 1680,
+              "newRatio": 0.084
+            },
+            {
+              "version": "4.4.0.4",
+              "activeUsers": 567,
+              "activeRatio": 0.079,
+              "newUsers": 1540,
+              "newRatio": 0.077
+            },
+            {
+              "version": "4.6.0.7",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            },
+            {
+              "version": "4.7.0.6",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "appId": "dy_lite",
+      "appName": "抖音极速版",
+      "data": [
+        {
+          "date": "2026-04-25",
+          "basicVersions": [
+            {
+              "version": "4.11.0.3",
+              "activeUsers": 11800,
+              "activeRatio": 0.118,
+              "newUsers": 2650,
+              "newRatio": 0.132
+            },
+            {
+              "version": "4.12.0.1",
+              "activeUsers": 15200,
+              "activeRatio": 0.152,
+              "newUsers": 3100,
+              "newRatio": 0.155
+            },
+            {
+              "version": "4.11.0.5",
+              "activeUsers": 10900,
+              "activeRatio": 0.109,
+              "newUsers": 1980,
+              "newRatio": 0.099
+            },
+            {
+              "version": "4.12.0.3",
+              "activeUsers": 777,
+              "activeRatio": 0.131,
+              "newUsers": 2840,
+              "newRatio": 0.142
+            },
+            {
+              "version": "4.10.0.2",
+              "activeUsers": 555,
+              "activeRatio": 0.101,
+              "newUsers": 2260,
+              "newRatio": 0.113
+            },
+            {
+              "version": "4.5.0.4",
+              "activeUsers": 988,
+              "activeRatio": 0.092,
+              "newUsers": 1820,
+              "newRatio": 0.091
+            },
+            {
+              "version": "4.9.0.3",
+              "activeUsers": 12,
+              "activeRatio": 0.086,
+              "newUsers": 1680,
+              "newRatio": 0.084
+            },
+            {
+              "version": "4.4.0.4",
+              "activeUsers": 567,
+              "activeRatio": 0.079,
+              "newUsers": 1540,
+              "newRatio": 0.077
+            },
+            {
+              "version": "4.6.0.7",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            },
+            {
+              "version": "4.7.0.6",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            }
+          ]
+        },
+        {
+          "date": "2026-04-26",
+          "basicVersions": [
+            {
+              "version": "4.11.0.3",
+              "activeUsers": 11800,
+              "activeRatio": 0.118,
+              "newUsers": 2650,
+              "newRatio": 0.132
+            },
+            {
+              "version": "4.12.0.1",
+              "activeUsers": 15200,
+              "activeRatio": 0.152,
+              "newUsers": 3100,
+              "newRatio": 0.155
+            },
+            {
+              "version": "4.11.0.5",
+              "activeUsers": 10900,
+              "activeRatio": 0.109,
+              "newUsers": 1980,
+              "newRatio": 0.099
+            },
+            {
+              "version": "4.12.0.3",
+              "activeUsers": 777,
+              "activeRatio": 0.131,
+              "newUsers": 2840,
+              "newRatio": 0.142
+            },
+            {
+              "version": "4.10.0.2",
+              "activeUsers": 555,
+              "activeRatio": 0.101,
+              "newUsers": 2260,
+              "newRatio": 0.113
+            },
+            {
+              "version": "4.5.0.4",
+              "activeUsers": 988,
+              "activeRatio": 0.092,
+              "newUsers": 1820,
+              "newRatio": 0.091
+            },
+            {
+              "version": "4.9.0.3",
+              "activeUsers": 12,
+              "activeRatio": 0.086,
+              "newUsers": 1680,
+              "newRatio": 0.084
+            },
+            {
+              "version": "4.4.0.4",
+              "activeUsers": 567,
+              "activeRatio": 0.079,
+              "newUsers": 1540,
+              "newRatio": 0.077
+            },
+            {
+              "version": "4.6.0.7",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            },
+            {
+              "version": "4.7.0.6",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
