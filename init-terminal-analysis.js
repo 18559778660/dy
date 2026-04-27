@@ -8,6 +8,7 @@
 // 时间范围：读取 .user-terminal-section 内昨天 / 7天 / 30天；「昨天」锚点为全量 JSON 中最大 date（与用户画像一致）
 //
 // 对外：window.initTerminalAnalysis()、window.updateTerminalAnalysis(opts?)
+//       window.exportTerminalModelDistribution() —— 机型分布 CSV 导出（无序号列）
 (function () {
   'use strict';
 
@@ -132,6 +133,67 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  function escapeCsvCell(val) {
+    const s = val === null || val === undefined ? '' : String(val);
+    if (/[",\n\r]/.test(s)) {
+      return `"${s.replace(/"/g, '""')}"`;
+    }
+    return s;
+  }
+
+  function exportTerminalModelDistribution() {
+    loadData()
+      .then(json => {
+        const range = getCurrentRange();
+        const anchor = getAnchorDate(json);
+        const appId = window._terminalAppId != null ? window._terminalAppId : 'all';
+        const category = window._terminalCategory === 'new' ? 'new' : 'active';
+        const rows = getModelRows(json, appId, range, anchor);
+        const { list, total } = rowsToChartValues(rows, category);
+        if (!list.length) {
+          console.warn('[terminal-analysis] 暂无数据可导出');
+          return;
+        }
+        const header = ['机型', '用户数', '占比'].map(escapeCsvCell).join(',');
+        const lines = [header];
+        list.forEach(r => {
+          const pct = total ? ((r.value / total) * 100).toFixed(2) : '0.00';
+          lines.push([
+            escapeCsvCell(r.model),
+            escapeCsvCell(Math.round(Number(r.value) || 0)),
+            escapeCsvCell(`${pct}%`)
+          ].join(','));
+        });
+        const csvContent = lines.join('\n');
+        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const now = new Date();
+        const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+        link.href = url;
+        link.download = `机型分布_${dateStr}.csv`;
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        console.log('✅ 机型分布已导出:', link.download);
+      })
+      .catch(err => {
+        console.error('[terminal-analysis] 导出失败:', err);
+      });
+  }
+
+  function bindTerminalModelExportButton() {
+    const btn = document.querySelector('.export-terminal-model-btn');
+    if (!btn || btn.dataset.terminalExportBound === '1') return;
+    btn.dataset.terminalExportBound = '1';
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      exportTerminalModelDistribution();
+    });
   }
 
   function disconnectChartResize(container) {
@@ -344,9 +406,11 @@
 
   function initTerminalAnalysis() {
     updateTerminalAnalysis();
+    bindTerminalModelExportButton();
     console.log('✅ 终端分析 · 机型分布初始化完成');
   }
 
   window.updateTerminalAnalysis = updateTerminalAnalysis;
   window.initTerminalAnalysis = initTerminalAnalysis;
+  window.exportTerminalModelDistribution = exportTerminalModelDistribution;
 })();
