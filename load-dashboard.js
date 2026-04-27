@@ -288,6 +288,9 @@
                     setTimeout(() => {
                         // 初始化流量主标签切换
                         initFlowRateTabs();
+                        if (typeof window.initFlowRateFilters === 'function') {
+                            window.initFlowRateFilters();
+                        }
                         console.log('流量主页面初始化完成');
                     }, 100);
                 }
