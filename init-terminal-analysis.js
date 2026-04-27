@@ -1,5 +1,5 @@
 // 终端分析 · 机型分布（柱形图 + 数据列表）
-// 数据源：conf/terminal-model-data.json
+// 数据源：conf/terminal-model-data_phone.json
 // 全局状态（与 init-metric-tooltip 下拉一致）：
 //   window._terminalAppId     —— 'all' | appId   默认 'all'
 //   window._terminalCategory  —— 'active' | 'new' 默认 'active'
@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  const DATA_URL = './conf/terminal-model-data.json';
+  const DATA_URL = './conf/terminal-model-data_phone.json';
   const CHART_KEY = 'terminalModelChartInstance';
 
   if (typeof window._terminalAppId === 'undefined') window._terminalAppId = 'all';

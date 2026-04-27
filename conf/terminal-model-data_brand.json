@@ -1,0 +1,316 @@
+{
+  "terminalbrandDistribution": [
+    {
+      "appId": "dy",
+      "appName": "抖音",
+      "data": [
+        {
+          "date": "2026-04-25",
+          "brands": [
+            {
+              "brand": "华为",
+              "activeUsers": 11800,
+              "activeRatio": 0.118,
+              "newUsers": 2650,
+              "newRatio": 0.132
+            },
+            {
+              "brand": "苹果",
+              "activeUsers": 15200,
+              "activeRatio": 0.152,
+              "newUsers": 3100,
+              "newRatio": 0.155
+            },
+            {
+              "brand": "vivo",
+              "activeUsers": 10900,
+              "activeRatio": 0.109,
+              "newUsers": 1980,
+              "newRatio": 0.099
+            },
+            {
+              "brand": "oppo",
+              "activeUsers": 777,
+              "activeRatio": 0.131,
+              "newUsers": 2840,
+              "newRatio": 0.142
+            },
+            {
+              "brand": "小米",
+              "activeUsers": 555,
+              "activeRatio": 0.101,
+              "newUsers": 2260,
+              "newRatio": 0.113
+            },
+            {
+              "brand": "荣耀",
+              "activeUsers": 988,
+              "activeRatio": 0.092,
+              "newUsers": 1820,
+              "newRatio": 0.091
+            },
+            {
+              "brand": "红米",
+              "activeUsers": 12,
+              "activeRatio": 0.086,
+              "newUsers": 1680,
+              "newRatio": 0.084
+            },
+            {
+              "brand": "iqoo",
+              "activeUsers": 567,
+              "activeRatio": 0.079,
+              "newUsers": 1540,
+              "newRatio": 0.077
+            },
+            {
+              "brand": "一加",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            },
+            {
+              "brand": "真我",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            }
+          ]
+        },
+        {
+          "date": "2026-04-26",
+          "brands": [
+            {
+              "brand": "华为",
+              "activeUsers": 666,
+              "activeRatio": 0.118,
+              "newUsers": 2650,
+              "newRatio": 0.132
+            },
+            {
+              "brand": "苹果",
+              "activeUsers": 777,
+              "activeRatio": 0.152,
+              "newUsers": 3100,
+              "newRatio": 0.155
+            },
+            {
+              "brand": "vivo",
+              "activeUsers": 888,
+              "activeRatio": 0.109,
+              "newUsers": 1980,
+              "newRatio": 0.099
+            },
+            {
+              "brand": "oppo",
+              "activeUsers": 777,
+              "activeRatio": 0.131,
+              "newUsers": 2840,
+              "newRatio": 0.142
+            },
+            {
+              "brand": "小米",
+              "activeUsers": 555,
+              "activeRatio": 0.101,
+              "newUsers": 2260,
+              "newRatio": 0.113
+            },
+            {
+              "brand": "荣耀",
+              "activeUsers": 988,
+              "activeRatio": 0.092,
+              "newUsers": 1820,
+              "newRatio": 0.091
+            },
+            {
+              "brand": "红米",
+              "activeUsers": 12,
+              "activeRatio": 0.086,
+              "newUsers": 1680,
+              "newRatio": 0.084
+            },
+            {
+              "brand": "iqoo",
+              "activeUsers": 567,
+              "activeRatio": 0.079,
+              "newUsers": 1540,
+              "newRatio": 0.077
+            },
+            {
+              "brand": "一加",
+              "activeUsers": 123,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            },
+            {
+              "brand": "真我",
+              "activeUsers": 542,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "appId": "dy_lite",
+      "appName": "抖音极速版",
+      "data": [
+        {
+          "date": "2026-04-25",
+          "brands": [
+            {
+              "brand": "华为",
+              "activeUsers": 11800,
+              "activeRatio": 0.118,
+              "newUsers": 2650,
+              "newRatio": 0.132
+            },
+            {
+              "brand": "苹果",
+              "activeUsers": 15200,
+              "activeRatio": 0.152,
+              "newUsers": 3100,
+              "newRatio": 0.155
+            },
+            {
+              "brand": "vivo",
+              "activeUsers": 10900,
+              "activeRatio": 0.109,
+              "newUsers": 1980,
+              "newRatio": 0.099
+            },
+            {
+              "brand": "oppo",
+              "activeUsers": 777,
+              "activeRatio": 0.131,
+              "newUsers": 2840,
+              "newRatio": 0.142
+            },
+            {
+              "brand": "小米",
+              "activeUsers": 555,
+              "activeRatio": 0.101,
+              "newUsers": 2260,
+              "newRatio": 0.113
+            },
+            {
+              "brand": "荣耀",
+              "activeUsers": 988,
+              "activeRatio": 0.092,
+              "newUsers": 1820,
+              "newRatio": 0.091
+            },
+            {
+              "brand": "红米",
+              "activeUsers": 12,
+              "activeRatio": 0.086,
+              "newUsers": 1680,
+              "newRatio": 0.084
+            },
+            {
+              "brand": "iqoo",
+              "activeUsers": 567,
+              "activeRatio": 0.079,
+              "newUsers": 1540,
+              "newRatio": 0.077
+            },
+            {
+              "brand": "一加",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            },
+            {
+              "brand": "真我",
+              "activeUsers": 13200,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            }
+          ]
+        },
+        {
+          "date": "2026-04-26",
+          "brands": [
+            {
+              "brand": "华为",
+              "activeUsers": 666,
+              "activeRatio": 0.118,
+              "newUsers": 2650,
+              "newRatio": 0.132
+            },
+            {
+              "brand": "苹果",
+              "activeUsers": 777,
+              "activeRatio": 0.152,
+              "newUsers": 3100,
+              "newRatio": 0.155
+            },
+            {
+              "brand": "vivo",
+              "activeUsers": 888,
+              "activeRatio": 0.109,
+              "newUsers": 1980,
+              "newRatio": 0.099
+            },
+            {
+              "brand": "oppo",
+              "activeUsers": 777,
+              "activeRatio": 0.131,
+              "newUsers": 2840,
+              "newRatio": 0.142
+            },
+            {
+              "brand": "小米",
+              "activeUsers": 555,
+              "activeRatio": 0.101,
+              "newUsers": 2260,
+              "newRatio": 0.113
+            },
+            {
+              "brand": "荣耀",
+              "activeUsers": 988,
+              "activeRatio": 0.092,
+              "newUsers": 1820,
+              "newRatio": 0.091
+            },
+            {
+              "brand": "红米",
+              "activeUsers": 12,
+              "activeRatio": 0.086,
+              "newUsers": 1680,
+              "newRatio": 0.084
+            },
+            {
+              "brand": "iqoo",
+              "activeUsers": 567,
+              "activeRatio": 0.079,
+              "newUsers": 1540,
+              "newRatio": 0.077
+            },
+            {
+              "brand": "一加",
+              "activeUsers": 123,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            },
+            {
+              "brand": "真我",
+              "activeUsers": 542,
+              "activeRatio": 0.132,
+              "newUsers": 2130,
+              "newRatio": 0.107
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
