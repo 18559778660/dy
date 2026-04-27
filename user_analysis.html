@@ -3034,7 +3034,7 @@
                           </div>
                           <div class="flex flex-row items-center">
                             <div><button
-                                class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-borderless"
+                                class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-borderless export-terminal-brand-btn"
                                 type="button" aria-disabled="false"><span class="semi-dy-open-button-content"
                                   x-semi-prop="children"><span class="flex items-center"><span class="mr-1"><span
                                         role="img" aria-label="export"
@@ -3054,7 +3054,8 @@
                           <div><span class="mr-1">APP</span>
                             <div role="combobox" aria-disabled="false" aria-expanded="false"
                               aria-controls="semi-dy-open-select-p68twpi" aria-haspopup="listbox" aria-label="selected"
-                              class="semi-dy-open-select w-40 semi-dy-open-select-single semi-dy-open-select-filterable"
+                              class="semi-dy-open-select w-40 semi-dy-open-select-single semi-dy-open-select-filterable filter-terminal-brand-app"
+                              data-tab="terminal-brand-app"
                               id="nk13y9p" tabindex="0" aria-activedescendant="nk13y9p-option-0" data-popupid="tticjus">
                               <div class="semi-dy-open-select-selection">
                                 <div class="semi-dy-open-select-content-wrapper"><span
@@ -3072,11 +3073,12 @@
                             </div>
                           </div>
                           <div
-                            class="semi-dy-open-radioGroup semi-dy-open-radioGroup-wrapper semi-dy-open-radioGroup-buttonRadio">
+                            class="semi-dy-open-radioGroup semi-dy-open-radioGroup-wrapper semi-dy-open-radioGroup-buttonRadio terminal-brand-view-radio">
                             <label
-                              class="semi-dy-open-radio semi-dy-open-radio-checked semi-dy-open-radio-buttonRadioGroup semi-dy-open-radio-buttonRadioGroup-middle"><span
+                              class="semi-dy-open-radio semi-dy-open-radio-checked semi-dy-open-radio-buttonRadioGroup semi-dy-open-radio-buttonRadioGroup-middle"
+                              data-view="distribution"><span
                                 class="semi-dy-open-radio-inner semi-dy-open-radio-inner-checked semi-dy-open-radio-inner-buttonRadio"><input
-                                  type="radio" name="default" aria-labelledby="addon-4j4mbgx"><span class=""><span
+                                  type="radio" name="terminal-brand-view" aria-labelledby="addon-4j4mbgx"><span class=""><span
                                     role="img" aria-label="radio"
                                     class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-radio"><svg
                                       viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em"
@@ -3087,9 +3089,10 @@
                                   class="semi-dy-open-radio-addon-buttonRadio semi-dy-open-radio-addon-buttonRadio-checked semi-dy-open-radio-addon-buttonRadio-middle"
                                   x-semi-prop="children" id="addon-4j4mbgx">分布图</span></div>
                             </label><label
-                              class="semi-dy-open-radio semi-dy-open-radio-buttonRadioGroup semi-dy-open-radio-buttonRadioGroup-middle"><span
+                              class="semi-dy-open-radio semi-dy-open-radio-buttonRadioGroup semi-dy-open-radio-buttonRadioGroup-middle"
+                              data-view="table"><span
                                 class="semi-dy-open-radio-inner semi-dy-open-radio-inner-buttonRadio"><input
-                                  type="radio" name="default" aria-labelledby="addon-p72lovf"><span
+                                  type="radio" name="terminal-brand-view" aria-labelledby="addon-p72lovf"><span
                                   class=""></span></span>
                               <div class="semi-dy-open-radio-content"><span
                                   class="semi-dy-open-radio-addon-buttonRadio semi-dy-open-radio-addon-buttonRadio-middle"
@@ -3097,11 +3100,11 @@
                             </label>
                           </div>
                         </div>
-                        <div class="relative mt-4 w-full h-full">
-                          <div style="position: relative; height: 288px; width: 100%; display: block;"><canvas
-                              width="1128" height="288" elementtiming="micro-game-element-timing"
-                              id="visactor_window_18"
-                              style="width: 1128px; height: 288px; display: block; cursor: inherit;"></canvas></div>
+                        <div class="relative mt-4 w-full h-full" style="min-height:288px;">
+                          <div id="terminal-brand-chart-wrap" style="position:relative;height:288px;width:100%;display:block;">
+                            <div id="terminal-brand-chart" style="width:100%;height:100%;"></div>
+                          </div>
+                          <div id="terminal-brand-table-wrap" style="display:none;"></div>
                         </div>
                       </div>
                     </div>

@@ -230,6 +230,7 @@ function initTimeRangeButtons(containerSelector = 'body') {
         },
         '.user-terminal-section': (range) => {
             window.updateTerminalAnalysis && window.updateTerminalAnalysis({ range });
+            window.updateTerminalBrandAnalysis && window.updateTerminalBrandAnalysis({ range });
         }
     };
     const dispatch = handlersByContainer[containerSelector] || null;
@@ -402,6 +403,15 @@ function initDropdownFilters() {
         ]);
     }
 
+    // 终端分析 · 品牌分布 APP 下拉（与机型分布同一套选项，独立 state）
+    const terminalBrandAppFilter = document.querySelector('.filter-terminal-brand-app');
+    if (terminalBrandAppFilter) {
+        createDropdownContent(terminalBrandAppFilter, 'semi-dy-open-select-terminal-brand-app', [
+            { value: 'all', label: '全部' },
+            ...SOURCE_APP_OPTIONS
+        ]);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
@@ -436,6 +446,9 @@ function initDropdownFilters() {
     }
     if (terminalAppFilter) {
         allFilters.push(terminalAppFilter);
+    }
+    if (terminalBrandAppFilter) {
+        allFilters.push(terminalBrandAppFilter);
     }
 
     allFilters.forEach(filter => {
@@ -518,6 +531,7 @@ function initDropdownFilters() {
             e.target.closest('.filter-profile-category') ||
             e.target.closest('.filter-terminal-category') ||
             e.target.closest('.filter-terminal-app') ||
+            e.target.closest('.filter-terminal-brand-app') ||
             e.target.closest('.source-scene-panel') ||
             e.target.closest('.time-range-yesterday') ||
             e.target.closest('.time-range-7days') ||
@@ -789,12 +803,22 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 if (typeof window.updateTerminalAnalysis === 'function') {
                     window.updateTerminalAnalysis();
                 }
+                if (typeof window.updateTerminalBrandAnalysis === 'function') {
+                    window.updateTerminalBrandAnalysis();
+                }
             } else if (tabType === 'terminal-app') {
                 // 终端分析 APP 切换
                 window._terminalAppId = value;
                 console.log('[terminal-app] APP 切换:', value, label);
                 if (typeof window.updateTerminalAnalysis === 'function') {
                     window.updateTerminalAnalysis();
+                }
+            } else if (tabType === 'terminal-brand-app') {
+                // 终端分析 · 品牌分布 APP 切换（数据源：terminal-model-data_brand.json，后续接入）
+                window._terminalBrandAppId = value;
+                console.log('[terminal-brand-app] APP 切换:', value, label);
+                if (typeof window.updateTerminalBrandAnalysis === 'function') {
+                    window.updateTerminalBrandAnalysis();
                 }
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);
