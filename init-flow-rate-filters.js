@@ -704,6 +704,70 @@
     });
   }
 
+  function showNoPermissionToast() {
+    let container = document.getElementById('flow-rate-toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'flow-rate-toast-container';
+      container.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:9999;';
+      document.body.appendChild(container);
+    }
+
+    const toastHtml = `<div class="semi-dy-open-toast-innerWrapper flow-rate-toast-item" style="margin-bottom:8px;">
+    <div role="alert" aria-label="warning type" class="semi-dy-open-toast semi-dy-open-toast-warning"
+        style="transform: translate3d(0px, 0px, 0px);">
+        <div class="semi-dy-open-toast-content"><span role="img" aria-label="alert_triangle"
+                class="semi-dy-open-icon semi-dy-open-icon-large semi-dy-open-icon-alert_triangle semi-dy-open-toast-icon semi-dy-open-toast-icon-warning"><svg
+                    viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+                    focusable="false" aria-hidden="true">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M10.2268 2.3986L1.52616 19.0749C0.831449 20.4064 1.79747 22 3.29933 22H20.7007C22.2025 22 23.1686 20.4064 22.4739 19.0749L13.7732 2.3986C13.0254 0.965441 10.9746 0.965442 10.2268 2.3986ZM13.1415 14.0101C13.0603 14.5781 12.5739 15 12.0001 15C11.4263 15 10.9398 14.5781 10.8586 14.0101L10.2829 9.97992C10.1336 8.93495 10.9445 8.00002 12.0001 8.00002C13.0556 8.00002 13.8665 8.93495 13.7172 9.97992L13.1415 14.0101ZM13.5001 18.5C13.5001 19.3284 12.8285 20 12.0001 20C11.1716 20 10.5001 19.3284 10.5001 18.5C10.5001 17.6716 11.1716 17 12.0001 17C12.8285 17 13.5001 17.6716 13.5001 18.5Z"
+                        fill="currentColor"></path>
+                </svg></span><span class="semi-dy-open-toast-content-text" style="max-width: 450px;">仅限拥有者与管理员查看</span>
+            <div class="semi-dy-open-toast-close-button"><button
+                    class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-size-small semi-dy-open-button-borderless semi-dy-open-button-with-icon semi-dy-open-button-with-icon-only flow-rate-toast-close"
+                    type="button" aria-disabled="false"><span class="semi-dy-open-button-content"><span role="img"
+                            aria-label="close"
+                            class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-close"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                width="1em" height="1em" focusable="false" aria-hidden="true">
+                                <path
+                                    d="M17.6568 19.7782C18.2426 20.3639 19.1924 20.3639 19.7782 19.7782C20.3639 19.1924 20.3639 18.2426 19.7782 17.6568L14.1213 12L19.7782 6.34313C20.3639 5.75734 20.3639 4.8076 19.7782 4.22181C19.1924 3.63602 18.2426 3.63602 17.6568 4.22181L12 9.87866L6.34313 4.22181C5.75734 3.63602 4.8076 3.63602 4.22181 4.22181C3.63602 4.8076 3.63602 5.75734 4.22181 6.34313L9.87866 12L4.22181 17.6568C3.63602 18.2426 3.63602 19.1924 4.22181 19.7782C4.8076 20.3639 5.75734 20.3639 6.34313 19.7782L12 14.1213L17.6568 19.7782Z"
+                                    fill="currentColor"></path>
+                            </svg></span></span></button></div>
+        </div>
+    </div>
+</div>`;
+
+    container.insertAdjacentHTML('beforeend', toastHtml);
+    const toastItem = container.lastElementChild;
+
+    const closeBtn = toastItem.querySelector('.flow-rate-toast-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        toastItem.remove();
+      });
+    }
+
+    setTimeout(() => {
+      if (toastItem.parentNode) {
+        toastItem.remove();
+      }
+    }, 3000);
+  }
+
+  function initSettlementTabClick() {
+    const tab = document.querySelector('.flow-rate-settlement-tab');
+    if (!tab || tab.dataset.bound === '1') return;
+    tab.dataset.bound = '1';
+
+    tab.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      showNoPermissionToast();
+    });
+  }
+
   window.initFlowRateFilters = initFlowRateFilters;
   window.initAdManageTypeRadio = initAdManageTypeRadio;
+  window.initSettlementTabClick = initSettlementTabClick;
 })();

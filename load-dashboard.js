@@ -294,6 +294,9 @@
                         if (typeof window.initAdManageTypeRadio === 'function') {
                             window.initAdManageTypeRadio();
                         }
+                        if (typeof window.initSettlementTabClick === 'function') {
+                            window.initSettlementTabClick();
+                        }
                         if (typeof window.initFlowRateCards === 'function') {
                             window.initFlowRateCards();
                         }
