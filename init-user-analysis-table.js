@@ -651,7 +651,9 @@
             });
 
             if (records.length === 0) {
-                records = retentionConfig.retentionData.filter(r => r.factor === 'none');
+                console.log('⚠️ 留存表格没有匹配的数据');
+                tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
+                return;
             }
 
             // factor label 映射
@@ -675,19 +677,21 @@
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            sevenDaysAgo.setHours(0, 0, 0, 0);
+            const timeRange = window._retentionTimeRange || 7;
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - timeRange);
+            startDate.setHours(0, 0, 0, 0);
 
             let filteredData = displayData.filter(item => {
                 const itemDate = new Date(item.date);
-                return itemDate >= sevenDaysAgo && itemDate < today;
+                return itemDate >= startDate && itemDate < today;
             });
 
-            // 如果没有符合7天范围的数据，显示所有数据
-            if (filteredData.length === 0 && displayData.length > 0) {
-                console.log('⚠️ 没有最近7天的数据，显示所有可用数据');
-                filteredData = displayData;
+            // 如果没有符合范围的数据，显示空
+            if (filteredData.length === 0) {
+                console.log(`⚠️ 留存表格没有最近${timeRange}天的数据`);
+                tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
+                return;
             }
 
             // 排序：先按日期，再按 factor（yes 在前，no 在后）
@@ -838,26 +842,30 @@
             });
 
             if (records.length === 0) {
-                records = retentionConfig.sidebarRetentionData;
+                console.log('⚠️ 侧边栏留存表格没有匹配的数据');
+                tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
+                return;
             }
 
             const aggregated = aggregateSidebarRetentionData(records);
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            sevenDaysAgo.setHours(0, 0, 0, 0);
+            const timeRange = window._retentionTimeRange || 7;
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - timeRange);
+            startDate.setHours(0, 0, 0, 0);
 
             let filteredData = aggregated.filter(item => {
                 const itemDate = new Date(item.date);
-                return itemDate >= sevenDaysAgo && itemDate < today;
+                return itemDate >= startDate && itemDate < today;
             });
 
-            // 如果没有符合7天范围的数据，显示所有数据
-            if (filteredData.length === 0 && aggregated.length > 0) {
-                console.log('⚠️ 侧边栏留存没有最近7天的数据，显示所有可用数据');
-                filteredData = aggregated;
+            // 如果没有符合范围的数据，显示空
+            if (filteredData.length === 0) {
+                console.log(`⚠️ 侧边栏留存没有最近${timeRange}天的数据`);
+                tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; padding: 40px; color: #999;">暂无数据</td></tr>';
+                return;
             }
 
             filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -876,24 +884,24 @@
                 const dateCell = createCell(item.date, 1, 'left', false);
                 row.appendChild(dateCell);
 
-                const activeUsersCell = createCell(item.dailyUsers ? item.dailyUsers.toLocaleString('zh-CN') : '-', 2);
+                const activeUsersCell = createCell(item.dailyUsers != null ? item.dailyUsers.toLocaleString('zh-CN') : '0', 2);
                 row.appendChild(activeUsersCell);
 
-                const penetrationCell = createCell(item.penetrationRate != null && item.penetrationRate > 0 ? item.penetrationRate.toFixed(2) + '%' : '-', 3);
+                const penetrationCell = createCell(item.penetrationRate != null ? (item.penetrationRate === 0 ? '0%' : item.penetrationRate.toFixed(2) + '%') : '0%', 3);
                 row.appendChild(penetrationCell);
 
                 const sidebarRetentionFields = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'day14'];
 
                 sidebarRetentionFields.forEach((field, i) => {
                     const value = item[field];
-                    const displayValue = value != null && value > 0 ? value.toFixed(2) + '%' : '-';
+                    const displayValue = value != null ? (value === 0 ? '0%' : value.toFixed(2) + '%') : '0%';
                     const colIndex = i + 4;
                     const cell = createCell(displayValue, colIndex);
                     row.appendChild(cell);
                 });
 
                 const day30Value = item.day30;
-                const day30Display = day30Value != null && day30Value > 0 ? day30Value.toFixed(2) + '%' : '-';
+                const day30Display = day30Value != null ? (day30Value === 0 ? '0%' : day30Value.toFixed(2) + '%') : '0%';
                 const day30Cell = createCell(day30Display, 12, 'right', false, true);
                 row.appendChild(day30Cell);
 

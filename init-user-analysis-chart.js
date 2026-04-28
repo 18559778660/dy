@@ -672,58 +672,238 @@
     }
 
     /**
+     * 创建多线图表配置（留存分析专用）
+     */
+    function createMultiLineChartConfig(data) {
+        // 定义两条线的颜色
+        const colors = ['rgb(73, 127, 252)', 'rgb(38, 194, 176)'];
+        return {
+            type: 'line',
+            data: [{ values: data, id: 'data' }],
+            xField: 'date',
+            yField: 'value',
+            seriesField: 'seriesName',
+            color: colors,
+            line: {
+                style: {
+                    lineWidth: 2
+                }
+            },
+            point: {
+                style: {
+                    size: 0
+                },
+                state: {
+                    dimension_hover: {
+                        size: 8,
+                        fill: '#ffffff',
+                        lineWidth: 2
+                    }
+                }
+            },
+            axes: [
+                {
+                    orient: 'left',
+                    grid: { visible: true, style: { lineDash: [], stroke: '#E5E6EB' } },
+                    label: {
+                        visible: true,
+                        style: { fill: '#8F959E' },
+                        formatMethod: (val) => val + '%'
+                    }
+                },
+                {
+                    orient: 'bottom',
+                    label: { visible: true, style: { fill: '#8F959E' } }
+                }
+            ],
+            tooltip: {
+                mark: { content: { valueFormatter: '{displayValue}' } },
+                dimension: { content: { valueFormatter: '{displayValue}' } }
+            },
+            legends: {
+                visible: false
+            },
+            crosshair: {
+                xField: {
+                    visible: true,
+                    line: { type: 'line', style: { lineWidth: 1, opacity: 0.6, stroke: 'rgb(138, 141, 143)', lineDash: [4, 4] } },
+                    bindingAxesIndex: [1]
+                }
+            }
+        };
+    }
+
+    /**
+     * 创建多线图例（放在图表下方，替代旧的单线图例）
+     */
+    function createMultiLineLegend(chartContainer, seriesNames) {
+        // 删除旧的图例
+        let legendElement = chartContainer.parentElement.querySelector('.chart-title');
+        if (legendElement) {
+            legendElement.remove();
+        }
+
+        // 创建新图例
+        legendElement = document.createElement('div');
+        legendElement.className = 'chart-title';
+        legendElement.style.cssText = `
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-top: 8px;
+            gap: 24px;
+        `;
+
+        const colors = ['rgb(73, 127, 252)', 'rgb(38, 194, 176)'];
+
+        seriesNames.forEach((name, index) => {
+            const item = document.createElement('div');
+            item.style.cssText = 'display: flex; align-items: center;';
+
+            const square = document.createElement('span');
+            square.style.cssText = `
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                background-color: ${colors[index] || '#999'};
+                margin-right: 8px;
+                border-radius: 2px;
+            `;
+
+            const text = document.createElement('span');
+            text.textContent = name;
+            text.style.color = 'var(--text-2, #747a85)';
+
+            item.appendChild(square);
+            item.appendChild(text);
+            legendElement.appendChild(item);
+        });
+
+        chartContainer.parentElement.appendChild(legendElement);
+    }
+
+    /**
+     * 渲染多线留存图表
+     */
+    function renderRetentionMultiLineChart(containerId, data, chartTitle, seriesNames) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            console.error(`❌ 未找到图表容器 ${containerId}`);
+            return null;
+        }
+        container.innerHTML = '';
+
+        try {
+            const ChartClass = VChart.VChart || VChart;
+            const config = createMultiLineChartConfig(data);
+
+            const vchart = new ChartClass(config, {
+                dom: container,
+                width: container.offsetWidth || 765,
+                height: container.offsetHeight || 305
+            });
+
+            vchart.renderAsync().then(() => {
+                console.log(`✅ [${chartTitle}] 多线图渲染完成`);
+                createMultiLineLegend(container, seriesNames);
+            }).catch(err => {
+                console.error(`❌ [${chartTitle}] 渲染失败:`, err);
+            });
+
+            return vchart;
+        } catch (error) {
+            console.error(`❌ [${chartTitle}] 创建失败:`, error);
+            return null;
+        }
+    }
+
+    /**
      * 初始化留存分析图表
      */
     function initRetentionChart() {
         console.log('初始化留存分析图表...');
 
-        let chartTitle = '全部-1天后留存率';
-
         loadRetentionChartData().then(retentionConfig => {
             const appId = window._retentionAppId || 'all';
             const os = window._retentionOs || 'all';
             const factor = window._retentionFactor || 'sidebar_popup';
+            const field = window._retentionChartField || 'day1';
 
+            // factor label 映射
+            const factorLabelMap = {
+                'sidebar_popup_yes': '有跳转',
+                'sidebar_popup_no': '无跳转',
+                'app_active_yes': '有活跃',
+                'app_active_no': '未活跃',
+                'none': '全部'
+            };
+
+            // 根据 factor 筛选数据
             let records = retentionConfig.retentionData.filter(r => {
                 if (appId !== 'all' && r.appId !== appId) return false;
                 if (os !== 'all' && r.os !== os) return false;
-                if (factor !== 'none' && r.factor !== factor) return false;
-                return true;
+                if (factor === 'none') {
+                    return r.factor === 'none';
+                } else {
+                    return r.factor.startsWith(factor);
+                }
             });
 
             if (records.length === 0) {
-                records = retentionConfig.retentionData;
+                console.log('⚠️ 留存图表没有匹配的数据');
+                const container = document.getElementById('visactor_window_7');
+                if (container) {
+                    container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #999;">暂无数据</div>';
+                }
+                return;
             }
-
-            const aggregated = aggregateRetentionChartData(records, 'day1');
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            sevenDaysAgo.setHours(0, 0, 0, 0);
+            const timeRange = window._retentionTimeRange || 7;
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - timeRange);
+            startDate.setHours(0, 0, 0, 0);
 
-            let filteredData = aggregated.filter(item => {
-                const itemDate = new Date(item.date);
-                return itemDate >= sevenDaysAgo && itemDate < today;
+            // 过滤日期范围
+            let filteredRecords = records.filter(r => {
+                const itemDate = new Date(r.date);
+                return itemDate >= startDate && itemDate < today;
             });
 
-            // 如果没有符合7天范围的数据，显示所有数据
-            if (filteredData.length === 0 && aggregated.length > 0) {
-                console.log('⚠️ 留存图表没有最近7天的数据，显示所有可用数据');
-                filteredData = aggregated;
+            if (filteredRecords.length === 0) {
+                console.log(`⚠️ 留存图表没有最近${timeRange}天的数据`);
+                const container = document.getElementById('visactor_window_7');
+                if (container) {
+                    container.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #999;">暂无数据</div>';
+                }
+                return;
             }
 
-            const data = filteredData.map(item => ({
-                date: item.date,
-                value: item.value,
-                displayValue: item.value != null && item.value > 0 ? item.value.toFixed(2) + '%' : '-',
-                medalType: chartTitle
+            const fieldLabelMap = { 'day1': '1天后', 'day3': '3天后', 'day14': '14天后', 'day30': '30天后' };
+            const fieldLabel = fieldLabelMap[field] || '1天后';
+
+            // 获取唯一的 factor 列表（用于图例）
+            const uniqueFactors = [...new Set(filteredRecords.map(r => r.factor))];
+            const seriesNames = uniqueFactors.map(f => (factorLabelMap[f] || f) + '-' + fieldLabel + '留存率');
+
+            // 构建多线数据，seriesName 格式: "有跳转-3天后留存率"
+            const data = filteredRecords.map(r => ({
+                date: r.date,
+                value: r[field] || 0,
+                displayValue: r[field] != null ? (r[field] === 0 ? '0%' : r[field].toFixed(2) + '%') : '0%',
+                seriesName: (factorLabelMap[r.factor] || r.factor) + '-' + fieldLabel + '留存率'
             }));
 
-            console.log('✅ [留存分析图表] 使用新数据结构:', chartTitle, `(最近 7 天，共${data.length}条数据)`);
+            // 按日期排序
+            data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            const vchart = renderChart('visactor_window_7', data, chartTitle, { yAxisPercent: true });
+            const chartTitle = fieldLabel + '留存率';
+
+            console.log('✅ [留存分析图表] 多线数据:', chartTitle, `(共${data.length}条数据, 系列: ${seriesNames.join(', ')})`);
+
+            const vchart = renderRetentionMultiLineChart('visactor_window_7', data, chartTitle, seriesNames);
             if (vchart) {
                 window.retentionChartInstance = vchart;
             }
@@ -840,67 +1020,13 @@
      * 更新留存分析图表数据
      */
     function updateRetentionChart(field, title) {
-        console.log(`更新留存图表: ${title}`);
+        console.log(`更新留存图表: ${title}, field: ${field}`);
 
-        loadRetentionChartData().then(retentionConfig => {
-            const appId = window._retentionAppId || 'all';
-            const os = window._retentionOs || 'all';
-            const factor = window._retentionFactor || 'sidebar_popup';
+        // 保存当前选中的 field，供筛选器切换时使用
+        window._retentionChartField = field;
 
-            let records = retentionConfig.retentionData.filter(r => {
-                if (appId !== 'all' && r.appId !== appId) return false;
-                if (os !== 'all' && r.os !== os) return false;
-                if (factor !== 'none' && r.factor !== factor) return false;
-                return true;
-            });
-
-            if (records.length === 0) {
-                records = retentionConfig.retentionData;
-            }
-
-            const aggregated = aggregateRetentionChartData(records, field);
-
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            sevenDaysAgo.setHours(0, 0, 0, 0);
-
-            let filteredData = aggregated.filter(item => {
-                const itemDate = new Date(item.date);
-                return itemDate >= sevenDaysAgo && itemDate < today;
-            });
-
-            // 如果没有符合7天范围的数据，显示所有数据
-            if (filteredData.length === 0 && aggregated.length > 0) {
-                filteredData = aggregated;
-            }
-
-            const data = filteredData.map(item => {
-                const value = item.value;
-                const validValue = (value !== null && value !== undefined) ? Number(value) : 0;
-
-                return {
-                    date: item.date,
-                    value: validValue,
-                    displayValue: value != null && value > 0 ? value.toFixed(2) + '%' : '-',
-                    medalType: title
-                };
-            });
-
-            console.log(`✅ [留存分析] 切换到指标: ${title} (共${data.length}条数据)`);
-
-            // 更新 VChart 数据
-            if (window.retentionChartInstance) {
-                window.retentionChartInstance.updateData('data', data);
-
-                // 更新标题
-                const container = document.getElementById('visactor_window_7');
-                if (container) {
-                    createChartTitle(container, title);
-                }
-            }
-        });
+        // 直接调用 initRetentionChart 重新渲染
+        initRetentionChart();
     }
 
     // 暴露到全局

@@ -233,6 +233,12 @@ function initTimeRangeButtons(containerSelector = 'body') {
             window.updateTerminalBrandAnalysis && window.updateTerminalBrandAnalysis({ range });
             window.updateTerminalClientVersionAnalysis && window.updateTerminalClientVersionAnalysis({ range });
             window.updateTerminalBasicVersionAnalysis && window.updateTerminalBasicVersionAnalysis({ range });
+        },
+        '.user-retention-section': (range) => {
+            window._retentionTimeRange = range;
+            window.initRetentionTable && window.initRetentionTable();
+            window.initSidebarRetentionTable && window.initSidebarRetentionTable();
+            window.initRetentionChart && window.initRetentionChart();
         }
     };
     const dispatch = handlersByContainer[containerSelector] || null;
