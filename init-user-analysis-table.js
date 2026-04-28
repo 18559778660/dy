@@ -10,17 +10,22 @@
 
     // 24小时权重配置（从配置文件加载）
     let HOURLY_WEIGHTS = {};
+    let _hourlyWeightsLoaded = false;
 
     // 加载权重配置文件
-    async function loadHourlyWeights() {
+    async function loadHourlyWeightsForTable() {
+        if (_hourlyWeightsLoaded) return HOURLY_WEIGHTS;
         const response = await fetch('./conf/hourly-weights.json');
         const config = await response.json();
         HOURLY_WEIGHTS = config.hourlyWeights;
+        _hourlyWeightsLoaded = true;
+        
+        // 验证权重总和是否接近 1
+        const weightSum = Object.values(HOURLY_WEIGHTS).reduce((sum, w) => sum + w, 0);
+        console.log('小时权重总和:', weightSum.toFixed(4), '(应接近 1.0)');
+        
+        return HOURLY_WEIGHTS;
     }
-
-    // 验证权重总和是否接近 1
-    const weightSum = Object.values(HOURLY_WEIGHTS).reduce((sum, w) => sum + w, 0);
-    console.log('小时权重总和:', weightSum.toFixed(4), '(应接近 1.0)');
 
     /**
      * 将天数据转换为小时数据
@@ -596,8 +601,8 @@
     async function initUserAnalysisTable(tbodySelector = '.semi-dy-open-table-tbody') {
         console.log('初始化用户分析表格...');
 
-        // 首先加载权重配置
-        await loadHourlyWeights();
+        // 首先加载权重配置（用于行为分析表格）
+        await loadHourlyWeightsForTable();
 
         // 从全局获取图表数据（由 init-chart.js 加载）
         const chartData = window.chartDataConfig;
