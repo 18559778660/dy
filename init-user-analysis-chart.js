@@ -637,48 +637,97 @@
     }
 
     /**
+     * 留存分析数据缓存
+     */
+    let _retentionChartDataCache = null;
+    const RETENTION_CHART_DATA_URL = 'conf/retention-data.json';
+
+    function loadRetentionChartData() {
+        if (_retentionChartDataCache) return Promise.resolve(_retentionChartDataCache);
+        return fetch(RETENTION_CHART_DATA_URL)
+            .then(res => res.json())
+            .then(json => {
+                _retentionChartDataCache = json;
+                return json;
+            });
+    }
+
+    /**
+     * 聚合留存图表数据（按日期分组）
+     */
+    function aggregateRetentionChartData(records, field) {
+        const grouped = {};
+        records.forEach(r => {
+            if (!grouped[r.date]) {
+                grouped[r.date] = { date: r.date, dailyUsers: 0, valueSum: 0 };
+            }
+            const g = grouped[r.date];
+            g.dailyUsers += r.dailyUsers || 0;
+            g.valueSum += (r[field] || 0) * (r.dailyUsers || 0);
+        });
+        return Object.values(grouped).map(g => ({
+            date: g.date,
+            value: g.dailyUsers > 0 ? g.valueSum / g.dailyUsers : 0
+        }));
+    }
+
+    /**
      * 初始化留存分析图表
      */
     function initRetentionChart() {
         console.log('初始化留存分析图表...');
 
-        // 从 JSON 配置中获取数据
-        let data = [];
         let chartTitle = '全部-1天后留存率';
 
-        if (window.chartDataConfig && window.chartDataConfig.overview && window.chartDataConfig.overview.length > 0) {
-            const chartConfig = window.chartDataConfig.overview[0];
+        loadRetentionChartData().then(retentionConfig => {
+            const appId = window._retentionAppId || 'all';
+            const os = window._retentionOs || 'all';
+            const factor = window._retentionFactor || 'sidebar_popup';
 
-            // 过滤最近 7 天的数据（不包括今天）
+            let records = retentionConfig.retentionData.filter(r => {
+                if (appId !== 'all' && r.appId !== appId) return false;
+                if (os !== 'all' && r.os !== os) return false;
+                if (factor !== 'none' && r.factor !== factor) return false;
+                return true;
+            });
+
+            if (records.length === 0) {
+                records = retentionConfig.retentionData;
+            }
+
+            const aggregated = aggregateRetentionChartData(records, 'day1');
+
             const today = new Date();
             today.setHours(0, 0, 0, 0);
-
             const sevenDaysAgo = new Date();
             sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
             sevenDaysAgo.setHours(0, 0, 0, 0);
 
-            const filteredData = chartConfig.data.filter(item => {
+            let filteredData = aggregated.filter(item => {
                 const itemDate = new Date(item.date);
                 return itemDate >= sevenDaysAgo && itemDate < today;
             });
 
-            data = filteredData.map(item => ({
+            // 如果没有符合7天范围的数据，显示所有数据
+            if (filteredData.length === 0 && aggregated.length > 0) {
+                console.log('⚠️ 留存图表没有最近7天的数据，显示所有可用数据');
+                filteredData = aggregated;
+            }
+
+            const data = filteredData.map(item => ({
                 date: item.date,
-                value: item.sidebarVisitday1Retention,  // 使用次日留存率
-                displayValue: item.sidebarVisitday1Retention ? item.sidebarVisitday1Retention.toFixed(2) + '%' : '-',
-                medalType: '全部-1天后留存率'
+                value: item.value,
+                displayValue: item.value != null && item.value > 0 ? item.value.toFixed(2) + '%' : '-',
+                medalType: chartTitle
             }));
 
-            console.log('✅ [留存分析图表] 使用 JSON 配置数据:', chartTitle, `(最近 7 天，共${data.length}条数据)`);
-        } else {
-            console.log('⚠️ 未找到留存分析图表数据配置');
-        }
+            console.log('✅ [留存分析图表] 使用新数据结构:', chartTitle, `(最近 7 天，共${data.length}条数据)`);
 
-        // 使用公共渲染函数，传入Y轴百分比选项
-        const vchart = renderChart('visactor_window_7', data, chartTitle, { yAxisPercent: true });
-        if (vchart) {
-            window.retentionChartInstance = vchart;
-        }
+            const vchart = renderChart('visactor_window_7', data, chartTitle, { yAxisPercent: true });
+            if (vchart) {
+                window.retentionChartInstance = vchart;
+            }
+        });
     }
 
     // 暴露到全局
@@ -709,12 +758,12 @@
 
         console.log(`✅ 找到 ${retentionButtons.length} 个留存分析按钮`);
 
-        // 定义每个按钮对应的数据字段和标题
+        // 定义每个按钮对应的数据字段和标题（新结构使用 day1, day3 等）
         const buttonConfig = [
-            { text: '全部-1天后留存率', field: 'sidebarVisitday1Retention' },
-            { text: '全部-3天后留存率', field: 'sidebarVisitday3Retention' },
-            { text: '全部-14天后留存率', field: 'sidebarVisitday14Retention' },
-            { text: '全部-30天后留存率', field: 'sidebarVisitday30Retention' }
+            { text: '全部-1天后留存率', field: 'day1' },
+            { text: '全部-3天后留存率', field: 'day3' },
+            { text: '全部-14天后留存率', field: 'day14' },
+            { text: '全部-30天后留存率', field: 'day30' }
         ];
 
         // 为每个按钮添加点击事件
@@ -793,49 +842,65 @@
     function updateRetentionChart(field, title) {
         console.log(`更新留存图表: ${title}`);
 
-        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
-            console.warn('未找到图表数据配置');
-            return;
-        }
+        loadRetentionChartData().then(retentionConfig => {
+            const appId = window._retentionAppId || 'all';
+            const os = window._retentionOs || 'all';
+            const factor = window._retentionFactor || 'sidebar_popup';
 
-        const chartConfig = window.chartDataConfig.overview[0];
+            let records = retentionConfig.retentionData.filter(r => {
+                if (appId !== 'all' && r.appId !== appId) return false;
+                if (os !== 'all' && r.os !== os) return false;
+                if (factor !== 'none' && r.factor !== factor) return false;
+                return true;
+            });
 
-        // 过滤最近 7 天的数据
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
-
-        const filteredData = chartConfig.data.filter(item => {
-            const itemDate = new Date(item.date);
-            return itemDate >= sevenDaysAgo && itemDate < today;
-        });
-
-        const data = filteredData.map(item => {
-            const value = item[field];
-            const validValue = (value !== null && value !== undefined) ? Number(value) : 0;
-
-            return {
-                date: item.date,
-                value: validValue,
-                displayValue: value ? value.toFixed(2) + '%' : '0.00%',
-                medalType: title
-            };
-        });
-
-        console.log(`✅ [留存分析] 切换到指标: ${title} (共${data.length}条数据)`);
-
-        // 更新 VChart 数据
-        if (window.retentionChartInstance) {
-            window.retentionChartInstance.updateData('data', data);
-
-            // 更新标题
-            const container = document.getElementById('visactor_window_7');
-            if (container) {
-                createChartTitle(container, title);
+            if (records.length === 0) {
+                records = retentionConfig.retentionData;
             }
-        }
+
+            const aggregated = aggregateRetentionChartData(records, field);
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            sevenDaysAgo.setHours(0, 0, 0, 0);
+
+            let filteredData = aggregated.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= sevenDaysAgo && itemDate < today;
+            });
+
+            // 如果没有符合7天范围的数据，显示所有数据
+            if (filteredData.length === 0 && aggregated.length > 0) {
+                filteredData = aggregated;
+            }
+
+            const data = filteredData.map(item => {
+                const value = item.value;
+                const validValue = (value !== null && value !== undefined) ? Number(value) : 0;
+
+                return {
+                    date: item.date,
+                    value: validValue,
+                    displayValue: value != null && value > 0 ? value.toFixed(2) + '%' : '-',
+                    medalType: title
+                };
+            });
+
+            console.log(`✅ [留存分析] 切换到指标: ${title} (共${data.length}条数据)`);
+
+            // 更新 VChart 数据
+            if (window.retentionChartInstance) {
+                window.retentionChartInstance.updateData('data', data);
+
+                // 更新标题
+                const container = document.getElementById('visactor_window_7');
+                if (container) {
+                    createChartTitle(container, title);
+                }
+            }
+        });
     }
 
     // 暴露到全局

@@ -447,6 +447,7 @@ function initDropdownFilters() {
             { value: 'all', label: '全部' },
             { value: 'ios', label: 'iOS' },
             { value: 'android', label: 'Android' },
+            { value: 'windows', label: 'Windows' },
             { value: 'open_harmony', label: 'OpenHarmony' }
         ]);
     }
@@ -922,22 +923,27 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 // 留存分析 APP 切换
                 window._retentionAppId = value;
                 console.log('[retention-app] APP 切换:', value, label);
-                // TODO: 数据设计完成后接入 window.updateRetentionXxx()
+                if (typeof window.initRetentionTable === 'function') window.initRetentionTable();
+                if (typeof window.initSidebarRetentionTable === 'function') window.initSidebarRetentionTable();
+                if (typeof window.initRetentionChart === 'function') window.initRetentionChart();
             } else if (tabType === 'retention-os') {
                 // 留存分析 操作系统切换
                 window._retentionOs = value;
                 console.log('[retention-os] 操作系统切换:', value, label);
-                // TODO: 数据设计完成后接入 window.updateRetentionXxx()
+                if (typeof window.initRetentionTable === 'function') window.initRetentionTable();
+                if (typeof window.initSidebarRetentionTable === 'function') window.initSidebarRetentionTable();
+                if (typeof window.initRetentionChart === 'function') window.initRetentionChart();
             } else if (tabType === 'retention-category') {
                 // 留存分析 分类切换（活跃用户/新增用户/活跃付费用户/新增付费用户）
                 window._retentionCategory = value;
                 console.log('[retention-category] 分类切换:', value, label);
-                // TODO: 数据设计完成后接入 window.updateRetentionXxx()
+                // TODO: 分类数据待设计
             } else if (tabType === 'retention-factor') {
                 // 留存分析 影响因素切换
                 window._retentionFactor = value;
                 console.log('[retention-factor] 影响因素切换:', value, label);
-                // TODO: 数据设计完成后接入 window.updateRetentionXxx()
+                if (typeof window.initRetentionTable === 'function') window.initRetentionTable();
+                if (typeof window.initRetentionChart === 'function') window.initRetentionChart();
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);
                 // TODO: 根据 tabType 和 value 更新对应的表格/图表

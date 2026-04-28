@@ -570,13 +570,60 @@
     /**
      * 渲染留存分析表格
      */
+    /**
+     * 留存分析数据缓存
+     */
+    let _retentionDataCache = null;
+    const RETENTION_DATA_URL = 'conf/retention-data.json';
+
+    function loadRetentionData() {
+        if (_retentionDataCache) return Promise.resolve(_retentionDataCache);
+        return fetch(RETENTION_DATA_URL)
+            .then(res => res.json())
+            .then(json => {
+                _retentionDataCache = json;
+                return json;
+            });
+    }
+
+    /**
+     * 聚合留存数据（按日期分组，支持多条记录聚合）
+     */
+    function aggregateRetentionData(records) {
+        const grouped = {};
+        records.forEach(r => {
+            if (!grouped[r.date]) {
+                grouped[r.date] = { date: r.date, dailyUsers: 0, day1Sum: 0, day2Sum: 0, day3Sum: 0, day4Sum: 0, day5Sum: 0, day6Sum: 0, day7Sum: 0, day14Sum: 0, day30Sum: 0 };
+            }
+            const g = grouped[r.date];
+            g.dailyUsers += r.dailyUsers || 0;
+            g.day1Sum += (r.day1 || 0) * (r.dailyUsers || 0);
+            g.day2Sum += (r.day2 || 0) * (r.dailyUsers || 0);
+            g.day3Sum += (r.day3 || 0) * (r.dailyUsers || 0);
+            g.day4Sum += (r.day4 || 0) * (r.dailyUsers || 0);
+            g.day5Sum += (r.day5 || 0) * (r.dailyUsers || 0);
+            g.day6Sum += (r.day6 || 0) * (r.dailyUsers || 0);
+            g.day7Sum += (r.day7 || 0) * (r.dailyUsers || 0);
+            g.day14Sum += (r.day14 || 0) * (r.dailyUsers || 0);
+            g.day30Sum += (r.day30 || 0) * (r.dailyUsers || 0);
+        });
+        return Object.values(grouped).map(g => ({
+            date: g.date,
+            dailyUsers: g.dailyUsers,
+            day1: g.dailyUsers > 0 ? g.day1Sum / g.dailyUsers : 0,
+            day2: g.dailyUsers > 0 ? g.day2Sum / g.dailyUsers : 0,
+            day3: g.dailyUsers > 0 ? g.day3Sum / g.dailyUsers : 0,
+            day4: g.dailyUsers > 0 ? g.day4Sum / g.dailyUsers : 0,
+            day5: g.dailyUsers > 0 ? g.day5Sum / g.dailyUsers : 0,
+            day6: g.dailyUsers > 0 ? g.day6Sum / g.dailyUsers : 0,
+            day7: g.dailyUsers > 0 ? g.day7Sum / g.dailyUsers : 0,
+            day14: g.dailyUsers > 0 ? g.day14Sum / g.dailyUsers : 0,
+            day30: g.dailyUsers > 0 ? g.day30Sum / g.dailyUsers : 0
+        }));
+    }
+
     function renderRetentionTable() {
         console.log('渲染留存分析表格...');
-
-        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
-            console.warn('未找到图表数据配置');
-            return;
-        }
 
         const tbody = document.querySelector('#retention-tbody');
         if (!tbody) {
@@ -584,83 +631,121 @@
             return;
         }
 
-        const chartConfig = window.chartDataConfig.overview[0];
-        const data = chartConfig.data;
+        loadRetentionData().then(retentionConfig => {
+            const appId = window._retentionAppId || 'all';
+            const os = window._retentionOs || 'all';
+            const factor = window._retentionFactor || 'sidebar_popup';
 
-        // 清空现有内容
-        tbody.innerHTML = '';
-
-        // 生成表格行（最近7天）
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
-
-        const filteredData = data.filter(item => {
-            const itemDate = new Date(item.date);
-            return itemDate >= sevenDaysAgo && itemDate < today;
-        });
-
-        // 按日期正序排列（从旧到新）
-        filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        // ✅ 保存数据到全局变量，供导出使用
-        window.retentionTableData = filteredData;
-
-        filteredData.forEach((item, index) => {
-            const row = document.createElement('tr');
-            row.setAttribute('role', 'row');
-            row.setAttribute('aria-rowindex', index + 1);
-            row.className = 'semi-dy-open-table-row';
-            row.setAttribute('data-row-key', `retention-${item.date}-全部`);
-
-            // 第1列：日期
-            const dateCell = createCell(item.date, 1, 'left');
-            row.appendChild(dateCell);
-
-            // 第2列：平台（默认显示“全部”）
-            const platformCell = createCell('全部', 2, 'left', true);
-            row.appendChild(platformCell);
-
-            // 第3列：活跃用户数
-            const activeUsersCell = createCell(item.sidebarVisitdailyUsers ? item.sidebarVisitdailyUsers.toLocaleString('zh-CN') : '-', 3);
-            row.appendChild(activeUsersCell);
-
-            // 第4-12列：留存率（1天、2天、3天、4天、5天、6天、7天、14天、30天）
-            const retentionFields = [
-                'sidebarVisitday1Retention',
-                'sidebarVisitday2Retention',
-                'sidebarVisitday3Retention',
-                'sidebarVisitday4Retention',
-                'sidebarVisitday5Retention',
-                'sidebarVisitday6Retention',
-                'sidebarVisitday7Retention',
-                'sidebarVisitday14Retention',
-                'sidebarVisitday30Retention'
-            ];
-
-            retentionFields.forEach((field, i) => {
-                const value = item[field];
-                const displayValue = value ? value.toFixed(2) + '%' : '-';
-                const colIndex = i + 4;
-
-                // 第12列（30天后）需要固定右列样式
-                let cell;
-                if (colIndex === 12) {
-                    cell = createCell(displayValue, colIndex, 'right', false, true);
+            // 根据 factor 筛选数据
+            // sidebar_popup → 筛选 sidebar_popup_yes 和 sidebar_popup_no
+            // app_active → 筛选 app_active_yes 和 app_active_no
+            // none → 筛选 factor === 'none' 的记录（总体数据）
+            let records = retentionConfig.retentionData.filter(r => {
+                if (appId !== 'all' && r.appId !== appId) return false;
+                if (os !== 'all' && r.os !== os) return false;
+                if (factor === 'none') {
+                    return r.factor === 'none';
                 } else {
-                    cell = createCell(displayValue, colIndex);
+                    return r.factor.startsWith(factor);
                 }
-
-                row.appendChild(cell);
             });
 
-            tbody.appendChild(row);
-        });
+            if (records.length === 0) {
+                records = retentionConfig.retentionData.filter(r => r.factor === 'none');
+            }
 
-        console.log(`✅ 留存分析表格渲染完成，共${filteredData.length}行`);
+            // factor label 映射
+            const factorLabelMap = {
+                'sidebar_popup_yes': '有跳转',
+                'sidebar_popup_no': '无跳转',
+                'app_active_yes': '有活跃',
+                'app_active_no': '未活跃',
+                'none': '全部'
+            };
+
+            // 直接使用筛选后的数据
+            let displayData = records.map(r => ({
+                date: r.date,
+                dailyUsers: r.dailyUsers,
+                day1: r.day1, day2: r.day2, day3: r.day3, day4: r.day4,
+                day5: r.day5, day6: r.day6, day7: r.day7, day14: r.day14, day30: r.day30,
+                factor: r.factor,
+                factorLabel: factorLabelMap[r.factor] || r.factor
+            }));
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            sevenDaysAgo.setHours(0, 0, 0, 0);
+
+            let filteredData = displayData.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= sevenDaysAgo && itemDate < today;
+            });
+
+            // 如果没有符合7天范围的数据，显示所有数据
+            if (filteredData.length === 0 && displayData.length > 0) {
+                console.log('⚠️ 没有最近7天的数据，显示所有可用数据');
+                filteredData = displayData;
+            }
+
+            // 排序：先按日期，再按 factor（yes 在前，no 在后）
+            filteredData.sort((a, b) => {
+                const dateCompare = new Date(a.date) - new Date(b.date);
+                if (dateCompare !== 0) return dateCompare;
+                // yes 排在 no 前面
+                if (a.factor && b.factor) {
+                    if (a.factor.endsWith('_yes') && b.factor.endsWith('_no')) return -1;
+                    if (a.factor.endsWith('_no') && b.factor.endsWith('_yes')) return 1;
+                }
+                return 0;
+            });
+
+            window.retentionTableData = filteredData;
+
+            tbody.innerHTML = '';
+
+            filteredData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.setAttribute('role', 'row');
+                row.setAttribute('aria-rowindex', index + 1);
+                row.className = 'semi-dy-open-table-row';
+                row.setAttribute('data-row-key', `retention-${item.date}-${item.factor || 'all'}`);
+
+                const dateCell = createCell(item.date, 1, 'left');
+                row.appendChild(dateCell);
+
+                const platformCell = createCell(item.factorLabel, 2, 'left', true);
+                row.appendChild(platformCell);
+
+                const activeUsersCell = createCell(item.dailyUsers != null ? item.dailyUsers.toLocaleString('zh-CN') : '0', 3);
+                row.appendChild(activeUsersCell);
+
+                const retentionFields = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'day14', 'day30'];
+
+                retentionFields.forEach((field, i) => {
+                    const value = item[field];
+                    const displayValue = value != null ? (value === 0 ? '0%' : value.toFixed(2) + '%') : '0%';
+                    const colIndex = i + 4;
+                    let cell;
+                    if (colIndex === 12) {
+                        cell = createCell(displayValue, colIndex, 'right', false, true);
+                    } else {
+                        cell = createCell(displayValue, colIndex);
+                    }
+                    row.appendChild(cell);
+                });
+
+                tbody.appendChild(row);
+            });
+
+            console.log(`✅ 留存分析表格渲染完成，共${filteredData.length}行，筛选: appId=${appId}, os=${os}, factor=${factor}`);
+        });
     }
+
+    // 暴露到全局
+    window.initRetentionTable = renderRetentionTable;
 
     /**
      * 创建表格单元格
@@ -693,67 +778,42 @@
     }
 
     /**
-     * 导出留存分析表格为CSV
+     * 聚合侧边栏留存数据（按日期分组）
      */
-    function exportRetentionTable() {
-        console.log('导出留存分析表格...');
-
-        // ✅ 直接使用已渲染的数据，不重新查询
-        const filteredData = window.retentionTableData;
-
-        if (!filteredData || filteredData.length === 0) {
-            console.warn('没有可导出的留存数据');
-            return;
-        }
-
-        // 构建CSV内容
-        const headers = ['日期', '影响因素', '活跃用户数', '1天后', '2天后', '3天后', '4天后', '5天后', '6天后', '7天后', '14天后', '30天后'];
-        const csvRows = [];
-
-        // 添加表头
-        csvRows.push(headers.join(','));
-
-        // 添加数据行
-        filteredData.forEach(item => {
-            const row = [
-                item.date,
-                '全部',
-                item.sidebarVisitdailyUsers || 0,
-                item.sidebarVisitday1Retention ? item.sidebarVisitday1Retention.toFixed(2) + '%' : '-',
-                item.sidebarVisitday2Retention ? item.sidebarVisitday2Retention.toFixed(2) + '%' : '-',
-                item.sidebarVisitday3Retention ? item.sidebarVisitday3Retention.toFixed(2) + '%' : '-',
-                item.sidebarVisitday4Retention ? item.sidebarVisitday4Retention.toFixed(2) + '%' : '-',
-                item.sidebarVisitday5Retention ? item.sidebarVisitday5Retention.toFixed(2) + '%' : '-',
-                item.sidebarVisitday6Retention ? item.sidebarVisitday6Retention.toFixed(2) + '%' : '-',
-                item.sidebarVisitday7Retention ? item.sidebarVisitday7Retention.toFixed(2) + '%' : '-',
-                item.sidebarVisitday14Retention ? item.sidebarVisitday14Retention.toFixed(2) + '%' : '-',
-                item.sidebarVisitday30Retention ? item.sidebarVisitday30Retention.toFixed(2) + '%' : '-'
-            ];
-            csvRows.push(row.join(','));
+    function aggregateSidebarRetentionData(records) {
+        const grouped = {};
+        records.forEach(r => {
+            if (!grouped[r.date]) {
+                grouped[r.date] = { date: r.date, dailyUsers: 0, penetrationSum: 0, day1Sum: 0, day2Sum: 0, day3Sum: 0, day4Sum: 0, day5Sum: 0, day6Sum: 0, day7Sum: 0, day14Sum: 0, day30Sum: 0 };
+            }
+            const g = grouped[r.date];
+            g.dailyUsers += r.dailyUsers || 0;
+            g.penetrationSum += (r.penetrationRate || 0) * (r.dailyUsers || 0);
+            g.day1Sum += (r.day1 || 0) * (r.dailyUsers || 0);
+            g.day2Sum += (r.day2 || 0) * (r.dailyUsers || 0);
+            g.day3Sum += (r.day3 || 0) * (r.dailyUsers || 0);
+            g.day4Sum += (r.day4 || 0) * (r.dailyUsers || 0);
+            g.day5Sum += (r.day5 || 0) * (r.dailyUsers || 0);
+            g.day6Sum += (r.day6 || 0) * (r.dailyUsers || 0);
+            g.day7Sum += (r.day7 || 0) * (r.dailyUsers || 0);
+            g.day14Sum += (r.day14 || 0) * (r.dailyUsers || 0);
+            g.day30Sum += (r.day30 || 0) * (r.dailyUsers || 0);
         });
-
-        const csvContent = csvRows.join('\n');
-
-        // 创建Blob并下载
-        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-
-        const fileName = '留存分析数据.csv';
-
-        link.setAttribute('href', url);
-        link.setAttribute('download', fileName);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        console.log('✅ 留存分析表格导出完成');
+        return Object.values(grouped).map(g => ({
+            date: g.date,
+            dailyUsers: g.dailyUsers,
+            penetrationRate: g.dailyUsers > 0 ? g.penetrationSum / g.dailyUsers : 0,
+            day1: g.dailyUsers > 0 ? g.day1Sum / g.dailyUsers : 0,
+            day2: g.dailyUsers > 0 ? g.day2Sum / g.dailyUsers : 0,
+            day3: g.dailyUsers > 0 ? g.day3Sum / g.dailyUsers : 0,
+            day4: g.dailyUsers > 0 ? g.day4Sum / g.dailyUsers : 0,
+            day5: g.dailyUsers > 0 ? g.day5Sum / g.dailyUsers : 0,
+            day6: g.dailyUsers > 0 ? g.day6Sum / g.dailyUsers : 0,
+            day7: g.dailyUsers > 0 ? g.day7Sum / g.dailyUsers : 0,
+            day14: g.dailyUsers > 0 ? g.day14Sum / g.dailyUsers : 0,
+            day30: g.dailyUsers > 0 ? g.day30Sum / g.dailyUsers : 0
+        }));
     }
-
-    // 暴露到全局
-    window.initRetentionTable = renderRetentionTable;
-    window.exportRetentionTable = exportRetentionTable;
 
     /**
      * 渲染侧边栏留存分析表格
@@ -761,91 +821,87 @@
     function renderSidebarRetentionTable() {
         console.log('渲染侧边栏留存分析表格...');
 
-        if (!window.chartDataConfig || !window.chartDataConfig.overview) {
-            console.warn('未找到图表数据配置');
-            return;
-        }
-
         const tbody = document.querySelector('#sidebar-retention-tbody');
         if (!tbody) {
             console.warn('未找到侧边栏留存分析表格 tbody');
             return;
         }
 
-        const chartConfig = window.chartDataConfig.overview[0];
-        const data = chartConfig.data;
+        loadRetentionData().then(retentionConfig => {
+            const appId = window._retentionAppId || 'all';
+            const os = window._retentionOs || 'all';
 
-        // 清空现有内容
-        tbody.innerHTML = '';
-
-        // 生成表格行（最近7天）
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
-
-        const filteredData = data.filter(item => {
-            const itemDate = new Date(item.date);
-            return itemDate >= sevenDaysAgo && itemDate < today;
-        });
-
-        // 按日期正序排列（从旧到新）
-        filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-        // ✅ 保存数据到全局变量，供导出使用
-        window.sidebarRetentionTableData = filteredData;
-
-        filteredData.forEach((item, index) => {
-            const row = document.createElement('tr');
-            row.setAttribute('role', 'row');
-            row.setAttribute('aria-rowindex', index + 1);
-            row.className = 'semi-dy-open-table-row';
-            row.setAttribute('data-row-key', `sideBarRetention-${item.date}-全部`);
-
-            // 第1列：日期（固定左列，只有一列所以不是最后一列）
-            const dateCell = createCell(item.date, 1, 'left', false);
-            row.appendChild(dateCell);
-
-            // 第2列：活跃用户数（按 sceneId 精确匹配，sceneName 不唯一）
-            const sidebarDaily = item.douyinSourceScenes.find(s => s.sceneId === DOUYIN_SIDEBAR_SCENE_ID).dailyUsers;
-            const activeUsersCell = createCell(sidebarDaily.toLocaleString('zh-CN'), 2);
-            row.appendChild(activeUsersCell);
-
-            // 第3列：渗透率
-            const penetrationCell = createCell(item.penetrationRate ? item.penetrationRate.toFixed(2) + '%' : '-', 3);
-            row.appendChild(penetrationCell);
-
-            // 第4-11列：侧边栏留存率（1天、2天、3天、4天、5天、6天、7天、14天）
-            const sidebarRetentionFields = [
-                'sidebarDay1Retention',
-                'sidebarDay2Retention',
-                'sidebarDay3Retention',
-                'sidebarDay4Retention',
-                'sidebarDay5Retention',
-                'sidebarDay6Retention',
-                'sidebarDay7Retention',
-                'sidebarDay14Retention'
-            ];
-
-            sidebarRetentionFields.forEach((field, i) => {
-                const value = item[field];
-                const displayValue = value ? value.toFixed(2) + '%' : '-';
-                const colIndex = i + 4; // 从第4列开始
-                const cell = createCell(displayValue, colIndex);
-                row.appendChild(cell);
+            let records = retentionConfig.sidebarRetentionData.filter(r => {
+                if (appId !== 'all' && r.appId !== appId) return false;
+                if (os !== 'all' && r.os !== os) return false;
+                return true;
             });
 
-            // 第12列：30天后留存率（固定右列）
-            const day30Value = item.sidebarDay30Retention;
-            const day30Display = day30Value ? day30Value.toFixed(2) + '%' : '-';
-            const day30Cell = createCell(day30Display, 12, 'right', false, true);
-            row.appendChild(day30Cell);
+            if (records.length === 0) {
+                records = retentionConfig.sidebarRetentionData;
+            }
 
-            tbody.appendChild(row);
+            const aggregated = aggregateSidebarRetentionData(records);
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            sevenDaysAgo.setHours(0, 0, 0, 0);
+
+            let filteredData = aggregated.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= sevenDaysAgo && itemDate < today;
+            });
+
+            // 如果没有符合7天范围的数据，显示所有数据
+            if (filteredData.length === 0 && aggregated.length > 0) {
+                console.log('⚠️ 侧边栏留存没有最近7天的数据，显示所有可用数据');
+                filteredData = aggregated;
+            }
+
+            filteredData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            window.sidebarRetentionTableData = filteredData;
+
+            tbody.innerHTML = '';
+
+            filteredData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.setAttribute('role', 'row');
+                row.setAttribute('aria-rowindex', index + 1);
+                row.className = 'semi-dy-open-table-row';
+                row.setAttribute('data-row-key', `sideBarRetention-${item.date}`);
+
+                const dateCell = createCell(item.date, 1, 'left', false);
+                row.appendChild(dateCell);
+
+                const activeUsersCell = createCell(item.dailyUsers ? item.dailyUsers.toLocaleString('zh-CN') : '-', 2);
+                row.appendChild(activeUsersCell);
+
+                const penetrationCell = createCell(item.penetrationRate != null && item.penetrationRate > 0 ? item.penetrationRate.toFixed(2) + '%' : '-', 3);
+                row.appendChild(penetrationCell);
+
+                const sidebarRetentionFields = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'day14'];
+
+                sidebarRetentionFields.forEach((field, i) => {
+                    const value = item[field];
+                    const displayValue = value != null && value > 0 ? value.toFixed(2) + '%' : '-';
+                    const colIndex = i + 4;
+                    const cell = createCell(displayValue, colIndex);
+                    row.appendChild(cell);
+                });
+
+                const day30Value = item.day30;
+                const day30Display = day30Value != null && day30Value > 0 ? day30Value.toFixed(2) + '%' : '-';
+                const day30Cell = createCell(day30Display, 12, 'right', false, true);
+                row.appendChild(day30Cell);
+
+                tbody.appendChild(row);
+            });
+
+            console.log(`✅ 侧边栏留存分析表格渲染完成，共${filteredData.length}行，筛选: appId=${appId}, os=${os}`);
         });
-
-        console.log(`✅ 侧边栏留存分析表格渲染完成，共${filteredData.length}行`);
     }
 
     // 暴露到全局
@@ -896,19 +952,13 @@
     function exportRetentionTable() {
         const headers = ['日期', '影响因素', '活跃用户数', '1天后', '2天后', '3天后', '4天后', '5天后', '6天后', '7天后', '14天后', '30天后'];
 
+        const fmtPct = (v) => v != null ? (v === 0 ? '0%' : v.toFixed(2) + '%') : '0%';
         const rowMapper = (item) => [
             item.date,
-            '全部',
-            item.sidebarVisitdailyUsers || 0,
-            item.sidebarVisitday1Retention ? item.sidebarVisitday1Retention.toFixed(2) + '%' : '-',
-            item.sidebarVisitday2Retention ? item.sidebarVisitday2Retention.toFixed(2) + '%' : '-',
-            item.sidebarVisitday3Retention ? item.sidebarVisitday3Retention.toFixed(2) + '%' : '-',
-            item.sidebarVisitday4Retention ? item.sidebarVisitday4Retention.toFixed(2) + '%' : '-',
-            item.sidebarVisitday5Retention ? item.sidebarVisitday5Retention.toFixed(2) + '%' : '-',
-            item.sidebarVisitday6Retention ? item.sidebarVisitday6Retention.toFixed(2) + '%' : '-',
-            item.sidebarVisitday7Retention ? item.sidebarVisitday7Retention.toFixed(2) + '%' : '-',
-            item.sidebarVisitday14Retention ? item.sidebarVisitday14Retention.toFixed(2) + '%' : '-',
-            item.sidebarVisitday30Retention ? item.sidebarVisitday30Retention.toFixed(2) + '%' : '-'
+            item.factorLabel || '全部',
+            item.dailyUsers != null ? item.dailyUsers : 0,
+            fmtPct(item.day1), fmtPct(item.day2), fmtPct(item.day3), fmtPct(item.day4),
+            fmtPct(item.day5), fmtPct(item.day6), fmtPct(item.day7), fmtPct(item.day14), fmtPct(item.day30)
         ];
 
         exportTableToCSV('retentionTableData', headers, rowMapper, '留存分析数据.csv');
@@ -922,17 +972,17 @@
 
         const rowMapper = (item) => [
             item.date,
-            item.douyinSourceScenes.find(s => s.sceneId === DOUYIN_SIDEBAR_SCENE_ID).dailyUsers,
-            item.penetrationRate ? item.penetrationRate.toFixed(2) + '%' : '-',
-            item.sidebarDay1Retention ? item.sidebarDay1Retention.toFixed(2) + '%' : '-',
-            item.sidebarDay2Retention ? item.sidebarDay2Retention.toFixed(2) + '%' : '-',
-            item.sidebarDay3Retention ? item.sidebarDay3Retention.toFixed(2) + '%' : '-',
-            item.sidebarDay4Retention ? item.sidebarDay4Retention.toFixed(2) + '%' : '-',
-            item.sidebarDay5Retention ? item.sidebarDay5Retention.toFixed(2) + '%' : '-',
-            item.sidebarDay6Retention ? item.sidebarDay6Retention.toFixed(2) + '%' : '-',
-            item.sidebarDay7Retention ? item.sidebarDay7Retention.toFixed(2) + '%' : '-',
-            item.sidebarDay14Retention ? item.sidebarDay14Retention.toFixed(2) + '%' : '-',
-            item.sidebarDay30Retention ? item.sidebarDay30Retention.toFixed(2) + '%' : '-'
+            item.dailyUsers || 0,
+            item.penetrationRate != null && item.penetrationRate > 0 ? item.penetrationRate.toFixed(2) + '%' : '-',
+            item.day1 != null && item.day1 > 0 ? item.day1.toFixed(2) + '%' : '-',
+            item.day2 != null && item.day2 > 0 ? item.day2.toFixed(2) + '%' : '-',
+            item.day3 != null && item.day3 > 0 ? item.day3.toFixed(2) + '%' : '-',
+            item.day4 != null && item.day4 > 0 ? item.day4.toFixed(2) + '%' : '-',
+            item.day5 != null && item.day5 > 0 ? item.day5.toFixed(2) + '%' : '-',
+            item.day6 != null && item.day6 > 0 ? item.day6.toFixed(2) + '%' : '-',
+            item.day7 != null && item.day7 > 0 ? item.day7.toFixed(2) + '%' : '-',
+            item.day14 != null && item.day14 > 0 ? item.day14.toFixed(2) + '%' : '-',
+            item.day30 != null && item.day30 > 0 ? item.day30.toFixed(2) + '%' : '-'
         ];
 
         exportTableToCSV('sidebarRetentionTableData', headers, rowMapper, '侧边栏留存数据.csv');
