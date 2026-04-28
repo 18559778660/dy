@@ -1,0 +1,134 @@
+{
+  "flowRateAdData": [
+    {
+      "date": "2026-04-25",
+      "appId": "dy",
+      "os": "ios",
+      "attribution": "ads",
+      "adTypes": {
+        "banner": {
+          "adRequestPV": 156840,
+          "exposurePV": 149360,
+          "clickPV": 5595,
+          "clickRate": 0.0375,
+          "ecpm": 19.25,
+          "revenueBeforeSplit": 2875.18,
+          "revenueAfterSplit": 2012.63
+        },
+        "rewardedVideo": {
+          "adRequestPV": 262950,
+          "exposurePV": 246390,
+          "clickPV": 10626,
+          "clickRate": 0.0431,
+          "ecpm": 34.12,
+          "revenueBeforeSplit": 8404.86,
+          "revenueAfterSplit": 5883.40
+        },
+        "interstitial": {
+          "adRequestPV": 106911,
+          "exposurePV": 75858,
+          "clickPV": 2929,
+          "clickRate": 0.0386,
+          "ecpm": 23.85,
+          "revenueBeforeSplit": 1809.21,
+          "revenueAfterSplit": 1266.45
+        }
+      }
+    },
+    {
+      "date": "2026-04-26",
+      "appId": "dy",
+      "os": "ios",
+      "attribution": "ads",
+      "adTypes": {
+        "banner": {
+          "adRequestPV": 156840,
+          "exposurePV": 149360,
+          "clickPV": 5595,
+          "clickRate": 0.0375,
+          "ecpm": 19.25,
+          "revenueBeforeSplit": 2875.18,
+          "revenueAfterSplit": 2012.63
+        },
+        "rewardedVideo": {
+          "adRequestPV": 262950,
+          "exposurePV": 246390,
+          "clickPV": 10626,
+          "clickRate": 0.0431,
+          "ecpm": 34.12,
+          "revenueBeforeSplit": 8404.86,
+          "revenueAfterSplit": 5883.40
+        },
+        "interstitial": {
+          "adRequestPV": 106911,
+          "exposurePV": 75858,
+          "clickPV": 2929,
+          "clickRate": 0.0386,
+          "ecpm": 23.85,
+          "revenueBeforeSplit": 1809.21,
+          "revenueAfterSplit": 1266.45
+        }
+      }
+    },
+    {
+      "date": "2026-04-26",
+      "appId": "dy",
+      "os": "android",
+      "attribution": "xingtu_fixed",
+      "adTypes": {
+        "banner": {
+          "adRequestPV": 48300,
+          "exposurePV": 45960,
+          "clickPV": 1722,
+          "clickRate": 0.0375,
+          "ecpm": 17.45,
+          "revenueBeforeSplit": 802.00,
+          "revenueAfterSplit": 561.40
+        },
+        "rewardedVideo": {
+          "adRequestPV": 81160,
+          "exposurePV": 76080,
+          "clickPV": 3279,
+          "clickRate": 0.0431,
+          "ecpm": 30.12,
+          "revenueBeforeSplit": 2291.93,
+          "revenueAfterSplit": 1604.35
+        },
+        "interstitial": {
+          "adRequestPV": 32960,
+          "exposurePV": 23388,
+          "clickPV": 903,
+          "clickRate": 0.0386,
+          "ecpm": 20.25,
+          "revenueBeforeSplit": 473.61,
+          "revenueAfterSplit": 331.53
+        }
+      }
+    }
+  ],
+  "adTypeLabels": {
+    "banner": "Banner",
+    "rewardedVideo": "激励式视频",
+    "interstitial": "插屏广告"
+  },
+  "metricLabels": {
+    "adRequestPV": "广告请求PV",
+    "exposurePV": "曝光PV",
+    "clickPV": "点击PV",
+    "clickRate": "点击率",
+    "ecpm": "ECPM",
+    "revenueBeforeSplit": "分成前广告收入(元)",
+    "revenueAfterSplit": "分成后广告收入(元)"
+  },
+  "osLabels": {
+    "ios": "iOS",
+    "android": "Android",
+    "open_harmony": "OpenHarmony"
+  },
+  "attributionLabels": {
+    "ads": "广告",
+    "xingtu_fixed": "星图一口价",
+    "publisher": "发行人",
+    "organic": "自然"
+  }
+}

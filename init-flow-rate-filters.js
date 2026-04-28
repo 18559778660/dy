@@ -22,6 +22,12 @@
     { value: 'publisher', label: '发行人' },
     { value: 'organic', label: '自然' }
   ];
+  const FLOW_RATE_ADTYPE_OPTIONS = [
+    { value: 'all', label: '全部' },
+    { value: 'banner', label: 'Banner' },
+    { value: 'rewardedVideo', label: '激励式视频' },
+    { value: 'interstitial', label: '插屏广告' }
+  ];
 
   if (!Array.isArray(window._flowRateAppSelected) || window._flowRateAppSelected.length === 0) {
     window._flowRateAppSelected = ['all'];
@@ -34,6 +40,12 @@
   }
   if (typeof window._flowRateAttribution === 'undefined') {
     window._flowRateAttribution = 'all';
+  }
+  if (typeof window._flowRateAdType === 'undefined') {
+    window._flowRateAdType = 'all';
+  }
+  if (typeof window._flowRateMetric === 'undefined') {
+    window._flowRateMetric = 'adRequestPV';
   }
   let _activeAppTrigger = null;
   let _appDocEventsBound = false;
@@ -85,6 +97,9 @@
         window._flowRateTimeRange = range;
         setRadioCheckedStyle(group, range);
         console.log('[flow-rate] 时间切换:', range);
+        if (typeof window.updateFlowRateCards === 'function') {
+          window.updateFlowRateCards();
+        }
       });
     });
   }
@@ -230,6 +245,9 @@
       renderTags(trigger, next);
       syncOptionChecked();
       console.log('[flow-rate] APP 关闭标签:', removed, '=>', window._flowRateAppSelected);
+      if (typeof window.updateFlowRateCards === 'function') {
+        window.updateFlowRateCards();
+      }
     });
 
     if (!_appDocEventsBound) {
@@ -263,6 +281,9 @@
         renderTags(active, next);
         syncOptionChecked();
         console.log('[flow-rate] APP 多选变更:', window._flowRateAppSelected);
+        if (typeof window.updateFlowRateCards === 'function') {
+          window.updateFlowRateCards();
+        }
       });
     }
   }
@@ -273,6 +294,13 @@
         stateKey: '_flowRateOs',
         options: FLOW_RATE_OS_OPTIONS,
         triggerClass: '.flow-rate-os-filter'
+      };
+    }
+    if (key === 'adtype') {
+      return {
+        stateKey: '_flowRateAdType',
+        options: FLOW_RATE_ADTYPE_OPTIONS,
+        triggerClass: '.flow-rate-adtype-filter'
       };
     }
     return {
@@ -387,6 +415,9 @@
         syncSingleOptionChecked(key);
         closeSingleDropdown(key);
         console.log(`[flow-rate] ${key} 切换:`, value);
+        if (typeof window.updateFlowRateCards === 'function') {
+          window.updateFlowRateCards();
+        }
       });
     });
     syncSingleOptionChecked(key);
@@ -420,8 +451,12 @@
     }
     const osTrigger = document.querySelector('.flow-rate-os-filter');
     const attributionTrigger = document.querySelector('.flow-rate-attribution-filter');
+    const adtypeTrigger = document.querySelector('.flow-rate-adtype-filter');
     bindSingleSelectEvents(osTrigger, 'os');
     bindSingleSelectEvents(attributionTrigger, 'attribution');
+    bindSingleSelectEvents(adtypeTrigger, 'adtype');
+
+    initMetricRadioGroup();
 
     if (!_globalCloseEventsBound) {
       _globalCloseEventsBound = true;
@@ -432,13 +467,59 @@
         const inOsMenu = e.target.closest('#flow-rate-os-wrapper');
         const inAttributionTrigger = e.target.closest('.flow-rate-attribution-filter');
         const inAttributionMenu = e.target.closest('#flow-rate-attribution-wrapper');
-        if (inAppTrigger || inAppMenu || inOsTrigger || inOsMenu || inAttributionTrigger || inAttributionMenu) return;
+        const inAdtypeTrigger = e.target.closest('.flow-rate-adtype-filter');
+        const inAdtypeMenu = e.target.closest('#flow-rate-adtype-wrapper');
+        if (inAppTrigger || inAppMenu || inOsTrigger || inOsMenu || inAttributionTrigger || inAttributionMenu || inAdtypeTrigger || inAdtypeMenu) return;
         if (_activeAppTrigger) closeMultiDropdown(_activeAppTrigger);
         closeSingleDropdown('os');
         closeSingleDropdown('attribution');
+        closeSingleDropdown('adtype');
       });
     }
     console.log('✅ 流量主筛选控件初始化完成');
+  }
+
+  function setMetricRadioCheckedStyle(group, value) {
+    group.querySelectorAll('label[data-metric]').forEach(label => {
+      const matched = label.getAttribute('data-metric') === value;
+      const inner = label.querySelector('.semi-dy-open-radio-inner');
+      const addon = label.querySelector('.semi-dy-open-radio-addon-buttonRadio');
+      const iconWrap = label.querySelector('.semi-dy-open-radio-inner > input + span');
+      const input = label.querySelector('input[type="radio"]');
+
+      label.classList.toggle('semi-dy-open-radio-checked', matched);
+      if (inner) inner.classList.toggle('semi-dy-open-radio-inner-checked', matched);
+      if (addon) addon.classList.toggle('semi-dy-open-radio-addon-buttonRadio-checked', matched);
+      if (input) input.checked = matched;
+
+      if (!iconWrap) return;
+      if (matched && !iconWrap.querySelector('.semi-dy-open-icon-radio')) {
+        iconWrap.innerHTML = '<span role="img" aria-label="radio" class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-radio">'
+          + '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" focusable="false" aria-hidden="true">'
+          + '<circle cx="12" cy="12" r="5" fill="currentColor"></circle></svg></span>';
+      } else if (!matched) {
+        iconWrap.innerHTML = '';
+      }
+    });
+  }
+
+  function initMetricRadioGroup() {
+    const group = document.querySelector('.flow-rate-metric-radio-group');
+    if (!group || group.dataset.bound === '1') return;
+    group.dataset.bound = '1';
+
+    setMetricRadioCheckedStyle(group, window._flowRateMetric);
+
+    group.querySelectorAll('label[data-metric]').forEach(label => {
+      label.addEventListener('click', function (e) {
+        e.preventDefault();
+        const metric = this.getAttribute('data-metric');
+        if (!metric || metric === window._flowRateMetric) return;
+        window._flowRateMetric = metric;
+        setMetricRadioCheckedStyle(group, metric);
+        console.log('[flow-rate] 指标切换:', metric);
+      });
+    });
   }
 
   window.initFlowRateFilters = initFlowRateFilters;
