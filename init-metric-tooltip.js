@@ -929,6 +929,14 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 // 留存分析 APP 切换
                 window._retentionAppId = value;
                 console.log('[retention-app] APP 切换:', value, label);
+                
+                // 侧边栏留存区域只对抖音(dy)和抖音lite(dy_lite)显示
+                const sidebarRetentionSection = document.querySelector('.sidebarRetention');
+                if (sidebarRetentionSection) {
+                    const showSidebar = (value === 'all' || value === 'dy' || value === 'dy_lite');
+                    sidebarRetentionSection.style.display = showSidebar ? '' : 'none';
+                }
+                
                 if (typeof window.initRetentionTable === 'function') window.initRetentionTable();
                 if (typeof window.initSidebarRetentionTable === 'function') window.initSidebarRetentionTable();
                 if (typeof window.initRetentionChart === 'function') window.initRetentionChart();
@@ -943,7 +951,9 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 // 留存分析 分类切换（活跃用户/新增用户/活跃付费用户/新增付费用户）
                 window._retentionCategory = value;
                 console.log('[retention-category] 分类切换:', value, label);
-                // TODO: 分类数据待设计
+                if (typeof window.initRetentionTable === 'function') window.initRetentionTable();
+                if (typeof window.initSidebarRetentionTable === 'function') window.initSidebarRetentionTable();
+                if (typeof window.initRetentionChart === 'function') window.initRetentionChart();
             } else if (tabType === 'retention-factor') {
                 // 留存分析 影响因素切换
                 window._retentionFactor = value;

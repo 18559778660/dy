@@ -665,10 +665,34 @@
                 'none': '全部'
             };
 
+            // 分类字段映射
+            const category = window._retentionCategory || 'active';
+            const categoryFieldMap = {
+                'active': 'activeUsers',
+                'new': 'newUsers',
+                'active_paid': 'activePaidUsers',
+                'new_paid': 'newPaidUsers'
+            };
+            const categoryLabelMap = {
+                'active': '活跃用户',
+                'new': '新增用户',
+                'active_paid': '活跃付费用户',
+                'new_paid': '新增付费用户'
+            };
+            const categoryField = categoryFieldMap[category] || 'activeUsers';
+            const categoryLabel = categoryLabelMap[category] || '活跃用户';
+
+            // 更新表头列名
+            const headerCell = document.querySelector('#retention-tbody')?.closest('table')?.querySelector('th[aria-colindex="3"]');
+            if (headerCell) {
+                headerCell.textContent = categoryLabel;
+                headerCell.title = categoryLabel;
+            }
+
             // 直接使用筛选后的数据
             let displayData = records.map(r => ({
                 date: r.date,
-                dailyUsers: r.dailyUsers,
+                categoryUsers: r[categoryField],
                 day1: r.day1, day2: r.day2, day3: r.day3, day4: r.day4,
                 day5: r.day5, day6: r.day6, day7: r.day7, day14: r.day14, day30: r.day30,
                 factor: r.factor,
@@ -723,7 +747,7 @@
                 const platformCell = createCell(item.factorLabel, 2, 'left', true);
                 row.appendChild(platformCell);
 
-                const activeUsersCell = createCell(item.dailyUsers != null ? item.dailyUsers.toLocaleString('zh-CN') : '0', 3);
+                const activeUsersCell = createCell(item.categoryUsers != null ? item.categoryUsers.toLocaleString('zh-CN') : '0', 3);
                 row.appendChild(activeUsersCell);
 
                 const retentionFields = ['day1', 'day2', 'day3', 'day4', 'day5', 'day6', 'day7', 'day14', 'day30'];
@@ -783,39 +807,42 @@
 
     /**
      * 聚合侧边栏留存数据（按日期分组）
+     * @param {Array} records - 数据记录
+     * @param {string} categoryField - 分类用户字段名（activeUsers/newUsers/activePaidUsers/newPaidUsers）
      */
-    function aggregateSidebarRetentionData(records) {
+    function aggregateSidebarRetentionData(records, categoryField = 'activeUsers') {
         const grouped = {};
         records.forEach(r => {
             if (!grouped[r.date]) {
-                grouped[r.date] = { date: r.date, dailyUsers: 0, penetrationSum: 0, day1Sum: 0, day2Sum: 0, day3Sum: 0, day4Sum: 0, day5Sum: 0, day6Sum: 0, day7Sum: 0, day14Sum: 0, day30Sum: 0 };
+                grouped[r.date] = { date: r.date, categoryUsers: 0, penetrationSum: 0, day1Sum: 0, day2Sum: 0, day3Sum: 0, day4Sum: 0, day5Sum: 0, day6Sum: 0, day7Sum: 0, day14Sum: 0, day30Sum: 0 };
             }
             const g = grouped[r.date];
-            g.dailyUsers += r.dailyUsers || 0;
-            g.penetrationSum += (r.penetrationRate || 0) * (r.dailyUsers || 0);
-            g.day1Sum += (r.day1 || 0) * (r.dailyUsers || 0);
-            g.day2Sum += (r.day2 || 0) * (r.dailyUsers || 0);
-            g.day3Sum += (r.day3 || 0) * (r.dailyUsers || 0);
-            g.day4Sum += (r.day4 || 0) * (r.dailyUsers || 0);
-            g.day5Sum += (r.day5 || 0) * (r.dailyUsers || 0);
-            g.day6Sum += (r.day6 || 0) * (r.dailyUsers || 0);
-            g.day7Sum += (r.day7 || 0) * (r.dailyUsers || 0);
-            g.day14Sum += (r.day14 || 0) * (r.dailyUsers || 0);
-            g.day30Sum += (r.day30 || 0) * (r.dailyUsers || 0);
+            const users = r[categoryField] || 0;
+            g.categoryUsers += users;
+            g.penetrationSum += (r.penetrationRate || 0) * users;
+            g.day1Sum += (r.day1 || 0) * users;
+            g.day2Sum += (r.day2 || 0) * users;
+            g.day3Sum += (r.day3 || 0) * users;
+            g.day4Sum += (r.day4 || 0) * users;
+            g.day5Sum += (r.day5 || 0) * users;
+            g.day6Sum += (r.day6 || 0) * users;
+            g.day7Sum += (r.day7 || 0) * users;
+            g.day14Sum += (r.day14 || 0) * users;
+            g.day30Sum += (r.day30 || 0) * users;
         });
         return Object.values(grouped).map(g => ({
             date: g.date,
-            dailyUsers: g.dailyUsers,
-            penetrationRate: g.dailyUsers > 0 ? g.penetrationSum / g.dailyUsers : 0,
-            day1: g.dailyUsers > 0 ? g.day1Sum / g.dailyUsers : 0,
-            day2: g.dailyUsers > 0 ? g.day2Sum / g.dailyUsers : 0,
-            day3: g.dailyUsers > 0 ? g.day3Sum / g.dailyUsers : 0,
-            day4: g.dailyUsers > 0 ? g.day4Sum / g.dailyUsers : 0,
-            day5: g.dailyUsers > 0 ? g.day5Sum / g.dailyUsers : 0,
-            day6: g.dailyUsers > 0 ? g.day6Sum / g.dailyUsers : 0,
-            day7: g.dailyUsers > 0 ? g.day7Sum / g.dailyUsers : 0,
-            day14: g.dailyUsers > 0 ? g.day14Sum / g.dailyUsers : 0,
-            day30: g.dailyUsers > 0 ? g.day30Sum / g.dailyUsers : 0
+            categoryUsers: g.categoryUsers,
+            penetrationRate: g.categoryUsers > 0 ? g.penetrationSum / g.categoryUsers : 0,
+            day1: g.categoryUsers > 0 ? g.day1Sum / g.categoryUsers : 0,
+            day2: g.categoryUsers > 0 ? g.day2Sum / g.categoryUsers : 0,
+            day3: g.categoryUsers > 0 ? g.day3Sum / g.categoryUsers : 0,
+            day4: g.categoryUsers > 0 ? g.day4Sum / g.categoryUsers : 0,
+            day5: g.categoryUsers > 0 ? g.day5Sum / g.categoryUsers : 0,
+            day6: g.categoryUsers > 0 ? g.day6Sum / g.categoryUsers : 0,
+            day7: g.categoryUsers > 0 ? g.day7Sum / g.categoryUsers : 0,
+            day14: g.categoryUsers > 0 ? g.day14Sum / g.categoryUsers : 0,
+            day30: g.categoryUsers > 0 ? g.day30Sum / g.categoryUsers : 0
         }));
     }
 
@@ -835,6 +862,30 @@
             const appId = window._retentionAppId || 'all';
             const os = window._retentionOs || 'all';
 
+            // 分类字段映射
+            const category = window._retentionCategory || 'active';
+            const categoryFieldMap = {
+                'active': 'activeUsers',
+                'new': 'newUsers',
+                'active_paid': 'activePaidUsers',
+                'new_paid': 'newPaidUsers'
+            };
+            const categoryLabelMap = {
+                'active': '活跃用户',
+                'new': '新增用户',
+                'active_paid': '活跃付费用户',
+                'new_paid': '新增付费用户'
+            };
+            const categoryField = categoryFieldMap[category] || 'activeUsers';
+            const categoryLabel = categoryLabelMap[category] || '活跃用户';
+
+            // 更新表头列名（第2列）
+            const headerCell = document.querySelector('#sidebar-retention-tbody')?.closest('table')?.querySelector('th[aria-colindex="2"]');
+            if (headerCell) {
+                headerCell.textContent = categoryLabel;
+                headerCell.title = categoryLabel;
+            }
+
             let records = retentionConfig.sidebarRetentionData.filter(r => {
                 if (appId !== 'all' && r.appId !== appId) return false;
                 if (os !== 'all' && r.os !== os) return false;
@@ -847,7 +898,7 @@
                 return;
             }
 
-            const aggregated = aggregateSidebarRetentionData(records);
+            const aggregated = aggregateSidebarRetentionData(records, categoryField);
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -884,7 +935,7 @@
                 const dateCell = createCell(item.date, 1, 'left', false);
                 row.appendChild(dateCell);
 
-                const activeUsersCell = createCell(item.dailyUsers != null ? item.dailyUsers.toLocaleString('zh-CN') : '0', 2);
+                const activeUsersCell = createCell(item.categoryUsers != null ? item.categoryUsers.toLocaleString('zh-CN') : '0', 2);
                 row.appendChild(activeUsersCell);
 
                 const penetrationCell = createCell(item.penetrationRate != null ? (item.penetrationRate === 0 ? '0%' : item.penetrationRate.toFixed(2) + '%') : '0%', 3);
