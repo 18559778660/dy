@@ -431,6 +431,47 @@ function initDropdownFilters() {
         ]);
     }
 
+    // 留存分析 APP 下拉
+    const retentionAppFilter = document.querySelector('.filter-retention-app');
+    if (retentionAppFilter) {
+        createDropdownContent(retentionAppFilter, 'semi-dy-open-select-retention-app', [
+            { value: 'all', label: '全部' },
+            ...SOURCE_APP_OPTIONS
+        ]);
+    }
+
+    // 留存分析 操作系统下拉
+    const retentionOsFilter = document.querySelector('.filter-retention-os');
+    if (retentionOsFilter) {
+        createDropdownContent(retentionOsFilter, 'semi-dy-open-select-retention-os', [
+            { value: 'all', label: '全部' },
+            { value: 'ios', label: 'iOS' },
+            { value: 'android', label: 'Android' },
+            { value: 'open_harmony', label: 'OpenHarmony' }
+        ]);
+    }
+
+    // 留存分析 分类下拉
+    const retentionCategoryFilter = document.querySelector('.filter-retention-category');
+    if (retentionCategoryFilter) {
+        createDropdownContent(retentionCategoryFilter, 'semi-dy-open-select-retention-category', [
+            { value: 'active', label: '活跃用户' },
+            { value: 'new', label: '新增用户' },
+            { value: 'active_paid', label: '活跃付费用户' },
+            { value: 'new_paid', label: '新增付费用户' }
+        ]);
+    }
+
+    // 留存分析 影响因素下拉
+    const retentionFactorFilter = document.querySelector('.filter-retention-factor');
+    if (retentionFactorFilter) {
+        createDropdownContent(retentionFactorFilter, 'semi-dy-open-select-retention-factor', [
+            { value: 'sidebar_popup', label: '当日是否有通过侧边栏复访弹窗跳转' },
+            { value: 'app_active', label: '当日是否有APP活跃行为' },
+            { value: 'none', label: '不考虑' }
+        ]);
+    }
+
     // 为每个筛选框添加点击事件
     const allFilters = [...appFilters];
     if (osFilter) {
@@ -474,6 +515,18 @@ function initDropdownFilters() {
     }
     if (terminalBasicVersionAppFilter) {
         allFilters.push(terminalBasicVersionAppFilter);
+    }
+    if (retentionAppFilter) {
+        allFilters.push(retentionAppFilter);
+    }
+    if (retentionOsFilter) {
+        allFilters.push(retentionOsFilter);
+    }
+    if (retentionCategoryFilter) {
+        allFilters.push(retentionCategoryFilter);
+    }
+    if (retentionFactorFilter) {
+        allFilters.push(retentionFactorFilter);
     }
 
     allFilters.forEach(filter => {
@@ -865,6 +918,26 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 if (typeof window.updateTerminalBasicVersionAnalysis === 'function') {
                     window.updateTerminalBasicVersionAnalysis();
                 }
+            } else if (tabType === 'retention-app') {
+                // 留存分析 APP 切换
+                window._retentionAppId = value;
+                console.log('[retention-app] APP 切换:', value, label);
+                // TODO: 数据设计完成后接入 window.updateRetentionXxx()
+            } else if (tabType === 'retention-os') {
+                // 留存分析 操作系统切换
+                window._retentionOs = value;
+                console.log('[retention-os] 操作系统切换:', value, label);
+                // TODO: 数据设计完成后接入 window.updateRetentionXxx()
+            } else if (tabType === 'retention-category') {
+                // 留存分析 分类切换（活跃用户/新增用户/活跃付费用户/新增付费用户）
+                window._retentionCategory = value;
+                console.log('[retention-category] 分类切换:', value, label);
+                // TODO: 数据设计完成后接入 window.updateRetentionXxx()
+            } else if (tabType === 'retention-factor') {
+                // 留存分析 影响因素切换
+                window._retentionFactor = value;
+                console.log('[retention-factor] 影响因素切换:', value, label);
+                // TODO: 数据设计完成后接入 window.updateRetentionXxx()
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);
                 // TODO: 根据 tabType 和 value 更新对应的表格/图表
