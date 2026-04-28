@@ -294,6 +294,9 @@
                         if (typeof window.initFlowRateCards === 'function') {
                             window.initFlowRateCards();
                         }
+                        if (typeof window.initFlowRateTrendChart === 'function') {
+                            window.initFlowRateTrendChart();
+                        }
                         console.log('流量主页面初始化完成');
                     }, 100);
                 }

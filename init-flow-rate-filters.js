@@ -100,6 +100,9 @@
         if (typeof window.updateFlowRateCards === 'function') {
           window.updateFlowRateCards();
         }
+        if (typeof window.updateFlowRateTrendChart === 'function') {
+          window.updateFlowRateTrendChart();
+        }
       });
     });
   }
@@ -248,6 +251,9 @@
       if (typeof window.updateFlowRateCards === 'function') {
         window.updateFlowRateCards();
       }
+      if (typeof window.updateFlowRateTrendChart === 'function') {
+        window.updateFlowRateTrendChart();
+      }
     });
 
     if (!_appDocEventsBound) {
@@ -283,6 +289,9 @@
         console.log('[flow-rate] APP 多选变更:', window._flowRateAppSelected);
         if (typeof window.updateFlowRateCards === 'function') {
           window.updateFlowRateCards();
+        }
+        if (typeof window.updateFlowRateTrendChart === 'function') {
+          window.updateFlowRateTrendChart();
         }
       });
     }
@@ -418,6 +427,9 @@
         if (typeof window.updateFlowRateCards === 'function') {
           window.updateFlowRateCards();
         }
+        if (typeof window.updateFlowRateTrendChart === 'function') {
+          window.updateFlowRateTrendChart();
+        }
       });
     });
     syncSingleOptionChecked(key);
@@ -518,6 +530,9 @@
         window._flowRateMetric = metric;
         setMetricRadioCheckedStyle(group, metric);
         console.log('[flow-rate] 指标切换:', metric);
+        if (typeof window.updateFlowRateTrendChart === 'function') {
+          window.updateFlowRateTrendChart();
+        }
       });
     });
   }
