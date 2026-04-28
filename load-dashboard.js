@@ -291,6 +291,9 @@
                         if (typeof window.initFlowRateFilters === 'function') {
                             window.initFlowRateFilters();
                         }
+                        if (typeof window.initAdManageTypeRadio === 'function') {
+                            window.initAdManageTypeRadio();
+                        }
                         if (typeof window.initFlowRateCards === 'function') {
                             window.initFlowRateCards();
                         }
