@@ -432,45 +432,96 @@
         });
     }
 
+    // 缓存小时权重
+    let _hourlyWeightsCache = null;
+
+    function loadHourlyWeights() {
+        if (_hourlyWeightsCache) {
+            return Promise.resolve(_hourlyWeightsCache);
+        }
+        return fetch('./conf/hourly-weights.json')
+            .then(res => res.json())
+            .then(config => {
+                _hourlyWeightsCache = config.hourlyWeights;
+                return _hourlyWeightsCache;
+            });
+    }
+
+    /**
+     * 获取当前选中 APP 的实时数据
+     */
+    function getRealTimeAppData() {
+        const realTimeList = window.chartDataConfig?.realTime || [];
+        const appId = window._realTimeAppId || 'all';
+        
+        if (appId === 'all') {
+            let totalVisitors = 0, totalVisits = 0;
+            realTimeList.forEach(item => {
+                totalVisitors += item.dailyVisitors || 0;
+                totalVisits += item.dailyVisits || 0;
+            });
+            return { dailyVisitors: totalVisitors, dailyVisits: totalVisits };
+        } else {
+            const appData = realTimeList.find(item => item.appId === appId);
+            return appData || { dailyVisitors: 0, dailyVisits: 0 };
+        }
+    }
+
     /**
      * 渲染实时分析卡片（累计到当前小时）
      */
     function renderRealTimeCards() {
         const chartData = window.chartDataConfig;
-        const hourlyData = chartData.realTime.hourlyData;
+        if (!chartData || !chartData.realTime) {
+            console.warn('未找到实时分析数据配置');
+            return;
+        }
 
-        // 获取当前小时
+        const appData = getRealTimeAppData();
+        const dailyVisitors = appData.dailyVisitors || 0;
+        const dailyVisits = appData.dailyVisits || 0;
         const currentHour = new Date().getHours();
 
-        // 累计 0 点到当前小时的数据
-        let totalVisitors = 0;
-        let totalVisits = 0;
+        loadHourlyWeights().then(weights => {
+            // 累计 0 点到当前小时的权重
+            let totalWeight = 0;
+            for (let h = 0; h <= currentHour; h++) {
+                const hourKey = String(h).padStart(2, '0');
+                totalWeight += weights[hourKey] || 0;
+            }
 
-        for (let i = 0; i <= currentHour && i < hourlyData.length; i++) {
-            totalVisitors += hourlyData[i].visitors;
-            totalVisits += hourlyData[i].visits;
-        }
+            const totalVisitors = Math.round(dailyVisitors * totalWeight);
+            const totalVisits = Math.round(dailyVisits * totalWeight);
 
-        // 查找访问人数和访问次数的卡片
-        const cards = document.querySelectorAll('#semiTabPanelRealTime .omg-metric-card-number');
+            // 查找访问人数和访问次数的卡片
+            const cards = document.querySelectorAll('#semiTabPanelRealTime .omg-metric-card-number');
 
-        if (cards.length >= 2) {
-            // 第一个卡片：访问人数（累计）
-            cards[0].textContent = formatNumber(totalVisitors);
-            // 第二个卡片：访问次数（累计）
-            cards[1].textContent = formatNumber(totalVisits);
-            console.log('✓ 实时分析卡片已更新（累计到', String(currentHour).padStart(2, '0') + ':00）');
-        } else {
-            console.warn('未找到实时分析卡片元素');
-        }
+            if (cards.length >= 2) {
+                cards[0].textContent = formatNumber(totalVisitors);
+                cards[1].textContent = formatNumber(totalVisits);
+                console.log('✓ 实时分析卡片已更新（累计到', String(currentHour).padStart(2, '0') + ':00）');
+            } else {
+                console.warn('未找到实时分析卡片元素');
+            }
+        });
     }
+
+    // 暴露到全局供 APP 切换时调用
+    window.renderRealTimeCards = renderRealTimeCards;
 
     /**
      * 导出实时分析数据（0点到当前小时）
      */
     function exportRealTimeData() {
         const chartData = window.chartDataConfig;
-        const hourlyData = chartData.realTime.hourlyData;
+        if (!chartData || !chartData.realTime) {
+            console.warn('未找到实时分析数据配置');
+            return;
+        }
+
+        const appData = getRealTimeAppData();
+        const dailyVisitors = appData.dailyVisitors || 0;
+        const dailyVisits = appData.dailyVisits || 0;
 
         // 获取当前小时
         const now = new Date();
@@ -478,42 +529,47 @@
 
         console.log(`导出实时数据：00:00 - ${String(currentHour).padStart(2, '0')}:00`);
 
-        // 构建 CSV 内容
-        const csvRows = [];
+        loadHourlyWeights().then(weights => {
+            // 构建 CSV 内容
+            const csvRows = [];
 
-        // 添加表头
-        csvRows.push('日期,访问人数,访问次数');
+            // 添加表头
+            csvRows.push('日期,访问人数,访问次数');
 
-        // 生成 0 点到当前小时的数据（从 JSON 中读取）
-        for (let i = 0; i <= currentHour && i < hourlyData.length; i++) {
-            const row = hourlyData[i];
-            csvRows.push(`${row.hour},${row.visitors},${row.visits}`);
-        }
+            // 生成 0 点到当前小时的数据（动态权重计算）
+            for (let h = 0; h <= currentHour; h++) {
+                const hourKey = String(h).padStart(2, '0');
+                const weight = weights[hourKey] || 0;
+                const visitors = Math.round(dailyVisitors * weight);
+                const visits = Math.round(dailyVisits * weight);
+                csvRows.push(`${hourKey}:00:00,${visitors},${visits}`);
+            }
 
-        // 生成 CSV 字符串
-        const csvContent = csvRows.join('\n');
+            // 生成 CSV 字符串
+            const csvContent = csvRows.join('\n');
 
-        // 创建 Blob 对象
-        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            // 创建 Blob 对象
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
 
-        // 创建下载链接
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
+            // 创建下载链接
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
 
-        // 生成文件名
-        const dateStr = now.getFullYear() +
-            String(now.getMonth() + 1).padStart(2, '0') +
-            String(now.getDate()).padStart(2, '0');
-        const fileName = `行为数据.csv`;
+            // 生成文件名
+            const dateStr = now.getFullYear() +
+                String(now.getMonth() + 1).padStart(2, '0') +
+                String(now.getDate()).padStart(2, '0');
+            const fileName = `行为数据.csv`;
 
-        link.setAttribute('href', url);
-        link.setAttribute('download', fileName);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-        console.log(`✅ 实时数据已导出: ${fileName}`);
+            console.log(`✅ 实时数据已导出: ${fileName}`);
+        });
     }
 
     /**

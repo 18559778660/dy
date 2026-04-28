@@ -227,35 +227,87 @@
         }
     }
 
+    // 缓存小时权重配置
+    let _hourlyWeightsCache = null;
+
+    /**
+     * 加载小时权重配置
+     */
+    function loadHourlyWeights() {
+        if (_hourlyWeightsCache) {
+            return Promise.resolve(_hourlyWeightsCache);
+        }
+        return fetch('./conf/hourly-weights.json')
+            .then(res => res.json())
+            .then(config => {
+                _hourlyWeightsCache = config.hourlyWeights;
+                return _hourlyWeightsCache;
+            });
+    }
+
+    /**
+     * 根据日活总数和权重生成每小时数据
+     */
+    function generateHourlyData(dailyTotal, weights, currentHour) {
+        const data = [];
+        for (let h = 0; h <= currentHour; h++) {
+            const hourKey = String(h).padStart(2, '0');
+            const weight = weights[hourKey] || 0;
+            const value = Math.round(dailyTotal * weight);
+            data.push({
+                date: `${hourKey}:00:00`,
+                value: value,
+                displayValue: value.toLocaleString('zh-CN')
+            });
+        }
+        return data;
+    }
+
+    /**
+     * 获取当前选中 APP 的实时数据
+     */
+    function getRealTimeAppData() {
+        const realTimeList = window.chartDataConfig?.realTime || [];
+        const appId = window._realTimeAppId || 'all';
+        
+        if (appId === 'all') {
+            // 全部 APP：累加所有数据
+            let totalVisitors = 0, totalVisits = 0;
+            realTimeList.forEach(item => {
+                totalVisitors += item.dailyVisitors || 0;
+                totalVisits += item.dailyVisits || 0;
+            });
+            return { dailyVisitors: totalVisitors, dailyVisits: totalVisits };
+        } else {
+            // 指定 APP
+            const appData = realTimeList.find(item => item.appId === appId);
+            return appData || { dailyVisitors: 0, dailyVisits: 0 };
+        }
+    }
+
     /**
      * 初始化实时分析图表
      */
     function initRealTimeChart() {
-        // 从 JSON 配置中获取小时数据
-        let data = [];
         const chartTitle = '访问人数';
 
-        if (window.chartDataConfig && window.chartDataConfig.realTime && window.chartDataConfig.realTime.hourlyData) {
-            const hourlyData = window.chartDataConfig.realTime.hourlyData;
-            const currentHour = new Date().getHours();
-
-            // 只取 0 点到当前小时的数据
-            data = hourlyData
-                .slice(0, currentHour + 1)
-                .map(item => ({
-                    date: item.hour,
-                    value: item.visitors,
-                    displayValue: item.visitors.toLocaleString('zh-CN'),
-                    medalType: '访问人数'
-                }));
-
-            console.log('✅ [实时分析图表] 使用 JSON 配置数据:', chartTitle, `(00:00 - ${String(currentHour).padStart(2, '0')}:00，共${data.length}条数据)`);
-        } else {
+        if (!window.chartDataConfig || !window.chartDataConfig.realTime) {
             console.log('⚠️ 未找到实时分析图表数据配置');
+            renderChart('real_time_window_user', [], chartTitle);
+            return;
         }
 
-        // 使用公共渲染函数
-        renderChart('real_time_window_user', data, chartTitle);
+        const appData = getRealTimeAppData();
+        const dailyVisitors = appData.dailyVisitors || 0;
+        const currentHour = new Date().getHours();
+
+        loadHourlyWeights().then(weights => {
+            const data = generateHourlyData(dailyVisitors, weights, currentHour);
+            data.forEach(item => item.medalType = '访问人数');
+
+            console.log('✅ [实时分析图表] 动态权重计算:', chartTitle, `(00:00 - ${String(currentHour).padStart(2, '0')}:00，共${data.length}条数据)`);
+            renderChart('real_time_window_user', data, chartTitle);
+        });
     }
 
     /**
@@ -270,35 +322,35 @@
             return;
         }
 
-        if (!window.chartDataConfig || !window.chartDataConfig.realTime || !window.chartDataConfig.realTime.hourlyData) {
+        if (!window.chartDataConfig || !window.chartDataConfig.realTime) {
             console.error('❌ [实时分析] 未找到数据配置');
             return;
         }
 
-        const hourlyData = window.chartDataConfig.realTime.hourlyData;
+        const appData = getRealTimeAppData();
+        const dailyTotal = metricTitle === '访问次数' ? appData.dailyVisits : appData.dailyVisitors;
         const currentHour = new Date().getHours();
 
-        // 根据指标类型选择数据字段
-        let dataField = 'visitors'; // 默认访问人数
-        if (metricTitle === '访问次数') {
-            dataField = 'visits';
-        }
+        loadHourlyWeights().then(weights => {
+            const data = generateHourlyData(dailyTotal, weights, currentHour);
+            data.forEach(item => item.medalType = metricTitle);
 
-        // 准备数据
-        const data = hourlyData
-            .slice(0, currentHour + 1)
-            .map(item => ({
-                date: item.hour,
-                value: item[dataField],
-                displayValue: item[dataField].toLocaleString('zh-CN'),
-                medalType: metricTitle
-            }));
-
-        console.log(`✅ [实时分析] 切换到 ${metricTitle}，共${data.length}条数据`);
-
-        // 重新渲染图表
-        renderChart('real_time_window_user', data, metricTitle);
+            console.log(`✅ [实时分析] 切换到 ${metricTitle}，共${data.length}条数据`);
+            renderChart('real_time_window_user', data, metricTitle);
+        });
     }
+
+    /**
+     * 更新实时分析（APP 切换时调用）
+     */
+    function updateRealTimeAnalysis() {
+        initRealTimeChart();
+        // 同时更新卡片数据
+        if (typeof window.renderRealTimeCards === 'function') {
+            window.renderRealTimeCards();
+        }
+    }
+    window.updateRealTimeAnalysis = updateRealTimeAnalysis;
 
     // 将更新函数暴露到全局
     window.updateRealTimeChartMetric = updateRealTimeChartMetric;

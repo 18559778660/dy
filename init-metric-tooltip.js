@@ -960,6 +960,11 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 console.log('[retention-factor] 影响因素切换:', value, label);
                 if (typeof window.initRetentionTable === 'function') window.initRetentionTable();
                 if (typeof window.initRetentionChart === 'function') window.initRetentionChart();
+            } else if (tabType === 'realtime') {
+                // 实时分析 APP 切换
+                window._realTimeAppId = value;
+                console.log('[realtime] APP 切换:', value, label);
+                if (typeof window.updateRealTimeAnalysis === 'function') window.updateRealTimeAnalysis();
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);
                 // TODO: 根据 tabType 和 value 更新对应的表格/图表
