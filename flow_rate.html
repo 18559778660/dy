@@ -481,10 +481,9 @@
                                             <div class="flex flex-col">
                                                 <div class="flex flex-row justify-between items-center w-full">
                                                     <div class="text-base font-semibold text-text-0">广告指标明细</div><button
-                                                        class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-borderless"
+                                                        class="semi-dy-open-button semi-dy-open-button-tertiary semi-dy-open-button-borderless export-flow-rate-detail-btn"
                                                         type="button" aria-disabled="false"><span
-                                                            class="semi-dy-open-button-content"
-                                                            x-semi-prop="children"><span class="flex items-center"><span
+                                                            class="semi-dy-open-button-content"><span class="flex items-center"><span
                                                                     class="mr-1"><span role="img" aria-label="export"
                                                                         class="semi-dy-open-icon semi-dy-open-icon-small semi-dy-open-icon-export"><svg
                                                                             viewBox="0 0 24 24" fill="none"
@@ -502,18 +501,15 @@
                                                 <div class="flex flex-row items-center my-4">
                                                     <div class="text-text-2">广告位类型</div>
                                                     <div role="combobox" aria-disabled="false" aria-expanded="false"
-                                                        aria-controls="semi-dy-open-select-h3fotbn"
                                                         aria-haspopup="listbox" aria-label="selected"
-                                                        class="semi-dy-open-select mr-8 ml-3 w-36 semi-dy-open-select-single"
-                                                        id="jxojhas" tabindex="0"
-                                                        aria-activedescendant="jxojhas-option-0" data-popupid="tmds1zn">
+                                                        class="semi-dy-open-select mr-8 ml-3 w-36 semi-dy-open-select-single flow-rate-table-adtype-filter"
+                                                        data-tab="flow-rate-table-adtype" tabindex="0">
                                                         <div class="semi-dy-open-select-selection">
                                                             <div class="semi-dy-open-select-content-wrapper"><span
-                                                                    class="semi-dy-open-select-selection-text"
-                                                                    x-semi-prop="placeholder">全部</span></div>
+                                                                    class="semi-dy-open-select-selection-text">全部</span></div>
                                                         </div>
-                                                        <div class="semi-dy-open-select-arrow" x-semi-prop="arrowIcon">
-                                                            <span role="img" aria-label=""
+                                                        <div class="semi-dy-open-select-arrow">
+                                                            <span role="img"
                                                                 class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-chevron_down"><svg
                                                                     viewBox="0 0 24 24" fill="none"
                                                                     xmlns="http://www.w3.org/2000/svg" width="1em"
@@ -524,158 +520,7 @@
                                                                 </svg></span></div>
                                                     </div>
                                                 </div>
-                                                <div class="omg-table-box">
-                                                    <div class="semi-dy-open-table-wrapper semi-dy-open-table-wrapper-undefined"
-                                                        data-column-fixed="false">
-                                                        <div
-                                                            class="semi-dy-open-spin semi-dy-open-spin-large semi-dy-open-spin-block semi-dy-open-spin-hidden">
-                                                            <div class="semi-dy-open-spin-children"
-                                                                x-semi-prop="children">
-                                                                <div class="semi-dy-open-table-scroll-position-left">
-                                                                    <div class="semi-dy-open-table-container">
-                                                                        <div class="semi-dy-open-table-body">
-                                                                            <table role="grid" aria-rowcount="1"
-                                                                                aria-colcount="9"
-                                                                                class="semi-dy-open-table">
-                                                                                <colgroup
-                                                                                    class="semi-dy-open-table-colgroup">
-                                                                                    <col class="semi-dy-open-table-col"
-                                                                                        style="width: 145px; min-width: 145px;">
-                                                                                    <col class="semi-dy-open-table-col"
-                                                                                        style="width: 120px; min-width: 120px;">
-                                                                                    <col class="semi-dy-open-table-col"
-                                                                                        style="width: 150px; min-width: 150px;">
-                                                                                    <col class="semi-dy-open-table-col">
-                                                                                    <col class="semi-dy-open-table-col">
-                                                                                    <col class="semi-dy-open-table-col">
-                                                                                    <col class="semi-dy-open-table-col">
-                                                                                    <col class="semi-dy-open-table-col">
-                                                                                    <col class="semi-dy-open-table-col">
-                                                                                </colgroup>
-                                                                                <thead class="semi-dy-open-table-thead">
-                                                                                    <tr role="row" aria-rowindex="1"
-                                                                                        class="semi-dy-open-table-row">
-                                                                                        <th role="columnheader"
-                                                                                            aria-colindex="1"
-                                                                                            class="semi-dy-open-table-row-head"
-                                                                                            colspan="1" title="日期"
-                                                                                            rowspan="1"
-                                                                                            style="background: rgb(248, 248, 248);">
-                                                                                            日期</th>
-                                                                                        <th role="columnheader"
-                                                                                            aria-colindex="2"
-                                                                                            class="semi-dy-open-table-row-head"
-                                                                                            colspan="1" title="APP"
-                                                                                            rowspan="1"
-                                                                                            style="background: rgb(248, 248, 248);">
-                                                                                            APP</th>
-                                                                                        <th role="columnheader"
-                                                                                            aria-colindex="3"
-                                                                                            class="semi-dy-open-table-row-head"
-                                                                                            colspan="1" title="广告请求PV"
-                                                                                            rowspan="1"
-                                                                                            style="background: rgb(248, 248, 248);">
-                                                                                            广告请求PV</th>
-                                                                                        <th role="columnheader"
-                                                                                            aria-colindex="4"
-                                                                                            class="semi-dy-open-table-row-head"
-                                                                                            colspan="1" title="曝光PV"
-                                                                                            rowspan="1"
-                                                                                            style="background: rgb(248, 248, 248);">
-                                                                                            曝光PV</th>
-                                                                                        <th role="columnheader"
-                                                                                            aria-colindex="5"
-                                                                                            class="semi-dy-open-table-row-head"
-                                                                                            colspan="1" title="点击PV"
-                                                                                            rowspan="1"
-                                                                                            style="background: rgb(248, 248, 248);">
-                                                                                            点击PV</th>
-                                                                                        <th role="columnheader"
-                                                                                            aria-colindex="6"
-                                                                                            class="semi-dy-open-table-row-head"
-                                                                                            colspan="1" title="点击率"
-                                                                                            rowspan="1"
-                                                                                            style="background: rgb(248, 248, 248);">
-                                                                                            点击率</th>
-                                                                                        <th role="columnheader"
-                                                                                            aria-colindex="7"
-                                                                                            class="semi-dy-open-table-row-head"
-                                                                                            colspan="1" title="ECPM"
-                                                                                            rowspan="1"
-                                                                                            style="background: rgb(248, 248, 248);">
-                                                                                            ECPM</th>
-                                                                                        <th role="columnheader"
-                                                                                            aria-colindex="8"
-                                                                                            class="semi-dy-open-table-row-head"
-                                                                                            colspan="1"
-                                                                                            title="分成前广告收入(元)"
-                                                                                            rowspan="1"
-                                                                                            style="background: rgb(248, 248, 248);">
-                                                                                            分成前广告收入(元)</th>
-                                                                                        <th role="columnheader"
-                                                                                            aria-colindex="9"
-                                                                                            class="semi-dy-open-table-row-head"
-                                                                                            colspan="1"
-                                                                                            title="分成后广告收入(元)"
-                                                                                            rowspan="1"
-                                                                                            style="background: rgb(248, 248, 248);">
-                                                                                            分成后广告收入(元)</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody class="semi-dy-open-table-tbody">
-                                                                                    <tr role="row" aria-rowindex="1"
-                                                                                        class="semi-dy-open-table-row"
-                                                                                        data-row-key="0">
-                                                                                        <td role="gridcell"
-                                                                                            aria-colindex="1"
-                                                                                            class="semi-dy-open-table-row-cell"
-                                                                                            title="2026/04/12">
-                                                                                            2026/04/12</td>
-                                                                                        <td role="gridcell"
-                                                                                            aria-colindex="2"
-                                                                                            class="semi-dy-open-table-row-cell"
-                                                                                            title="全部">全部</td>
-                                                                                        <td role="gridcell"
-                                                                                            aria-colindex="3"
-                                                                                            class="semi-dy-open-table-row-cell"
-                                                                                            title="1,756,270">1,756,270
-                                                                                        </td>
-                                                                                        <td role="gridcell"
-                                                                                            aria-colindex="4"
-                                                                                            class="semi-dy-open-table-row-cell"
-                                                                                            title="1,572,361">1,572,361
-                                                                                        </td>
-                                                                                        <td role="gridcell"
-                                                                                            aria-colindex="5"
-                                                                                            class="semi-dy-open-table-row-cell"
-                                                                                            title="63,835">63,835</td>
-                                                                                        <td role="gridcell"
-                                                                                            aria-colindex="6"
-                                                                                            class="semi-dy-open-table-row-cell"
-                                                                                            title="4.0598%">4.0598%</td>
-                                                                                        <td role="gridcell"
-                                                                                            aria-colindex="7"
-                                                                                            class="semi-dy-open-table-row-cell"
-                                                                                            title="21.18">21.18</td>
-                                                                                        <td role="gridcell"
-                                                                                            aria-colindex="8"
-                                                                                            class="semi-dy-open-table-row-cell">
-                                                                                            55528.99</td>
-                                                                                        <td role="gridcell"
-                                                                                            aria-colindex="9"
-                                                                                            class="semi-dy-open-table-row-cell"
-                                                                                            title="33,317.41">33,317.41
-                                                                                        </td>
-                                                                                    </tr>
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <div class="flow-rate-detail-table-wrap"></div>
                                             </div>
                                         </div>
                                     </div>

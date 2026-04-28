@@ -297,6 +297,13 @@
                         if (typeof window.initFlowRateTrendChart === 'function') {
                             window.initFlowRateTrendChart();
                         }
+                        if (typeof window.initFlowRateDetailTable === 'function') {
+                            window.initFlowRateDetailTable();
+                            const exportBtn = document.querySelector('.export-flow-rate-detail-btn');
+                            if (exportBtn && typeof window.exportFlowRateDetailTable === 'function') {
+                                exportBtn.addEventListener('click', window.exportFlowRateDetailTable);
+                            }
+                        }
                         console.log('流量主页面初始化完成');
                     }, 100);
                 }

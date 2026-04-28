@@ -44,6 +44,9 @@
   if (typeof window._flowRateAdType === 'undefined') {
     window._flowRateAdType = 'all';
   }
+  if (typeof window._flowRateTableAdType === 'undefined') {
+    window._flowRateTableAdType = 'all';
+  }
   if (typeof window._flowRateMetric === 'undefined') {
     window._flowRateMetric = 'adRequestPV';
   }
@@ -102,6 +105,9 @@
         }
         if (typeof window.updateFlowRateTrendChart === 'function') {
           window.updateFlowRateTrendChart();
+        }
+        if (typeof window.updateFlowRateDetailTable === 'function') {
+          window.updateFlowRateDetailTable();
         }
       });
     });
@@ -254,6 +260,9 @@
       if (typeof window.updateFlowRateTrendChart === 'function') {
         window.updateFlowRateTrendChart();
       }
+      if (typeof window.updateFlowRateDetailTable === 'function') {
+        window.updateFlowRateDetailTable();
+      }
     });
 
     if (!_appDocEventsBound) {
@@ -293,6 +302,9 @@
         if (typeof window.updateFlowRateTrendChart === 'function') {
           window.updateFlowRateTrendChart();
         }
+        if (typeof window.updateFlowRateDetailTable === 'function') {
+          window.updateFlowRateDetailTable();
+        }
       });
     }
   }
@@ -310,6 +322,13 @@
         stateKey: '_flowRateAdType',
         options: FLOW_RATE_ADTYPE_OPTIONS,
         triggerClass: '.flow-rate-adtype-filter'
+      };
+    }
+    if (key === 'table-adtype') {
+      return {
+        stateKey: '_flowRateTableAdType',
+        options: FLOW_RATE_ADTYPE_OPTIONS,
+        triggerClass: '.flow-rate-table-adtype-filter'
       };
     }
     return {
@@ -424,11 +443,20 @@
         syncSingleOptionChecked(key);
         closeSingleDropdown(key);
         console.log(`[flow-rate] ${key} 切换:`, value);
-        if (typeof window.updateFlowRateCards === 'function') {
-          window.updateFlowRateCards();
-        }
-        if (typeof window.updateFlowRateTrendChart === 'function') {
-          window.updateFlowRateTrendChart();
+        if (key === 'table-adtype') {
+          if (typeof window.updateFlowRateDetailTable === 'function') {
+            window.updateFlowRateDetailTable();
+          }
+        } else {
+          if (typeof window.updateFlowRateCards === 'function') {
+            window.updateFlowRateCards();
+          }
+          if (typeof window.updateFlowRateTrendChart === 'function') {
+            window.updateFlowRateTrendChart();
+          }
+          if (typeof window.updateFlowRateDetailTable === 'function') {
+            window.updateFlowRateDetailTable();
+          }
         }
       });
     });
@@ -464,9 +492,11 @@
     const osTrigger = document.querySelector('.flow-rate-os-filter');
     const attributionTrigger = document.querySelector('.flow-rate-attribution-filter');
     const adtypeTrigger = document.querySelector('.flow-rate-adtype-filter');
+    const tableAdtypeTrigger = document.querySelector('.flow-rate-table-adtype-filter');
     bindSingleSelectEvents(osTrigger, 'os');
     bindSingleSelectEvents(attributionTrigger, 'attribution');
     bindSingleSelectEvents(adtypeTrigger, 'adtype');
+    bindSingleSelectEvents(tableAdtypeTrigger, 'table-adtype');
 
     initMetricRadioGroup();
 
@@ -481,11 +511,14 @@
         const inAttributionMenu = e.target.closest('#flow-rate-attribution-wrapper');
         const inAdtypeTrigger = e.target.closest('.flow-rate-adtype-filter');
         const inAdtypeMenu = e.target.closest('#flow-rate-adtype-wrapper');
-        if (inAppTrigger || inAppMenu || inOsTrigger || inOsMenu || inAttributionTrigger || inAttributionMenu || inAdtypeTrigger || inAdtypeMenu) return;
+        const inTableAdtypeTrigger = e.target.closest('.flow-rate-table-adtype-filter');
+        const inTableAdtypeMenu = e.target.closest('#flow-rate-table-adtype-wrapper');
+        if (inAppTrigger || inAppMenu || inOsTrigger || inOsMenu || inAttributionTrigger || inAttributionMenu || inAdtypeTrigger || inAdtypeMenu || inTableAdtypeTrigger || inTableAdtypeMenu) return;
         if (_activeAppTrigger) closeMultiDropdown(_activeAppTrigger);
         closeSingleDropdown('os');
         closeSingleDropdown('attribution');
         closeSingleDropdown('adtype');
+        closeSingleDropdown('table-adtype');
       });
     }
     console.log('✅ 流量主筛选控件初始化完成');
