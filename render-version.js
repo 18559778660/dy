@@ -22,13 +22,13 @@ function renderVersionData() {
                 // 存储到全局变量
                 versionData.online = data.online;
                 versionData.audit = data.audit;
-                versionData.test = data.test;
+                versionData.test = data.history;
                 console.log('全局变量已赋值:', versionData);
 
                 // 分别渲染三个版本
                 renderVersion('online', data.online);
                 renderVersion('audit', data.audit);
-                renderVersion('test', data.test);
+                renderVersion('test', data.history);
 
             } catch (e) {
                 console.error('解析版本数据失败:', e);
@@ -246,7 +246,7 @@ function generateTestVersionHTML(data) {
                                     style="position: absolute; top: 50%; transform: translate(-50%, -50%); left: 50%;">
                                     <span
                                         class="semi-dy-open-typography semi-dy-open-typography-tertiary semi-dy-open-typography-normal"
-                                        style="color: rgba(23, 26, 28, 0.45);">暂无测试版本</span>
+                                        style="color: rgba(23, 26, 28, 0.45);">暂无历史版本</span>
                                 </div>
                             </div>
                         </div>
@@ -340,12 +340,12 @@ function generateTestVersionHTML(data) {
                                         <div class="semi-dy-open-space index-module_qrcode-img__WRLKB semi-dy-open-space-align-center semi-dy-open-space-vertical"
                                             x-semi-prop="children" style="gap: 16px;"><span
                                                 class="semi-dy-open-typography semi-dy-open-typography-primary semi-dy-open-typography-normal"
-                                                style="font-weight: 500; font-size: 20px; line-height: 24px;">测试版本</span>
+                                                style="font-weight: 500; font-size: 20px; line-height: 24px;">历史版本</span>
                                             <div class="semi-dy-open-space semi-dy-open-space-align-center semi-dy-open-space-vertical"
                                                 x-semi-prop="children"
                                                 style="margin-bottom: 4px; background-color: rgb(247, 247, 247); border-radius: 4px; padding: 16px 20px 8px; width: 158px; display: flex; flex-direction: column; justify-content: center; gap: 8px;">
                                                 <img src="data:image/png;base64,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"
-                                                    alt="测试版本" style="width: 158px;"><span
+                                                    alt="历史版本" style="width: 158px;"><span
                                                     class="semi-dy-open-typography semi-dy-open-typography-primary semi-dy-open-typography-normal"
                                                     style="overflow-wrap: break-word; word-break: break-all;">数独与激情${data.version}</span>
                                             </div><span
