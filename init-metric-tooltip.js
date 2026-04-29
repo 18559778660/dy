@@ -80,6 +80,53 @@
                 }
             });
         });
+
+        // 通用 tooltip 绑定：处理所有带 data-tooltip 但不在 checkable 卡片内的元素
+        const allTooltipElements = document.querySelectorAll('.omg-metric-card-solid-title-tooltip[data-tooltip]');
+        allTooltipElements.forEach(el => {
+            // 跳过已经在 checkable 卡片内绑定过的
+            if (el.closest('.omg-metric-card-checkable')) return;
+            // 跳过已绑定的
+            if (el._tooltipBound) return;
+            el._tooltipBound = true;
+
+            const tooltipText = el.getAttribute('data-tooltip');
+
+            el.addEventListener('mouseenter', function (e) {
+                if (!tooltipText) return;
+
+                const oldTooltip = document.getElementById('metric-tooltip');
+                if (oldTooltip) oldTooltip.remove();
+
+                const tooltip = document.createElement('div');
+                tooltip.className = 'semi-dy-open-portal';
+                tooltip.style.zIndex = '1060';
+                tooltip.id = 'metric-tooltip';
+
+                const rect = this.getBoundingClientRect();
+
+                tooltip.innerHTML = `
+                    <div class="semi-dy-open-portal-inner" 
+                        style="left: ${rect.left + rect.width / 2}px; top: ${rect.top}px; transform: translateX(-50%) translateY(-100%);">
+                        <div class="semi-dy-open-tooltip-wrapper semi-dy-open-tooltip-wrapper-show semi-dy-open-tooltip-with-arrow" 
+                            role="tooltip" x-placement="top">
+                            <div class="semi-dy-open-tooltip-content">${tooltipText}</div>
+                            <svg aria-hidden="true" class="semi-dy-open-tooltip-icon-arrow" width="24" height="7" viewBox="0 0 24 7" 
+                                fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="fill: currentcolor;">
+                                <path d="M12 7L0 0h24L12 7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+
+                document.body.appendChild(tooltip);
+            });
+
+            el.addEventListener('mouseleave', function () {
+                const tooltip = document.getElementById('metric-tooltip');
+                if (tooltip) tooltip.remove();
+            });
+        });
     }
 
     // 页面加载完成后自动初始化

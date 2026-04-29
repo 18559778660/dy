@@ -310,6 +310,10 @@
                                 exportBtn.addEventListener('click', window.exportFlowRateDetailTable);
                             }
                         }
+                        // 初始化 tooltip
+                        if (typeof window.initMetricTooltip === 'function') {
+                            window.initMetricTooltip();
+                        }
                         console.log('流量主页面初始化完成');
                     }, 100);
                 }
