@@ -7,11 +7,20 @@
         "user": "123456"
     },
     "audit": {},
-    "history": {
-        "version": "fff",
-        "coverageApp": "",
-        "date": "tdfgf",
-        "remark": "zxx",
-        "user": "123456"
-    }
+    "history": [
+        {
+            "version": "fff",
+            "coverageApp": "",
+            "date": "tdfgf",
+            "remark": "zxx",
+            "user": "123456"
+        },
+        {
+            "version": "eee",
+            "coverageApp": "",
+            "date": "2026-04-20",
+            "remark": "历史版本示例2",
+            "user": "654321"
+        }
+    ]
 }

@@ -22,12 +22,13 @@ function renderVersionData() {
                 // 存储到全局变量
                 versionData.online = data.online;
                 versionData.audit = data.audit;
-                versionData.test = data.history;
+                versionData.history = data.history || [];
                 console.log('全局变量已赋值:', versionData);
 
-                // 分别渲染三个版本
+                // 分别渲染版本
                 renderVersion('online', data.online);
                 renderVersion('audit', data.audit);
+                // 渲染历史版本（数组）
                 renderVersion('test', data.history);
 
             } catch (e) {
@@ -230,31 +231,60 @@ function generateAuditVersionHTML(data) {
     return ``;
 }
 
-// 生成测试版本 HTML
+// 生成测试版本 HTML（支持数组）
 function generateTestVersionHTML(data) {
+    // 如果是数组，遍历生成多个版本
+    if (Array.isArray(data)) {
+        if (data.length === 0) {
+            return generateEmptyTestVersionHTML();
+        }
+        return data.map((item, index) => {
+            const html = generateSingleTestVersionHTML(item);
+            // 第一个不加分隔线，后面的加上间距和分隔线
+            if (index === 0) {
+                return html;
+            }
+            return `<div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e6eb;">${html}</div>`;
+        }).join('');
+    }
+    
     // 如果没有数据，返回空状态
-    if (Object.keys(data).length === 0) {
-        return `
-                <div class="semi-dy-open-space semi-dy-open-space-align-center semi-dy-open-space-horizontal semi-dy-open-space-tight-horizontal semi-dy-open-space-tight-vertical"
-                        x-semi-prop="children" style="display: flex; align-items: start; width: 100%; height: 100%;">
-                        <div class="semi-dy-open-spin semi-dy-open-spin-middle semi-dy-open-spin-block semi-dy-open-spin-hidden"
-                            style="flex: 1 1 0%; max-width: 100%; height: 100%; width: 100%;">
-                            <div class="semi-dy-open-spin-children" x-semi-prop="children"
-                                style="width: 100%; flex-direction: column; display: flex; height: 100%; align-items: start; min-height: 139px;">
-                                <div class="semi-dy-open-space semi-dy-open-space-align-center semi-dy-open-space-horizontal semi-dy-open-space-tight-horizontal semi-dy-open-space-tight-vertical"
-                                    x-semi-prop="children"
-                                    style="position: absolute; top: 50%; transform: translate(-50%, -50%); left: 50%;">
-                                    <span
-                                        class="semi-dy-open-typography semi-dy-open-typography-tertiary semi-dy-open-typography-normal"
-                                        style="color: rgba(23, 26, 28, 0.45);">暂无历史版本</span>
-                                </div>
-                            </div>
+    if (!data || Object.keys(data).length === 0) {
+        return generateEmptyTestVersionHTML();
+    }
+    
+    // 单个对象
+    return generateSingleTestVersionHTML(data);
+}
+
+// 生成空状态 HTML
+function generateEmptyTestVersionHTML() {
+    return `
+        <div class="semi-dy-open-space semi-dy-open-space-align-center semi-dy-open-space-horizontal semi-dy-open-space-tight-horizontal semi-dy-open-space-tight-vertical"
+                x-semi-prop="children" style="display: flex; align-items: start; width: 100%; height: 100%;">
+                <div class="semi-dy-open-spin semi-dy-open-spin-middle semi-dy-open-spin-block semi-dy-open-spin-hidden"
+                    style="flex: 1 1 0%; max-width: 100%; height: 100%; width: 100%;">
+                    <div class="semi-dy-open-spin-children" x-semi-prop="children"
+                        style="width: 100%; flex-direction: column; display: flex; height: 100%; align-items: start; min-height: 139px;">
+                        <div class="semi-dy-open-space semi-dy-open-space-align-center semi-dy-open-space-horizontal semi-dy-open-space-tight-horizontal semi-dy-open-space-tight-vertical"
+                            x-semi-prop="children"
+                            style="position: absolute; top: 50%; transform: translate(-50%, -50%); left: 50%;">
+                            <span
+                                class="semi-dy-open-typography semi-dy-open-typography-tertiary semi-dy-open-typography-normal"
+                                style="color: rgba(23, 26, 28, 0.45);">暂无历史版本</span>
                         </div>
+                    </div>
                 </div>
-        `;
+        </div>
+    `;
+}
+
+// 生成单个测试版本 HTML
+function generateSingleTestVersionHTML(data) {
+    if (!data || Object.keys(data).length === 0) {
+        return '';
     }
 
-    // TODO: 这里有数据的测试版本 HTML 结构待补充
     return `                            <div class="semi-dy-open-space semi-dy-open-space-align-center semi-dy-open-space-horizontal semi-dy-open-space-tight-horizontal semi-dy-open-space-tight-vertical"
                                 x-semi-prop="children"
                                 style="display: flex; align-items: start; width: 100%; height: 100%;">
@@ -528,3 +558,4 @@ function hideCoverageTooltip_() {
         tooltip.remove();
     }
 }
+
