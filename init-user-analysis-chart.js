@@ -80,11 +80,17 @@
                 },
                 {
                     orient: 'bottom',
+                    sampling: false,
                     label: {
                         visible: true,
+                        autoHide: false,
                         style: {
                             fill: '#8F959E'
-                        }
+                        },
+                        dataFilter: (items) => items.filter((_, i) => i % 2 === 0)
+                    },
+                    tick: {
+                        dataFilter: (items) => items.filter((_, i) => i % 2 === 0)
                     }
                 }
             ],
@@ -187,37 +193,156 @@
         }
     }
 
-    function initUserAnalysisChart() {
-        // 从 JSON 配置中获取数据
-        let data = [];
-        let chartTitle = '活跃用户数';
+    /**
+     * 获取行为分析筛选后的数据
+     */
+    function getBehaviorFilteredData() {
+        if (!window.chartDataConfig || !window.chartDataConfig.overview || window.chartDataConfig.overview.length === 0) {
+            return [];
+        }
 
-        if (window.chartDataConfig && window.chartDataConfig.overview && window.chartDataConfig.overview.length > 0) {
-            const chartConfig = window.chartDataConfig.overview[0];
-            // 过滤最近 7 天的数据（不包括今天）
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+        const appId = window._behaviorAppId || 'all';
+        const os = window._behaviorOs || 'all';
+        const timeRange = window._behaviorTimeRange || 'yesterday';
 
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            sevenDaysAgo.setHours(0, 0, 0, 0);
-
-            const filteredData = chartConfig.data.filter(item => {
-                const itemDate = new Date(item.date);
-                return itemDate >= sevenDaysAgo && itemDate < today;
+        // 找到对应 APP 的数据
+        let appData;
+        if (appId === 'all') {
+            // 全部 APP：合并所有 APP 的数据
+            appData = { data: [] };
+            window.chartDataConfig.overview.forEach(app => {
+                appData.data = appData.data.concat(app.data);
             });
+        } else {
+            appData = window.chartDataConfig.overview.find(app => app.appId === appId);
+        }
 
+        if (!appData || !appData.data) return [];
+
+        // 筛选 OS
+        let records = appData.data;
+        if (os !== 'all') {
+            records = records.filter(r => r.os === os);
+        }
+
+        // 按日期聚合（同一天多个 OS 的数据合并）
+        const grouped = {};
+        records.forEach(r => {
+            if (!grouped[r.date]) {
+                grouped[r.date] = {
+                    date: r.date,
+                    dailyUsers: 0, newUsers: 0, totalUser: 0,
+                    avgDuration: 0, singleAvgDuration: 0,
+                    startup: 0, avgStartup: 0,
+                    sharing: 0, shareSuccess: 0, shareNewUsers: 0, shareSuccessUsers: 0,
+                    totalShares: 0,
+                    _count: 0
+                };
+            }
+            const g = grouped[r.date];
+            g.dailyUsers += r.dailyUsers || 0;
+            g.newUsers += r.newUsers || 0;
+            g.totalUser += r.totalUser || 0;
+            g.avgDuration += r.avgDuration || 0;
+            g.singleAvgDuration += r.singleAvgDuration || 0;
+            g.startup += r.startup || 0;
+            g.avgStartup += r.avgStartup || 0;
+            g.sharing += r.sharing || 0;
+            g.shareSuccess += r.shareSuccess || 0;
+            g.shareNewUsers += r.shareNewUsers || 0;
+            g.shareSuccessUsers += r.shareSuccessUsers || 0;
+            g.totalShares += r.totalShares || 0;
+            g._count += 1;
+        });
+
+        // 平均值字段需要除以记录数
+        Object.values(grouped).forEach(g => {
+            if (g._count > 1) {
+                g.avgDuration = g.avgDuration / g._count;
+                g.singleAvgDuration = g.singleAvgDuration / g._count;
+                g.avgStartup = g.avgStartup / g._count;
+            }
+            delete g._count;
+        });
+
+        let aggregated = Object.values(grouped);
+
+        // 筛选时间范围
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        let startDate;
+        if (timeRange === 'yesterday') {
+            startDate = new Date(today);
+            startDate.setDate(startDate.getDate() - 1);
+            // yesterday 只取一天
+            aggregated = aggregated.filter(item => item.date === startDate.toISOString().split('T')[0]);
+        } else {
+            const days = timeRange === 30 ? 30 : 7;
+            startDate = new Date(today);
+            startDate.setDate(startDate.getDate() - days);
+            aggregated = aggregated.filter(item => {
+                const itemDate = new Date(item.date);
+                return itemDate >= startDate && itemDate < today;
+            });
+        }
+
+        // 按日期排序
+        aggregated.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        return aggregated;
+    }
+
+    function initUserAnalysisChart() {
+        let chartTitle = '活跃用户数';
+        const timeRange = window._behaviorTimeRange || 'yesterday';
+        
+        let data = [];
+        
+        if (timeRange === 'yesterday') {
+            // 昨天：显示 24 小时数据
+            const filteredData = getBehaviorFilteredData();
+            if (filteredData.length > 0) {
+                const dailyTotal = filteredData[0].dailyUsers || 0;
+                
+                // 加载权重生成小时数据
+                loadHourlyWeights().then(weights => {
+                    const currentHour = new Date().getHours();
+                    const hourlyData = [];
+                    
+                    for (let h = 0; h <= 23; h++) {
+                        const hourKey = String(h).padStart(2, '0');
+                        const weight = weights[hourKey] || 0;
+                        const value = Math.round(dailyTotal * weight);
+                        hourlyData.push({
+                            date: `${hourKey}:00`,
+                            value: value,
+                            displayValue: value.toLocaleString('zh-CN'),
+                            medalType: '活跃用户数'
+                        });
+                    }
+                    
+                    console.log('✅ [用户分析图表] 昨天小时数据:', chartTitle, `(共${hourlyData.length}条数据)`);
+                    const vchart = renderChart('visactor_window_user', hourlyData, chartTitle);
+                    if (vchart) {
+                        userAnalysisChartInstance = vchart;
+                        userAnalysisChartContainer = document.getElementById('visactor_window_user');
+                    }
+                });
+                return;
+            }
+        } else {
+            // 7天/30天：显示每天的数据
+            const filteredData = getBehaviorFilteredData();
             data = filteredData.map(item => ({
                 date: item.date,
                 value: item.dailyUsers,
                 displayValue: item.dailyUsers.toLocaleString('zh-CN'),
                 medalType: '活跃用户数'
             }));
-
-            console.log('✅ [用户分析图表] 使用 JSON 配置数据:', chartTitle, `(最近 7 天，共${data.length}条数据)`);
-        } else {
-            console.log('⚠️ 未找到图表数据配置');
         }
+
+        console.log('✅ [用户分析图表] 筛选后数据:', chartTitle, `(共${data.length}条数据)`);
 
         // 使用公共渲染函数
         const vchart = renderChart('visactor_window_user', data, chartTitle);
@@ -226,6 +351,23 @@
             userAnalysisChartContainer = document.getElementById('visactor_window_user');
         }
     }
+
+    /**
+     * 更新行为分析（APP/OS/时间切换时调用）
+     */
+    function updateBehaviorAnalysis() {
+        console.log('[updateBehaviorAnalysis] 开始更新，timeRange:', window._behaviorTimeRange, 'appId:', window._behaviorAppId, 'os:', window._behaviorOs);
+        initUserAnalysisChart();
+        // 同时更新卡片数据
+        if (typeof window.renderBehaviorCards === 'function') {
+            window.renderBehaviorCards();
+        }
+        // 同时更新表格数据
+        if (typeof window.renderBehaviorTable === 'function') {
+            window.renderBehaviorTable();
+        }
+    }
+    window.updateBehaviorAnalysis = updateBehaviorAnalysis;
 
     // 缓存小时权重配置
     let _hourlyWeightsCache = null;
@@ -399,49 +541,205 @@
         }
     }
 
+    /**
+     * 获取行为分析卡片的聚合数据
+     */
+    function getBehaviorCardData(dateStr) {
+        const appId = window._behaviorAppId || 'all';
+        const os = window._behaviorOs || 'all';
+
+        let allRecords = [];
+        if (appId === 'all') {
+            window.chartDataConfig.overview.forEach(app => {
+                allRecords = allRecords.concat(app.data);
+            });
+        } else {
+            const appData = window.chartDataConfig.overview.find(app => app.appId === appId);
+            if (appData) allRecords = appData.data;
+        }
+
+        console.log(`getBehaviorCardData(${dateStr}) - 所有记录:`, allRecords.map(r => r.date));
+
+        // 筛选日期和 OS
+        let records = allRecords.filter(r => r.date === dateStr);
+        if (os !== 'all') {
+            records = records.filter(r => r.os === os);
+        }
+
+        console.log(`getBehaviorCardData(${dateStr}) - appId:${appId}, os:${os}, records.length:${records.length}`);
+
+        if (records.length === 0) return null;
+
+        // 聚合数据
+        const aggregated = {
+            dailyUsers: 0, newUsers: 0, totalUser: 0, sharing: 0, startup: 0,
+            avgStartup: 0, avgDuration: 0, singleAvgDuration: 0,
+            shareSuccess: 0, shareNewUsers: 0, shareSuccessUsers: 0
+        };
+
+        records.forEach(r => {
+            aggregated.dailyUsers += r.dailyUsers || 0;
+            aggregated.newUsers += r.newUsers || 0;
+            aggregated.totalUser += r.totalUser || 0;
+            aggregated.sharing += r.sharing || 0;
+            aggregated.startup += r.startup || 0;
+            aggregated.avgStartup += r.avgStartup || 0;
+            aggregated.avgDuration += r.avgDuration || 0;
+            aggregated.singleAvgDuration += r.singleAvgDuration || 0;
+            aggregated.shareSuccess += r.shareSuccess || 0;
+            aggregated.shareNewUsers += r.shareNewUsers || 0;
+            aggregated.shareSuccessUsers += r.shareSuccessUsers || 0;
+        });
+
+        // 平均值字段需要除以记录数
+        if (records.length > 1) {
+            aggregated.avgStartup = aggregated.avgStartup / records.length;
+            aggregated.avgDuration = aggregated.avgDuration / records.length;
+            aggregated.singleAvgDuration = aggregated.singleAvgDuration / records.length;
+        }
+
+        return aggregated;
+    }
+
     // 初始化卡片数据（显示昨天数据）
     function initUserAnalysisCards() {
-        console.log('开始初始化用户分析卡片数据...');
+        renderBehaviorCards();
+    }
+
+    // 渲染行为分析卡片（支持筛选）
+    function renderBehaviorCards() {
+        console.log('开始渲染行为分析卡片数据...');
 
         if (!window.chartDataConfig || !window.chartDataConfig.overview || !window.chartDataConfig.overview[0]) {
             console.error('未找到图表数据配置');
             return;
         }
 
-        // 获取昨天的日期（YYYY-MM-DD 格式）
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const year = yesterday.getFullYear();
-        const month = String(yesterday.getMonth() + 1).padStart(2, '0');
-        const day = String(yesterday.getDate()).padStart(2, '0');
-        const yesterdayStr = `${year}-${month}-${day}`;
+        const timeRange = window._behaviorTimeRange || 'yesterday';
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-        console.log('加载昨天数据:', yesterdayStr);
+        let currentData, compareData;
 
-        const chartConfig = window.chartDataConfig.overview[0];
-
-        // 找到昨天的数据
-        const yesterdayData = chartConfig.data.find(item => item.date === yesterdayStr);
-
-        if (!yesterdayData) {
-            console.warn('未找到昨天的数据:', yesterdayStr);
-            return;
+        if (timeRange === 'yesterday') {
+            // 格式化日期为本地时间 YYYY-MM-DD
+            const formatDate = (d) => {
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            // 昨天数据
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = formatDate(yesterday);
+            
+            // 前天数据（用于对比）
+            const dayBefore = new Date(today);
+            dayBefore.setDate(dayBefore.getDate() - 2);
+            const dayBeforeStr = formatDate(dayBefore);
+            
+            currentData = getBehaviorCardData(yesterdayStr);
+            compareData = getBehaviorCardData(dayBeforeStr);
+            console.log('昨天数据:', yesterdayStr, currentData);
+            console.log('前天数据:', dayBeforeStr, compareData);
+        } else {
+            // 7天或30天：聚合该范围内的数据
+            const days = (timeRange === 30 || timeRange === '30') ? 30 : 7;
+            const filteredData = getBehaviorFilteredData();
+            
+            // 聚合函数
+            const aggregateData = (dataList) => {
+                if (!dataList || dataList.length === 0) return null;
+                const result = {
+                    dailyUsers: 0, newUsers: 0, totalUser: 0, sharing: 0, startup: 0,
+                    avgStartup: 0, avgDuration: 0, singleAvgDuration: 0,
+                    shareSuccess: 0, shareNewUsers: 0, shareSuccessUsers: 0
+                };
+                dataList.forEach(r => {
+                    result.dailyUsers += r.dailyUsers || 0;
+                    result.newUsers += r.newUsers || 0;
+                    result.totalUser += r.totalUser || 0;
+                    result.sharing += r.sharing || 0;
+                    result.startup += r.startup || 0;
+                    result.avgStartup += r.avgStartup || 0;
+                    result.avgDuration += r.avgDuration || 0;
+                    result.singleAvgDuration += r.singleAvgDuration || 0;
+                    result.shareSuccess += r.shareSuccess || 0;
+                    result.shareNewUsers += r.shareNewUsers || 0;
+                    result.shareSuccessUsers += r.shareSuccessUsers || 0;
+                });
+                if (dataList.length > 1) {
+                    result.avgStartup = result.avgStartup / dataList.length;
+                    result.avgDuration = result.avgDuration / dataList.length;
+                    result.singleAvgDuration = result.singleAvgDuration / dataList.length;
+                }
+                return result;
+            };
+            
+            currentData = aggregateData(filteredData);
+            
+            // 对比数据：前一个同等周期
+            const prevStart = new Date(today);
+            prevStart.setDate(prevStart.getDate() - days * 2);
+            const prevEnd = new Date(today);
+            prevEnd.setDate(prevEnd.getDate() - days);
+            
+            // 获取前一周期的数据
+            const appId = window._behaviorAppId || 'all';
+            const os = window._behaviorOs || 'all';
+            let allRecords = [];
+            if (appId === 'all') {
+                window.chartDataConfig.overview.forEach(app => {
+                    allRecords = allRecords.concat(app.data);
+                });
+            } else {
+                const appData = window.chartDataConfig.overview.find(app => app.appId === appId);
+                if (appData) allRecords = appData.data;
+            }
+            if (os !== 'all') {
+                allRecords = allRecords.filter(r => r.os === os);
+            }
+            const prevRecords = allRecords.filter(r => {
+                const d = new Date(r.date);
+                return d >= prevStart && d < prevEnd;
+            });
+            compareData = aggregateData(prevRecords);
+            
+            console.log(`最近${days}天累计数据:`, currentData, '对比前${days}天:', compareData);
         }
 
-        console.log('昨天数据:', yesterdayData);
+        const yesterdayData = currentData;
+        const dayBeforeData = compareData;
 
-        // 找到前天的数据
-        const dayBeforeYesterday = new Date();
-        dayBeforeYesterday.setDate(dayBeforeYesterday.getDate() - 2);
-        const dbyYear = dayBeforeYesterday.getFullYear();
-        const dbyMonth = String(dayBeforeYesterday.getMonth() + 1).padStart(2, '0');
-        const dbyDay = String(dayBeforeYesterday.getDate()).padStart(2, '0');
-        const dayBeforeStr = `${dbyYear}-${dbyMonth}-${dbyDay}`;
+        console.log('卡片渲染 - timeRange:', timeRange);
+        console.log('卡片渲染 - yesterdayData:', yesterdayData);
+        console.log('卡片渲染 - dayBeforeData:', dayBeforeData);
 
-        const dayBeforeData = chartConfig.data.find(item => item.date === dayBeforeStr);
-
-        if (dayBeforeData) {
-            console.log('前天数据:', dayBeforeData);
+        // 如果没有数据，显示默认值
+        if (!yesterdayData) {
+            console.log('暂无数据，显示默认值');
+            const defaultData = {
+                dailyUsers: 0, newUsers: 0, totalUser: 0, sharing: 0, startup: 0,
+                avgStartup: 0, avgDuration: 0, singleAvgDuration: 0,
+                shareSuccess: 0, shareNewUsers: 0, shareSuccessUsers: 0
+            };
+            // 更新所有卡片为 0
+            document.querySelectorAll('[data-metric]').forEach(el => {
+                const metric = el.dataset.metric;
+                if (metric === 'avgDuration' || metric === 'singleAvgDuration') {
+                    el.textContent = '00:00:00';
+                } else {
+                    el.textContent = '0';
+                }
+            });
+            // 清空所有涨幅
+            document.querySelectorAll('[data-compare]').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('omg-compares-number-type-up', 'omg-compares-number-type-down');
+            });
+            return;
         }
 
         // 获取所有卡片元素
@@ -541,6 +839,7 @@
 
         // 更新涨幅数据
         if (dayBeforeData) {
+            console.log('开始更新涨幅数据, activeUsersCompareEl:', activeUsersCompareEl);
             updateCompareValues(activeUsersCompareEl, yesterdayData.dailyUsers, dayBeforeData.dailyUsers);
             updateCompareValues(newUsersCompareEl, yesterdayData.newUsers, dayBeforeData.newUsers);
 
@@ -560,9 +859,15 @@
         console.log('✅ 用户分析卡片数据已更新');
     }
 
+    // 暴露到全局
+    window.renderBehaviorCards = renderBehaviorCards;
+
     // 更新涨幅显示
     function updateCompareValues(element, yesterdayValue, dayBeforeValue) {
-        if (!element) return;
+        if (!element) {
+            console.log('updateCompareValues: element is null');
+            return;
+        }
 
         // 计算涨幅百分比
         let comparePercent = 0;
@@ -574,6 +879,7 @@
         const sign = comparePercent >= 0 ? '+' : '';
         const percentStr = sign + comparePercent.toFixed(2) + '%';
 
+        console.log('updateCompareValues:', yesterdayValue, dayBeforeValue, '->', percentStr);
         element.textContent = percentStr;
 
         // 设置样式（上涨/下跌）
@@ -610,19 +916,7 @@
             return;
         }
 
-        const chartConfig = window.chartDataConfig.overview[0];
-
-        // 过滤最近 7 天的数据（不包括今天）
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        sevenDaysAgo.setHours(0, 0, 0, 0);
-
-        const filteredData = chartConfig.data.filter(item => {
-            const itemDate = new Date(item.date);
-            return itemDate >= sevenDaysAgo && itemDate < today;
-        });
+        const timeRange = window._behaviorTimeRange || 'yesterday';
 
         // 根据指标选择对应的字段
         let dataField = 'dailyUsers'; // 默认活跃用户数
@@ -633,7 +927,6 @@
         } else if (metricTitle === '次均游戏时长') {
             dataField = 'singleAvgDuration';
         } else if (metricTitle === '累计用户数') {
-            // 总用户数需要从原始数据重新计算累计值
             dataField = 'totalUser';
         } else if (metricTitle === '分享次数') {
             dataField = 'sharing';
@@ -649,12 +942,58 @@
             dataField = 'shareSuccessUsers';
         }
 
-        // 转换数据
+        // 使用筛选后的聚合数据
+        const filteredData = getBehaviorFilteredData();
+
+        if (timeRange === 'yesterday' && filteredData.length > 0) {
+            // 昨天：显示 24 小时数据
+            const dailyTotal = filteredData[0][dataField] || 0;
+            
+            loadHourlyWeights().then(weights => {
+                const hourlyData = [];
+                for (let h = 0; h <= 23; h++) {
+                    const hourKey = String(h).padStart(2, '0');
+                    const weight = weights[hourKey] || 0;
+                    let value = Math.round(dailyTotal * weight);
+                    let displayValue = value;
+                    
+                    // 时长类指标格式化
+                    if ((metricTitle === '人均游戏时长' || metricTitle === '次均游戏时长') && typeof value === 'number') {
+                        const hours = Math.floor(value / 3600);
+                        const minutes = Math.floor((value % 3600) / 60);
+                        const seconds = value % 60;
+                        displayValue = [
+                            String(hours).padStart(2, '0'),
+                            String(minutes).padStart(2, '0'),
+                            String(seconds).padStart(2, '0')
+                        ].join(':');
+                    } else if (typeof value === 'number') {
+                        displayValue = value.toLocaleString('zh-CN');
+                    }
+                    
+                    hourlyData.push({
+                        date: `${hourKey}:00`,
+                        value: value,
+                        displayValue: displayValue,
+                        medalType: metricTitle
+                    });
+                }
+                
+                console.log('✅ [用户分析] 切换到指标(小时):', metricTitle, `(共${hourlyData.length}条数据)`);
+                
+                if (userAnalysisChartInstance && userAnalysisChartContainer) {
+                    userAnalysisChartInstance.updateData('data', hourlyData);
+                    createChartTitle(userAnalysisChartContainer, metricTitle);
+                }
+            });
+            return;
+        }
+
+        // 7天/30天：显示每天的数据
         let data = filteredData.map(item => {
             let value = item[dataField];
-            let displayValue = value; // 用于 tooltip 显示的值
+            let displayValue = value;
 
-            // 如果是人均游戏时长或次均游戏时长，将秒数转换为 "HH:MM:SS" 格式字符串用于显示
             if ((metricTitle === '人均游戏时长' || metricTitle === '次均游戏时长') && typeof value === 'number') {
                 const hours = Math.floor(value / 3600);
                 const minutes = Math.floor((value % 3600) / 60);
@@ -665,25 +1004,21 @@
                     String(seconds).padStart(2, '0')
                 ].join(':');
             } else if (typeof value === 'number') {
-                // 其他数字指标使用千位分隔符
                 displayValue = value.toLocaleString('zh-CN');
             }
 
             return {
                 date: item.date,
-                value: value,           // 数值类型，用于图表渲染
-                displayValue: displayValue, // 格式化后的值，用于 tooltip 显示
+                value: value,
+                displayValue: displayValue,
                 medalType: metricTitle
             };
         });
 
         console.log('✅ [用户分析] 切换到指标:', metricTitle, `(共${data.length}条数据)`);
 
-        // 更新 VChart 数据
         if (userAnalysisChartInstance && userAnalysisChartContainer) {
             userAnalysisChartInstance.updateData('data', data);
-
-            // 更新标题
             createChartTitle(userAnalysisChartContainer, metricTitle);
         }
     }

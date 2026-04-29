@@ -208,12 +208,17 @@ function initTimeRangeButtons(containerSelector = 'body') {
 
     console.log(`找到 ${timeButtons.length} 个时间范围按钮`);
 
-    // 文案 -> 参数值
-    const labelToRange = { '昨天': 'yesterday', '7天': 7, '30天': 30 };
+    // 文案 -> 参数值（注意：HTML 中可能带空格如 "7 天"）
+    const labelToRange = { '昨天': 'yesterday', '7天': 7, '30天': 30, '7 天': 7, '30 天': 30 };
 
     // 按容器派发的 handler：同一容器下想响应多个组件就在这里累加调用
     // 没列出的容器 = 仅做视觉切换，不触发任何业务更新
     const handlersByContainer = {
+        '.user-behavior-section': (range) => {
+            window._behaviorTimeRange = range;
+            console.log('[behavior-section] 天数切换:', range);
+            window.updateBehaviorAnalysis && window.updateBehaviorAnalysis();
+        },
         '.user-source-section': (range) => {
             window.updateSourceAnalysisChart && window.updateSourceAnalysisChart(range);
             window.updateSourceSceneTable && window.updateSourceSceneTable(range);
@@ -965,6 +970,16 @@ function bindDropdownEvents(triggerElement, dropdownId) {
                 window._realTimeAppId = value;
                 console.log('[realtime] APP 切换:', value, label);
                 if (typeof window.updateRealTimeAnalysis === 'function') window.updateRealTimeAnalysis();
+            } else if (tabType === 'behavior') {
+                // 行为分析 APP 切换
+                window._behaviorAppId = value;
+                console.log('[behavior] APP 切换:', value, label);
+                if (typeof window.updateBehaviorAnalysis === 'function') window.updateBehaviorAnalysis();
+            } else if (tabType === 'behavior-os') {
+                // 行为分析 操作系统切换
+                window._behaviorOs = value;
+                console.log('[behavior-os] 操作系统切换:', value, label);
+                if (typeof window.updateBehaviorAnalysis === 'function') window.updateBehaviorAnalysis();
             } else if (tabType) {
                 console.log(`[${tabType}] APP 筛选变更:`, value, label);
                 // TODO: 根据 tabType 和 value 更新对应的表格/图表

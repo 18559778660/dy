@@ -4,6 +4,7 @@
 
     // 将初始化函数暴露到全局作用域
     window.initUserAnalysisTable = initUserAnalysisTable;
+    window.renderBehaviorTable = renderBehaviorTable;
 
     /** 与 chart-data.json 中 douyinSourceScenes 里「首页侧边栏」场景的官方 sceneId 一致 */
     const DOUYIN_SIDEBAR_SCENE_ID = '021036';
@@ -626,6 +627,175 @@
         initRealTimeCards();
         // 绑定实时分析导出按钮
         bindRealTimeExportButton();
+    }
+
+    /**
+     * 渲染行为分析表格（支持时间范围筛选）
+     * 昨天 -> 显示 24 小时数据
+     * 7天/30天 -> 显示每天数据
+     */
+    function renderBehaviorTable(tbodySelector = '.semi-dy-open-table-tbody') {
+        const timeRange = window._behaviorTimeRange || 'yesterday';
+        const appId = window._behaviorAppId || 'all';
+        const os = window._behaviorOs || 'all';
+        
+        console.log('渲染行为表格 - timeRange:', timeRange, 'appId:', appId, 'os:', os);
+        
+        const chartData = window.chartDataConfig;
+        if (!chartData || !chartData.overview) {
+            console.warn('未找到图表数据配置');
+            return;
+        }
+        
+        // 获取筛选后的数据
+        let allRecords = [];
+        if (appId === 'all') {
+            chartData.overview.forEach(app => {
+                allRecords = allRecords.concat(app.data);
+            });
+        } else {
+            const appData = chartData.overview.find(app => app.appId === appId);
+            if (appData) allRecords = appData.data;
+        }
+        
+        if (os !== 'all') {
+            allRecords = allRecords.filter(r => r.os === os);
+        }
+        
+        // 格式化日期为本地时间 YYYY-MM-DD
+        const formatDateStr = (d) => {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        let tableData = [];
+        
+        if (timeRange === 'yesterday') {
+            // 昨天：显示 24 小时数据
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = formatDateStr(yesterday);
+            
+            // 聚合昨天的所有记录
+            const yesterdayRecords = allRecords.filter(r => r.date === yesterdayStr);
+            if (yesterdayRecords.length === 0) {
+                console.log('未找到昨天的数据');
+                renderTable([], 1, tbodySelector);
+                return;
+            }
+            
+            // 聚合数据
+            const aggregated = {
+                dailyUsers: 0, newUsers: 0, totalUser: 0, totalShares: 0,
+                shareSuccessUsers: 0, shareNewUsers: 0, shareSuccess: 0,
+                startup: 0, avgStartup: 0, avgDuration: 0, singleAvgDuration: 0
+            };
+            yesterdayRecords.forEach(r => {
+                aggregated.dailyUsers += r.dailyUsers || 0;
+                aggregated.newUsers += r.newUsers || 0;
+                aggregated.totalUser += r.totalUser || 0;
+                aggregated.totalShares += r.totalShares || 0;
+                aggregated.shareSuccessUsers += r.shareSuccessUsers || 0;
+                aggregated.shareNewUsers += r.shareNewUsers || 0;
+                aggregated.shareSuccess += r.shareSuccess || 0;
+                aggregated.startup += r.startup || 0;
+                aggregated.avgStartup += r.avgStartup || 0;
+                aggregated.avgDuration += r.avgDuration || 0;
+                aggregated.singleAvgDuration += r.singleAvgDuration || 0;
+            });
+            if (yesterdayRecords.length > 1) {
+                aggregated.avgStartup /= yesterdayRecords.length;
+                aggregated.avgDuration /= yesterdayRecords.length;
+                aggregated.singleAvgDuration /= yesterdayRecords.length;
+            }
+            
+            // 生成 24 小时数据
+            for (let hour = 0; hour < 24; hour++) {
+                const hourKey = String(hour).padStart(2, '0');
+                const timeStr = `${hourKey}:00:00`;
+                const weight = HOURLY_WEIGHTS[hourKey] || 0;
+                
+                tableData.push({
+                    time: timeStr,
+                    activeUsers: Math.round(aggregated.dailyUsers * weight),
+                    newUsers: Math.round(aggregated.newUsers * weight),
+                    totalUsers: Math.round(aggregated.totalUser * weight),
+                    shares: Math.round(aggregated.totalShares * weight),
+                    shareSuccessUsers: Math.round(aggregated.shareSuccessUsers * weight),
+                    shareNewUsers: Math.round(aggregated.shareNewUsers * weight),
+                    shareSuccess: Math.round(aggregated.shareSuccess * weight),
+                    startup: Math.round(aggregated.startup * weight),
+                    avgStartup: aggregated.avgStartup * weight,
+                    avgDuration: aggregated.avgDuration * weight,
+                    singleAvgDuration: aggregated.singleAvgDuration * weight
+                });
+            }
+        } else {
+            // 7天/30天：显示每天数据
+            const days = (timeRange === 30 || timeRange === '30') ? 30 : 7;
+            const startDate = new Date(today);
+            startDate.setDate(startDate.getDate() - days);
+            
+            // 筛选日期范围内的记录
+            const filteredRecords = allRecords.filter(r => {
+                const d = new Date(r.date);
+                return d >= startDate && d < today;
+            });
+            
+            // 按日期分组聚合
+            const grouped = {};
+            filteredRecords.forEach(r => {
+                if (!grouped[r.date]) {
+                    grouped[r.date] = {
+                        date: r.date,
+                        dailyUsers: 0, newUsers: 0, totalUser: 0, totalShares: 0,
+                        shareSuccessUsers: 0, shareNewUsers: 0, shareSuccess: 0,
+                        startup: 0, avgStartup: 0, avgDuration: 0, singleAvgDuration: 0,
+                        count: 0
+                    };
+                }
+                const g = grouped[r.date];
+                g.dailyUsers += r.dailyUsers || 0;
+                g.newUsers += r.newUsers || 0;
+                g.totalUser += r.totalUser || 0;
+                g.totalShares += r.totalShares || 0;
+                g.shareSuccessUsers += r.shareSuccessUsers || 0;
+                g.shareNewUsers += r.shareNewUsers || 0;
+                g.shareSuccess += r.shareSuccess || 0;
+                g.startup += r.startup || 0;
+                g.avgStartup += r.avgStartup || 0;
+                g.avgDuration += r.avgDuration || 0;
+                g.singleAvgDuration += r.singleAvgDuration || 0;
+                g.count++;
+            });
+            
+            // 转换为表格数据，按日期排序（最新的在前）
+            tableData = Object.values(grouped)
+                .map(g => ({
+                    time: g.date,
+                    activeUsers: g.dailyUsers,
+                    newUsers: g.newUsers,
+                    totalUsers: g.totalUser,
+                    shares: g.totalShares,
+                    shareSuccessUsers: g.shareSuccessUsers,
+                    shareNewUsers: g.shareNewUsers,
+                    shareSuccess: g.shareSuccess,
+                    startup: g.startup,
+                    avgStartup: g.count > 1 ? g.avgStartup / g.count : g.avgStartup,
+                    avgDuration: g.count > 1 ? g.avgDuration / g.count : g.avgDuration,
+                    singleAvgDuration: g.count > 1 ? g.singleAvgDuration / g.count : g.singleAvgDuration
+                }))
+                .sort((a, b) => b.time.localeCompare(a.time));
+        }
+        
+        // 渲染表格
+        renderTable(tableData, 1, tbodySelector);
+        console.log('✅ 行为表格渲染完成，共', tableData.length, '条数据');
     }
 
     /**
