@@ -184,11 +184,15 @@
                               <div class="flex relative gap-2 justify-start items-center w-full h-10 cursor-pointer">
                                 <div class="flex flex-1 gap-2 justify-start items-center left"><img
                                     class="object-cover flex-shrink-0 w-10 h-10 picture"
+                                    id="current-account-avatar"
                                     src="./index/01a5c3f8bf3244aeaabd03f34befe5af~tplv-ke512zj2cu-144x144.jpeg"
+                                    alt=""
                                     style="border-radius: 8px;">
                                   <div class="flex flex-col"><span
-                                      class="flex-1 w-36 font-semibold leading-5 truncate title">数独与激情</span><span
+                                      class="flex-1 w-36 font-semibold leading-5 truncate title"
+                                      id="current-account-title">数独与激情</span><span
                                       class="flex items-center mt-1 w-36"><span class="truncate text-semi-color-text-2"
+                                        id="current-account-appid"
                                         style="font-size: 12px; font-weight: 400; line-height: 16px;">AppID:ttbd94cb29229c7fea02</span><span
                                         class="i-icon i-icon-copy flex-shrink-0 ml-1 leading-4 text-semi-color-link"><svg
                                           width="16" height="16" viewBox="0 0 48 48" fill="none">
@@ -201,7 +205,7 @@
                                             fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round">
                                           </path>
                                         </svg></span></span></div>
-                                </div><span class="i-icon i-icon-transfer-data flex-shrink-0 w-5 h-5 right"><svg
+                                </div><span class="i-icon i-icon-transfer-data flex-shrink-0 w-5 h-5 right" id="switch-app-btn" style="cursor: pointer;"><svg
                                     width="1em" height="1em" viewBox="0 0 48 48" preserveAspectRatio="xMidYMid meet"
                                     fill="none" role="presentation" xmlns="http://www.w3.org/2000/svg">
                                     <g>
@@ -626,6 +630,118 @@
   <script src="./init-terminal-client-version-analysis.js"></script>
   <script src="./init-terminal-basic-version-analysis.js"></script>
   <script src="./init-chart.js"></script>
+
+  <!-- 当前账户（从 account.json isCurrent） -->
+  <script>
+    (function () {
+      function applyCurrentAccount(accounts) {
+        if (!Array.isArray(accounts) || accounts.length === 0) return;
+        const current = accounts.find(function (a) { return a.isCurrent === true; }) || accounts[0];
+        var img = document.getElementById('current-account-avatar');
+        var title = document.getElementById('current-account-title');
+        var appidEl = document.getElementById('current-account-appid');
+        if (img && current.avatar) img.src = current.avatar;
+        if (img && current.name) img.alt = current.name;
+        if (title && current.name) title.textContent = current.name;
+        if (appidEl && current.appid) appidEl.textContent = 'AppID:' + current.appid;
+      }
+
+      fetch('./account.json')
+        .then(function (r) { return r.json(); })
+        .then(applyCurrentAccount)
+        .catch(function () { console.warn('无法加载 account.json'); });
+
+      window.applyCurrentAccountHeader = applyCurrentAccount;
+    })();
+  </script>
+
+  <!-- 切换应用弹窗 -->
+  <script>
+    (function() {
+      const switchBtn = document.getElementById('switch-app-btn');
+      if (!switchBtn) return;
+
+      let popover = null;
+
+      switchBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        // 如果已经显示，则关闭
+        if (popover) {
+          popover.remove();
+          popover = null;
+          return;
+        }
+
+        // 获取按钮位置
+        const rect = switchBtn.getBoundingClientRect();
+
+        // 创建弹窗容器
+        popover = document.createElement('div');
+        popover.className = 'semi-dy-open-portal';
+        popover.id = 'switch-app-popover';
+        popover.style.zIndex = '1030';
+        
+        // 加载账号数据
+        fetch('./account.json')
+          .then(res => res.json())
+          .then(accounts => {
+            // 生成账号列表 HTML
+            const accountsHtml = accounts.map((account) => `
+              <div class="flex overflow-auto relative justify-start items-center pr-4 pl-4 w-full h-10 cursor-pointer hover:bg-gray-100 menu-header-dropdown-option-item"
+                  id="${account.appid}" ${account.isCurrent ? 'style="background: rgb(234, 245, 255);"' : ''}>
+                <img class="object-cover flex-shrink-0 w-6 h-6 rounded-md icon" src="${account.avatar}">
+                <span class="semi-dy-open-typography description h-4 w-40 items-center leading-4 truncate ml-[6px] semi-dy-open-typography-ellipsis semi-dy-open-typography-ellipsis-single-line semi-dy-open-typography-ellipsis-overflow-ellipsis semi-dy-open-typography-ellipsis-overflow-ellipsis-text semi-dy-open-typography-primary semi-dy-open-typography-normal">
+                  <span>${account.name}</span>
+                </span>
+                <div aria-label="Tag: 小游戏" class="semi-dy-open-tag semi-dy-open-tag-default semi-dy-open-tag-square semi-dy-open-tag-light semi-dy-open-tag-white-light ml-[4px] shrink-0">
+                  <div class="semi-dy-open-tag-content semi-dy-open-tag-content-ellipsis">小游戏</div>
+                </div>
+              </div>
+            `).join('');
+
+            popover.innerHTML = `
+              <div tabindex="-1" class="semi-dy-open-portal-inner" style="left: 21px; top: ${rect.bottom + 8}px; transform: translateX(0%) translateY(0%);">
+                <div class="semi-dy-open-popover-wrapper semi-dy-open-popover-wrapper-show" role="dialog" x-placement="bottomLeft" style="animation-fill-mode: forwards;">
+                  <div class="semi-dy-open-tooltip-content">
+                    <div class="semi-dy-open-popover">
+                      <div class="semi-dy-open-popover-content">
+                        <div class="semi-dy-open-select-option-list-wrapper overflow-auto py-2 menu-header-dropdown-VJkUB2 menu-header-dropdown" style="min-width: 224px; width: 224px;">
+                          <div class="semi-dy-open-select-dropdown-search-wrapper">
+                            <div class="semi-dy-open-input-wrapper menu-header-dropdown-search semi-dy-open-input-wrapper__with-prefix semi-dy-open-input-wrapper-clearable semi-dy-open-input-wrapper-default">
+                              <div class="semi-dy-open-input-prefix semi-dy-open-input-prefix-icon" x-semi-prop="prefix,insetLabel">
+                                <span role="img" aria-label="search" class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-search">
+                                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" focusable="false" aria-hidden="true">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 2a8.5 8.5 0 1 0 4.86 15.48l4.08 4.08a1.5 1.5 0 1 0 2.12-2.12l-4.08-4.08A8.5 8.5 0 0 0 10.5 2ZM5 10.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Z" fill="currentColor"></path>
+                                  </svg>
+                                </span>
+                              </div>
+                              <input class="semi-dy-open-input semi-dy-open-input-default" type="text" placeholder="搜索结果最多展示50个" value="">
+                            </div>
+                          </div>
+                          <div class="semi-dy-open-select-option-list semi-dy-open-select-option-list-chosen" role="listbox" aria-multiselectable="false" style="max-height: 270px;">
+                            ${accountsHtml}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+            document.body.appendChild(popover);
+          });
+      });
+
+      // 点击外部关闭
+      document.addEventListener('click', function(e) {
+        if (popover && !popover.contains(e.target) && e.target !== switchBtn && !switchBtn.contains(e.target)) {
+          popover.remove();
+          popover = null;
+        }
+      });
+    })();
+  </script>
 </body>
 
 </html>

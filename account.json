@@ -1,0 +1,16 @@
+[
+    {
+        "id": "1",
+        "name": "数独与激情",
+        "appid": "ttbd94cb29229c7fea02",
+        "avatar": "https://p9-mgsdk-sign.byteimg.com/tos-cn-i-ke512zj2cu/01a5c3f8bf3244aeaabd03f34befe5af~tplv-ke512zj2cu-144x144.jpeg?lk3s=9faec0cc&x-expires=2724203264&x-signature=cnedbmUeNgOWuvjJILLPrzgrCTU%3D",
+        "isCurrent": false
+    },
+    {
+        "id": "2",
+        "name": "123",
+        "appid": "tta638d085390d9a7302",
+        "avatar": "https://p9-mgsdk-sign.byteimg.com/tos-cn-i-ke512zj2cu/30222b403c434b21b7ab3b933466a912~tplv-ke512zj2cu-144x144.jpeg?lk3s=9faec0cc&x-expires=2724203723&x-signature=i5NjlhWMg3ueNn06ynf%2B5VO91rM%3D",
+        "isCurrent": true
+    }
+]
