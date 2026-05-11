@@ -183,10 +183,8 @@
                               data-popupid="21p6a1z" style="width: 224px;">
                               <div class="flex relative gap-2 justify-start items-center w-full h-10 cursor-pointer">
                                 <div class="flex flex-1 gap-2 justify-start items-center left"><img
-                                    class="object-cover flex-shrink-0 w-10 h-10 picture"
-                                    id="current-account-avatar"
-                                    src="./index/01a5c3f8bf3244aeaabd03f34befe5af~tplv-ke512zj2cu-144x144.jpeg"
-                                    alt=""
+                                    class="object-cover flex-shrink-0 w-10 h-10 picture" id="current-account-avatar"
+                                    src="./index/01a5c3f8bf3244aeaabd03f34befe5af~tplv-ke512zj2cu-144x144.jpeg" alt=""
                                     style="border-radius: 8px;">
                                   <div class="flex flex-col"><span
                                       class="flex-1 w-36 font-semibold leading-5 truncate title"
@@ -205,9 +203,10 @@
                                             fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round">
                                           </path>
                                         </svg></span></span></div>
-                                </div><span class="i-icon i-icon-transfer-data flex-shrink-0 w-5 h-5 right" id="switch-app-btn" style="cursor: pointer;"><svg
-                                    width="1em" height="1em" viewBox="0 0 48 48" preserveAspectRatio="xMidYMid meet"
-                                    fill="none" role="presentation" xmlns="http://www.w3.org/2000/svg">
+                                </div><span class="i-icon i-icon-transfer-data flex-shrink-0 w-5 h-5 right"
+                                  id="switch-app-btn" style="cursor: pointer;"><svg width="1em" height="1em"
+                                    viewBox="0 0 48 48" preserveAspectRatio="xMidYMid meet" fill="none"
+                                    role="presentation" xmlns="http://www.w3.org/2000/svg">
                                     <g>
                                       <path data-follow-stroke="currentColor"
                                         d="m10 8-6 6 6 6m28 8 6 6-6 6M4 14h40M4 34h40" stroke-width="4"
@@ -586,6 +585,8 @@
     </section>
   </div>
   <link rel="stylesheet" href="./index/index-1.css">
+  <script src="./config-path-utils.js"></script>
+  <!-- 公告动态渲染功能（依赖上一行的 getConfigPath） -->
   <!-- 动态加载仪表板内容 -->
   <script src="./load-dashboard.js"></script>
   <script src="./render-version.js"></script>
@@ -593,7 +594,7 @@
   <!-- 菜单折叠功能 -->
   <script src="./menu-collapse.js"></script>
 
-  <!-- 公告动态渲染功能 -->
+
   <script src="./render-announcements.js"></script>
 
   <!-- 指标卡片 Tooltip 功能 -->
@@ -657,7 +658,7 @@
 
   <!-- 切换应用弹窗 -->
   <script>
-    (function() {
+    (function () {
       const switchBtn = document.getElementById('switch-app-btn');
       if (!switchBtn) return;
 
@@ -687,7 +688,7 @@
       // 渲染弹窗
       function renderPopover(rect) {
         const accountsHtml = renderAccountsHtml();
-        
+
         popover.innerHTML = `
           <div tabindex="-1" class="semi-dy-open-portal-inner" style="left: 21px; top: ${rect.bottom + 8}px; transform: translateX(0%) translateY(0%);">
             <div class="semi-dy-open-popover-wrapper semi-dy-open-popover-wrapper-show" role="dialog" x-placement="bottomLeft" style="animation-fill-mode: forwards;">
@@ -721,9 +722,9 @@
 
         // 绑定账号切换点击事件
         popover.querySelectorAll('.account-switch-item').forEach(item => {
-          item.addEventListener('click', function(e) {
+          item.addEventListener('click', function (e) {
             e.stopPropagation();
-            
+
             const appid = this.dataset.appid;
             const name = this.dataset.name;
             const avatar = this.dataset.avatar;
@@ -748,6 +749,14 @@
             if (titleEl) titleEl.textContent = name;
             if (appidEl) appidEl.textContent = 'AppID:' + appid;
 
+            try {
+              localStorage.setItem('dy_conf_current_appid', appid);
+            } catch (err) { /* 隐私模式等 */ }
+
+            if (typeof window.renderAnnouncementsInit === 'function') {
+              window.renderAnnouncementsInit();
+            }
+
             // 关闭弹窗
             popover.remove();
             popover = null;
@@ -757,9 +766,9 @@
         });
       }
 
-      switchBtn.addEventListener('click', function(e) {
+      switchBtn.addEventListener('click', function (e) {
         e.stopPropagation();
-        
+
         // 如果已经显示，则关闭
         if (popover) {
           popover.remove();
@@ -775,7 +784,7 @@
         popover.className = 'semi-dy-open-portal';
         popover.id = 'switch-app-popover';
         popover.style.zIndex = '1030';
-        
+
         // 如果已有缓存数据，直接渲染；否则从 JSON 加载
         if (accountsData) {
           renderPopover(rect);
@@ -791,7 +800,7 @@
       });
 
       // 点击外部关闭
-      document.addEventListener('click', function(e) {
+      document.addEventListener('click', function (e) {
         if (popover && !popover.contains(e.target) && e.target !== switchBtn && !switchBtn.contains(e.target)) {
           popover.remove();
           popover = null;
