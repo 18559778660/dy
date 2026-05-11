@@ -662,6 +662,100 @@
       if (!switchBtn) return;
 
       let popover = null;
+      // 内存中维护账号列表状态
+      let accountsData = null;
+
+      // 生成账号列表 HTML
+      function renderAccountsHtml() {
+        return accountsData.map((account) => `
+          <div class="flex overflow-auto relative justify-start items-center pr-4 pl-4 w-full h-10 cursor-pointer hover:bg-gray-100 menu-header-dropdown-option-item account-switch-item"
+              data-appid="${account.appid}"
+              data-name="${account.name}"
+              data-avatar="${account.avatar}"
+              ${account.isCurrent ? 'style="background: rgb(234, 245, 255);"' : ''}>
+            <img class="object-cover flex-shrink-0 w-6 h-6 rounded-md icon" src="${account.avatar}">
+            <span class="semi-dy-open-typography description h-4 w-40 items-center leading-4 truncate ml-[6px] semi-dy-open-typography-ellipsis semi-dy-open-typography-ellipsis-single-line semi-dy-open-typography-ellipsis-overflow-ellipsis semi-dy-open-typography-ellipsis-overflow-ellipsis-text semi-dy-open-typography-primary semi-dy-open-typography-normal">
+              <span>${account.name}</span>
+            </span>
+            <div aria-label="Tag: 小游戏" class="semi-dy-open-tag semi-dy-open-tag-default semi-dy-open-tag-square semi-dy-open-tag-light semi-dy-open-tag-white-light ml-[4px] shrink-0">
+              <div class="semi-dy-open-tag-content semi-dy-open-tag-content-ellipsis">小游戏</div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 渲染弹窗
+      function renderPopover(rect) {
+        const accountsHtml = renderAccountsHtml();
+        
+        popover.innerHTML = `
+          <div tabindex="-1" class="semi-dy-open-portal-inner" style="left: 21px; top: ${rect.bottom + 8}px; transform: translateX(0%) translateY(0%);">
+            <div class="semi-dy-open-popover-wrapper semi-dy-open-popover-wrapper-show" role="dialog" x-placement="bottomLeft" style="animation-fill-mode: forwards;">
+              <div class="semi-dy-open-tooltip-content">
+                <div class="semi-dy-open-popover">
+                  <div class="semi-dy-open-popover-content">
+                    <div class="semi-dy-open-select-option-list-wrapper overflow-auto py-2 menu-header-dropdown-VJkUB2 menu-header-dropdown" style="min-width: 224px; width: 224px;">
+                      <div class="semi-dy-open-select-dropdown-search-wrapper">
+                        <div class="semi-dy-open-input-wrapper menu-header-dropdown-search semi-dy-open-input-wrapper__with-prefix semi-dy-open-input-wrapper-clearable semi-dy-open-input-wrapper-default">
+                          <div class="semi-dy-open-input-prefix semi-dy-open-input-prefix-icon" x-semi-prop="prefix,insetLabel">
+                            <span role="img" aria-label="search" class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-search">
+                              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" focusable="false" aria-hidden="true">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 2a8.5 8.5 0 1 0 4.86 15.48l4.08 4.08a1.5 1.5 0 1 0 2.12-2.12l-4.08-4.08A8.5 8.5 0 0 0 10.5 2ZM5 10.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Z" fill="currentColor"></path>
+                              </svg>
+                            </span>
+                          </div>
+                          <input class="semi-dy-open-input semi-dy-open-input-default" type="text" placeholder="搜索结果最多展示50个" value="">
+                        </div>
+                      </div>
+                      <div class="semi-dy-open-select-option-list semi-dy-open-select-option-list-chosen" role="listbox" aria-multiselectable="false" style="max-height: 270px;">
+                        ${accountsHtml}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(popover);
+
+        // 绑定账号切换点击事件
+        popover.querySelectorAll('.account-switch-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            const appid = this.dataset.appid;
+            const name = this.dataset.name;
+            const avatar = this.dataset.avatar;
+
+            // 更新内存中的 isCurrent 状态
+            accountsData.forEach(acc => {
+              acc.isCurrent = (acc.appid === appid);
+            });
+
+            // 打印当前 JSON 数据
+            console.log('账号数据已更新:', JSON.stringify(accountsData, null, 2));
+
+            // 更新顶部账号信息
+            const avatarEl = document.getElementById('current-account-avatar');
+            const titleEl = document.getElementById('current-account-title');
+            const appidEl = document.getElementById('current-account-appid');
+
+            if (avatarEl) {
+              avatarEl.src = avatar;
+              avatarEl.alt = name;
+            }
+            if (titleEl) titleEl.textContent = name;
+            if (appidEl) appidEl.textContent = 'AppID:' + appid;
+
+            // 关闭弹窗
+            popover.remove();
+            popover = null;
+
+            console.log('切换到账号:', name, appid);
+          });
+        });
+      }
 
       switchBtn.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -682,55 +776,18 @@
         popover.id = 'switch-app-popover';
         popover.style.zIndex = '1030';
         
-        // 加载账号数据
-        fetch('./account.json')
-          .then(res => res.json())
-          .then(accounts => {
-            // 生成账号列表 HTML
-            const accountsHtml = accounts.map((account) => `
-              <div class="flex overflow-auto relative justify-start items-center pr-4 pl-4 w-full h-10 cursor-pointer hover:bg-gray-100 menu-header-dropdown-option-item"
-                  id="${account.appid}" ${account.isCurrent ? 'style="background: rgb(234, 245, 255);"' : ''}>
-                <img class="object-cover flex-shrink-0 w-6 h-6 rounded-md icon" src="${account.avatar}">
-                <span class="semi-dy-open-typography description h-4 w-40 items-center leading-4 truncate ml-[6px] semi-dy-open-typography-ellipsis semi-dy-open-typography-ellipsis-single-line semi-dy-open-typography-ellipsis-overflow-ellipsis semi-dy-open-typography-ellipsis-overflow-ellipsis-text semi-dy-open-typography-primary semi-dy-open-typography-normal">
-                  <span>${account.name}</span>
-                </span>
-                <div aria-label="Tag: 小游戏" class="semi-dy-open-tag semi-dy-open-tag-default semi-dy-open-tag-square semi-dy-open-tag-light semi-dy-open-tag-white-light ml-[4px] shrink-0">
-                  <div class="semi-dy-open-tag-content semi-dy-open-tag-content-ellipsis">小游戏</div>
-                </div>
-              </div>
-            `).join('');
-
-            popover.innerHTML = `
-              <div tabindex="-1" class="semi-dy-open-portal-inner" style="left: 21px; top: ${rect.bottom + 8}px; transform: translateX(0%) translateY(0%);">
-                <div class="semi-dy-open-popover-wrapper semi-dy-open-popover-wrapper-show" role="dialog" x-placement="bottomLeft" style="animation-fill-mode: forwards;">
-                  <div class="semi-dy-open-tooltip-content">
-                    <div class="semi-dy-open-popover">
-                      <div class="semi-dy-open-popover-content">
-                        <div class="semi-dy-open-select-option-list-wrapper overflow-auto py-2 menu-header-dropdown-VJkUB2 menu-header-dropdown" style="min-width: 224px; width: 224px;">
-                          <div class="semi-dy-open-select-dropdown-search-wrapper">
-                            <div class="semi-dy-open-input-wrapper menu-header-dropdown-search semi-dy-open-input-wrapper__with-prefix semi-dy-open-input-wrapper-clearable semi-dy-open-input-wrapper-default">
-                              <div class="semi-dy-open-input-prefix semi-dy-open-input-prefix-icon" x-semi-prop="prefix,insetLabel">
-                                <span role="img" aria-label="search" class="semi-dy-open-icon semi-dy-open-icon-default semi-dy-open-icon-search">
-                                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" focusable="false" aria-hidden="true">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 2a8.5 8.5 0 1 0 4.86 15.48l4.08 4.08a1.5 1.5 0 1 0 2.12-2.12l-4.08-4.08A8.5 8.5 0 0 0 10.5 2ZM5 10.5a5.5 5.5 0 1 1 11 0 5.5 5.5 0 0 1-11 0Z" fill="currentColor"></path>
-                                  </svg>
-                                </span>
-                              </div>
-                              <input class="semi-dy-open-input semi-dy-open-input-default" type="text" placeholder="搜索结果最多展示50个" value="">
-                            </div>
-                          </div>
-                          <div class="semi-dy-open-select-option-list semi-dy-open-select-option-list-chosen" role="listbox" aria-multiselectable="false" style="max-height: 270px;">
-                            ${accountsHtml}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            `;
-            document.body.appendChild(popover);
-          });
+        // 如果已有缓存数据，直接渲染；否则从 JSON 加载
+        if (accountsData) {
+          renderPopover(rect);
+        } else {
+          fetch('./account.json')
+            .then(res => res.json())
+            .then(accounts => {
+              accountsData = accounts;
+              console.log('初始加载账号数据:', JSON.stringify(accountsData, null, 2));
+              renderPopover(rect);
+            });
+        }
       });
 
       // 点击外部关闭
