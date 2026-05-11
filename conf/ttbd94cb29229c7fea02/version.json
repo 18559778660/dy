@@ -1,0 +1,26 @@
+{
+    "online": {
+        "version": "888",
+        "coverageApp": "抖音 PC、抖音(iOS, Android)、抖音火山 - 新版(iOS, Android)、抖音火山 - 旧版(iOS, Android)、抖音lite(Android)",
+        "date": "7777",
+        "remark": "5555",
+        "user": "123456"
+    },
+    "audit": {},
+    "history": [
+        {
+            "version": "fff",
+            "coverageApp": "",
+            "date": "tdfgf",
+            "remark": "zxx",
+            "user": "123456"
+        },
+        {
+            "version": "eee",
+            "coverageApp": "",
+            "date": "2026-04-20",
+            "remark": "历史版本示例2",
+            "user": "654321"
+        }
+    ]
+}

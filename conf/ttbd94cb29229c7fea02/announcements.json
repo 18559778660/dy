@@ -1,0 +1,84 @@
+{
+    "announcements": [
+        {
+            "id": "1",
+            "tag": "政策",
+            "tagType": "policy",
+            "title": "抖音小游戏春节假期服务通知",
+            "date": "02/06",
+            "hasBadge": true
+        },
+        {
+            "id": "2",
+            "tag": "活动",
+            "tagType": "activity",
+            "title": "小游戏推荐流春节限时激励开启",
+            "date": "01/14",
+            "hasBadge": true
+        },
+        {
+            "id": "3",
+            "tag": "活动",
+            "tagType": "activity",
+            "title": "小游戏激励加码，内容&社交创新高",
+            "date": "01/12",
+            "hasBadge": false
+        },
+        {
+            "id": "4",
+            "tag": "功能",
+            "tagType": "feature",
+            "title": "开放引擎自由切换及新能力",
+            "date": "12/29",
+            "hasBadge": true
+        },
+        {
+            "id": "5",
+            "tag": "功能",
+            "tagType": "feature",
+            "title": "收入结算模块全新升级",
+            "date": "12/25",
+            "hasBadge": false
+        },
+        {
+            "id": "6",
+            "tag": "功能",
+            "tagType": "feature",
+            "title": "新增红果短剧，首批流量即刻接入！",
+            "date": "12/03",
+            "hasBadge": true
+        },
+        {
+            "id": "7",
+            "tag": "功能",
+            "tagType": "feature",
+            "title": "抖音小游戏「主体评级体系」上线试运行通知",
+            "date": "12/03",
+            "hasBadge": true
+        },
+        {
+            "id": "8",
+            "tag": "活动",
+            "tagType": "activity",
+            "title": "开发者面对面第二期-社交能力分享回顾",
+            "date": "11/28",
+            "hasBadge": true
+        },
+        {
+            "id": "9",
+            "tag": "功能",
+            "tagType": "feature",
+            "title": "分享卡片高清素材配置能力全量通知",
+            "date": "11/28",
+            "hasBadge": true
+        },
+        {
+            "id": "10",
+            "tag": "功能",
+            "tagType": "feature",
+            "title": "高效管理来袭，一站式管理旗下游戏",
+            "date": "11/28",
+            "hasBadge": true
+        }
+    ]
+}
