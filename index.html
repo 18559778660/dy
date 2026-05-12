@@ -632,12 +632,36 @@
   <script src="./init-terminal-basic-version-analysis.js"></script>
   <script src="./init-chart.js"></script>
 
-  <!-- 当前账户（从 account.json isCurrent） -->
+  <!-- 当前账户（优先从 localStorage 读取，否则用 account.json isCurrent） -->
   <script>
     (function () {
+      var KEY = 'dy_conf_current_appid';
+
       function applyCurrentAccount(accounts) {
         if (!Array.isArray(accounts) || accounts.length === 0) return;
-        const current = accounts.find(function (a) { return a.isCurrent === true; }) || accounts[0];
+
+        // 优先从 localStorage 获取上次选择的账号
+        var savedAppid = null;
+        try {
+          savedAppid = localStorage.getItem(KEY);
+        } catch (e) { }
+
+        var current;
+        if (savedAppid) {
+          // 用 localStorage 中保存的 appid 查找对应账号
+          current = accounts.find(function (a) { return a.appid === savedAppid; });
+        }
+        // 如果没找到，回退到 isCurrent 或第一个账号
+        if (!current) {
+          current = accounts.find(function (a) { return a.isCurrent === true; }) || accounts[0];
+          // 同步到 localStorage
+          if (current && current.appid) {
+            try {
+              localStorage.setItem(KEY, current.appid);
+            } catch (e) { }
+          }
+        }
+
         var img = document.getElementById('current-account-avatar');
         var title = document.getElementById('current-account-title');
         var appidEl = document.getElementById('current-account-appid');
@@ -665,15 +689,29 @@
       let popover = null;
       // 内存中维护账号列表状态
       let accountsData = null;
+      var KEY = 'dy_conf_current_appid';
+
+      // 获取当前选中的 appid（优先 localStorage）
+      function getCurrentAppid() {
+        var savedAppid = null;
+        try {
+          savedAppid = localStorage.getItem(KEY);
+        } catch (e) { }
+        if (savedAppid) return savedAppid;
+        // 回退到 isCurrent
+        var current = accountsData && accountsData.find(function (a) { return a.isCurrent === true; });
+        return current ? current.appid : null;
+      }
 
       // 生成账号列表 HTML
       function renderAccountsHtml() {
+        var currentAppid = getCurrentAppid();
         return accountsData.map((account) => `
           <div class="flex overflow-auto relative justify-start items-center pr-4 pl-4 w-full h-10 cursor-pointer hover:bg-gray-100 menu-header-dropdown-option-item account-switch-item"
               data-appid="${account.appid}"
               data-name="${account.name}"
               data-avatar="${account.avatar}"
-              ${account.isCurrent ? 'style="background: rgb(234, 245, 255);"' : ''}>
+              ${account.appid === currentAppid ? 'style="background: rgb(234, 245, 255);"' : ''}>
             <img class="object-cover flex-shrink-0 w-6 h-6 rounded-md icon" src="${account.avatar}">
             <span class="semi-dy-open-typography description h-4 w-40 items-center leading-4 truncate ml-[6px] semi-dy-open-typography-ellipsis semi-dy-open-typography-ellipsis-single-line semi-dy-open-typography-ellipsis-overflow-ellipsis semi-dy-open-typography-ellipsis-overflow-ellipsis-text semi-dy-open-typography-primary semi-dy-open-typography-normal">
               <span>${account.name}</span>
@@ -753,15 +791,10 @@
               localStorage.setItem('dy_conf_current_appid', appid);
             } catch (err) { /* 隐私模式等 */ }
 
-            if (typeof window.renderAnnouncementsInit === 'function') {
-              window.renderAnnouncementsInit();
-            }
-
-            // 关闭弹窗
-            popover.remove();
-            popover = null;
-
             console.log('切换到账号:', name, appid);
+
+            // 直接刷新页面，重置所有状态
+            location.reload();
           });
         });
       }
