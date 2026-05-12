@@ -15,7 +15,7 @@
 (function () {
   'use strict';
 
-  const DATA_URL = './conf/conversion-data.json';
+  const DATA_URL = getConfigPath('conversion-data.json');
   const WEIGHTS_URL = './conf/hourly-weights.json';
 
   // 录屏数据指标配置
