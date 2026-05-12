@@ -20,11 +20,11 @@
         const config = await response.json();
         HOURLY_WEIGHTS = config.hourlyWeights;
         _hourlyWeightsLoaded = true;
-        
+
         // 验证权重总和是否接近 1
         const weightSum = Object.values(HOURLY_WEIGHTS).reduce((sum, w) => sum + w, 0);
         console.log('小时权重总和:', weightSum.toFixed(4), '(应接近 1.0)');
-        
+
         return HOURLY_WEIGHTS;
     }
 
@@ -459,7 +459,7 @@
     function getRealTimeAppData() {
         const realTimeList = window.chartDataConfig?.realTime || [];
         const appId = window._realTimeAppId || 'all';
-        
+
         if (appId === 'all') {
             let totalVisitors = 0, totalVisits = 0;
             realTimeList.forEach(item => {
@@ -638,15 +638,15 @@
         const timeRange = window._behaviorTimeRange || 'yesterday';
         const appId = window._behaviorAppId || 'all';
         const os = window._behaviorOs || 'all';
-        
+
         console.log('渲染行为表格 - timeRange:', timeRange, 'appId:', appId, 'os:', os);
-        
+
         const chartData = window.chartDataConfig;
         if (!chartData || !chartData.overview) {
             console.warn('未找到图表数据配置');
             return;
         }
-        
+
         // 获取筛选后的数据
         let allRecords = [];
         if (appId === 'all') {
@@ -657,11 +657,11 @@
             const appData = chartData.overview.find(app => app.appId === appId);
             if (appData) allRecords = appData.data;
         }
-        
+
         if (os !== 'all') {
             allRecords = allRecords.filter(r => r.os === os);
         }
-        
+
         // 格式化日期为本地时间 YYYY-MM-DD
         const formatDateStr = (d) => {
             const year = d.getFullYear();
@@ -669,18 +669,18 @@
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
         };
-        
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        
+
         let tableData = [];
-        
+
         if (timeRange === 'yesterday') {
             // 昨天：显示 24 小时数据
             const yesterday = new Date(today);
             yesterday.setDate(yesterday.getDate() - 1);
             const yesterdayStr = formatDateStr(yesterday);
-            
+
             // 聚合昨天的所有记录
             const yesterdayRecords = allRecords.filter(r => r.date === yesterdayStr);
             if (yesterdayRecords.length === 0) {
@@ -688,7 +688,7 @@
                 renderTable([], 1, tbodySelector);
                 return;
             }
-            
+
             // 聚合数据
             const aggregated = {
                 dailyUsers: 0, newUsers: 0, totalUser: 0, totalShares: 0,
@@ -713,13 +713,13 @@
                 aggregated.avgDuration /= yesterdayRecords.length;
                 aggregated.singleAvgDuration /= yesterdayRecords.length;
             }
-            
+
             // 生成 24 小时数据
             for (let hour = 0; hour < 24; hour++) {
                 const hourKey = String(hour).padStart(2, '0');
                 const timeStr = `${hourKey}:00:00`;
                 const weight = HOURLY_WEIGHTS[hourKey] || 0;
-                
+
                 tableData.push({
                     time: timeStr,
                     activeUsers: Math.round(aggregated.dailyUsers * weight),
@@ -740,13 +740,13 @@
             const days = (timeRange === 30 || timeRange === '30') ? 30 : 7;
             const startDate = new Date(today);
             startDate.setDate(startDate.getDate() - days);
-            
+
             // 筛选日期范围内的记录
             const filteredRecords = allRecords.filter(r => {
                 const d = new Date(r.date);
                 return d >= startDate && d < today;
             });
-            
+
             // 按日期分组聚合
             const grouped = {};
             filteredRecords.forEach(r => {
@@ -773,7 +773,7 @@
                 g.singleAvgDuration += r.singleAvgDuration || 0;
                 g.count++;
             });
-            
+
             // 转换为表格数据，按日期排序（最新的在前）
             tableData = Object.values(grouped)
                 .map(g => ({
@@ -792,7 +792,7 @@
                 }))
                 .sort((a, b) => b.time.localeCompare(a.time));
         }
-        
+
         // 渲染表格
         renderTable(tableData, 1, tbodySelector);
         console.log('✅ 行为表格渲染完成，共', tableData.length, '条数据');
@@ -805,7 +805,7 @@
      * 留存分析数据缓存
      */
     let _retentionDataCache = null;
-    const RETENTION_DATA_URL = 'conf/retention-data.json';
+    const RETENTION_DATA_URL = getConfigPath('retention-data.json');
 
     function loadRetentionData() {
         if (_retentionDataCache) return Promise.resolve(_retentionDataCache);

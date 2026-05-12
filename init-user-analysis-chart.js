@@ -296,20 +296,20 @@
     function initUserAnalysisChart() {
         let chartTitle = '活跃用户数';
         const timeRange = window._behaviorTimeRange || 'yesterday';
-        
+
         let data = [];
-        
+
         if (timeRange === 'yesterday') {
             // 昨天：显示 24 小时数据
             const filteredData = getBehaviorFilteredData();
             if (filteredData.length > 0) {
                 const dailyTotal = filteredData[0].dailyUsers || 0;
-                
+
                 // 加载权重生成小时数据
                 loadHourlyWeights().then(weights => {
                     const currentHour = new Date().getHours();
                     const hourlyData = [];
-                    
+
                     for (let h = 0; h <= 23; h++) {
                         const hourKey = String(h).padStart(2, '0');
                         const weight = weights[hourKey] || 0;
@@ -321,7 +321,7 @@
                             medalType: '活跃用户数'
                         });
                     }
-                    
+
                     console.log('✅ [用户分析图表] 昨天小时数据:', chartTitle, `(共${hourlyData.length}条数据)`);
                     const vchart = renderChart('visactor_window_user', hourlyData, chartTitle);
                     if (vchart) {
@@ -411,7 +411,7 @@
     function getRealTimeAppData() {
         const realTimeList = window.chartDataConfig?.realTime || [];
         const appId = window._realTimeAppId || 'all';
-        
+
         if (appId === 'all') {
             // 全部 APP：累加所有数据
             let totalVisitors = 0, totalVisits = 0;
@@ -629,17 +629,17 @@
                 const day = String(d.getDate()).padStart(2, '0');
                 return `${year}-${month}-${day}`;
             };
-            
+
             // 昨天数据
             const yesterday = new Date(today);
             yesterday.setDate(yesterday.getDate() - 1);
             const yesterdayStr = formatDate(yesterday);
-            
+
             // 前天数据（用于对比）
             const dayBefore = new Date(today);
             dayBefore.setDate(dayBefore.getDate() - 2);
             const dayBeforeStr = formatDate(dayBefore);
-            
+
             currentData = getBehaviorCardData(yesterdayStr);
             compareData = getBehaviorCardData(dayBeforeStr);
             console.log('昨天数据:', yesterdayStr, currentData);
@@ -648,7 +648,7 @@
             // 7天或30天：聚合该范围内的数据
             const days = (timeRange === 30 || timeRange === '30') ? 30 : 7;
             const filteredData = getBehaviorFilteredData();
-            
+
             // 聚合函数
             const aggregateData = (dataList) => {
                 if (!dataList || dataList.length === 0) return null;
@@ -677,15 +677,15 @@
                 }
                 return result;
             };
-            
+
             currentData = aggregateData(filteredData);
-            
+
             // 对比数据：前一个同等周期
             const prevStart = new Date(today);
             prevStart.setDate(prevStart.getDate() - days * 2);
             const prevEnd = new Date(today);
             prevEnd.setDate(prevEnd.getDate() - days);
-            
+
             // 获取前一周期的数据
             const appId = window._behaviorAppId || 'all';
             const os = window._behaviorOs || 'all';
@@ -706,7 +706,7 @@
                 return d >= prevStart && d < prevEnd;
             });
             compareData = aggregateData(prevRecords);
-            
+
             console.log(`最近${days}天累计数据:`, currentData, '对比前${days}天:', compareData);
         }
 
@@ -948,7 +948,7 @@
         if (timeRange === 'yesterday' && filteredData.length > 0) {
             // 昨天：显示 24 小时数据
             const dailyTotal = filteredData[0][dataField] || 0;
-            
+
             loadHourlyWeights().then(weights => {
                 const hourlyData = [];
                 for (let h = 0; h <= 23; h++) {
@@ -956,7 +956,7 @@
                     const weight = weights[hourKey] || 0;
                     let value = Math.round(dailyTotal * weight);
                     let displayValue = value;
-                    
+
                     // 时长类指标格式化
                     if ((metricTitle === '人均游戏时长' || metricTitle === '次均游戏时长') && typeof value === 'number') {
                         const hours = Math.floor(value / 3600);
@@ -970,7 +970,7 @@
                     } else if (typeof value === 'number') {
                         displayValue = value.toLocaleString('zh-CN');
                     }
-                    
+
                     hourlyData.push({
                         date: `${hourKey}:00`,
                         value: value,
@@ -978,9 +978,9 @@
                         medalType: metricTitle
                     });
                 }
-                
+
                 console.log('✅ [用户分析] 切换到指标(小时):', metricTitle, `(共${hourlyData.length}条数据)`);
-                
+
                 if (userAnalysisChartInstance && userAnalysisChartContainer) {
                     userAnalysisChartInstance.updateData('data', hourlyData);
                     createChartTitle(userAnalysisChartContainer, metricTitle);
@@ -1027,7 +1027,7 @@
      * 留存分析数据缓存
      */
     let _retentionChartDataCache = null;
-    const RETENTION_CHART_DATA_URL = 'conf/retention-data.json';
+    const RETENTION_CHART_DATA_URL = getConfigPath('retention-data.json');
 
     function loadRetentionChartData() {
         if (_retentionChartDataCache) return Promise.resolve(_retentionChartDataCache);

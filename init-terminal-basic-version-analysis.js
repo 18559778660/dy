@@ -13,7 +13,7 @@
 (function () {
   'use strict';
 
-  const DATA_URL = './conf/terminal-model-data_brand_basic_version.json';
+  const DATA_URL = getConfigPath('terminal-model-data_brand_basic_version.json');
   const CHART_KEY = 'terminalBasicVersionChartInstance';
 
   if (typeof window._terminalBasicVersionAppId === 'undefined') {

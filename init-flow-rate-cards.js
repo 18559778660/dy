@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const DATA_URL = 'conf/flow-rate-ad-data.json';
+  const DATA_URL = getConfigPath('flow-rate-ad-data.json');
   let _adData = null;
 
   function loadAdData() {

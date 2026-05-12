@@ -17,7 +17,7 @@
 (function () {
   'use strict';
 
-  const DATA_URL = './conf/user-profile-data.json';
+  const DATA_URL = getConfigPath('user-profile-data.json');
 
   if (typeof window._profileAppId === 'undefined') window._profileAppId = 'dy';
   if (typeof window._profileCategory === 'undefined') window._profileCategory = 'active';

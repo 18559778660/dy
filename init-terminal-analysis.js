@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  const DATA_URL = './conf/terminal-model-data_phone.json';
+  const DATA_URL = getConfigPath('terminal-model-data_phone.json');
   const CHART_KEY = 'terminalModelChartInstance';
 
   if (typeof window._terminalAppId === 'undefined') window._terminalAppId = 'all';
