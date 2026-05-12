@@ -681,8 +681,8 @@
         {
             "appId": "dy",
             "appName": "抖音",
-            "dailyVisitors": 68000,
-            "dailyVisits": 85000
+            "dailyVisitors": 123,
+            "dailyVisits": 123
         },
         {
             "appId": "dy_lite",
