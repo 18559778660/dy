@@ -12,7 +12,7 @@ function renderVersionData() {
     console.log('开始加载版本数据...');
 
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', './conf/version.json', true);
+    xhr.open('GET', getConfigPath('version.json'), true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             try {
@@ -247,12 +247,12 @@ function generateTestVersionHTML(data) {
             return `<div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e6eb;">${html}</div>`;
         }).join('');
     }
-    
+
     // 如果没有数据，返回空状态
     if (!data || Object.keys(data).length === 0) {
         return generateEmptyTestVersionHTML();
     }
-    
+
     // 单个对象
     return generateSingleTestVersionHTML(data);
 }
