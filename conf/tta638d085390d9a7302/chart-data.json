@@ -5,7 +5,7 @@
             "appName": "抖音",
             "data": [
                 {
-                    "date": "2026-05-10",
+                    "date": "2026-05-11",
                     "os": "ios",
                     "dailyUsers": 10,
                     "newUsers": 855,
@@ -340,7 +340,7 @@
                     ]
                 },
                 {
-                    "date": "2026-05-11",
+                    "date": "2026-05-12",
                     "os": "android",
                     "dailyUsers": 30,
                     "newUsers": 10,
