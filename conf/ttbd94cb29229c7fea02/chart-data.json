@@ -68,12 +68,6 @@
             "dailyVisits": 41000
         },
         {
-            "appId": "xigua",
-            "appName": "西瓜视频",
-            "dailyVisitors": 15000,
-            "dailyVisits": 19500
-        },
-        {
             "appId": "toutiao",
             "appName": "今日头条",
             "dailyVisitors": 21000,
