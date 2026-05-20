@@ -19,6 +19,19 @@ BEHAVIOR_SHEET = "行为分析"
 REALTIME_SHEET = "实时分析"
 HEADER_ROW = 2   # row 1 is Chinese labels, row 2 is English field keys
 DATA_START_ROW = 3
+MAIN_METRIC_FIELDS = [
+    "dailyUsers",
+    "newUsers",
+    "avgDuration",
+    "sharing",
+    "startup",
+    "avgStartup",
+    "singleAvgDuration",
+    "shareSuccess",
+    "shareNewUsers",
+    "shareSuccessUsers",
+    "totalShares",
+]
 
 
 def normalize(v):
@@ -68,29 +81,29 @@ def read_sheet_as_dict_rows(ws):
 
 
 def build_overview(behavior_rows):
-    # group app level
+    # app_key -> list[data_item]
     apps = OrderedDict()
+    current_ctx = None  # { app_key, date, os }
 
     for row in behavior_rows:
-        app_id = normalize(row.get("appId"))
-        app_name = normalize(row.get("appName"))
-        date = normalize(row.get("date"))
-        os_name = normalize(row.get("os"))
-
-        if not app_id or not date or not os_name:
-            # skip invalid data rows
+        # Ignore completely empty rows
+        if not any(normalize(v) is not None for v in row.values()):
             continue
 
-        app_key = (app_id, app_name or app_id)
-        if app_key not in apps:
-            apps[app_key] = OrderedDict()
+        raw_app_id = normalize(row.get("appId"))
+        raw_app_name = normalize(row.get("appName"))
 
-        day_key = (str(date), str(os_name))
-        app_days = apps[app_key]
-        if day_key not in app_days:
-            app_days[day_key] = {
-                "date": str(date),
-                "os": str(os_name),
+        # Anchor row: has appId => always starts a new independent data item
+        if raw_app_id is not None:
+            app_id = raw_app_id
+            app_name = raw_app_name or app_id
+            app_key = (app_id, app_name)
+            if app_key not in apps:
+                apps[app_key] = []
+
+            day_item = {
+                "date": normalize(row.get("date")),
+                "os": normalize(row.get("os")),
                 "dailyUsers": to_int_if_possible(row.get("dailyUsers")),
                 "newUsers": to_int_if_possible(row.get("newUsers")),
                 "avgDuration": to_int_if_possible(row.get("avgDuration")),
@@ -105,8 +118,41 @@ def build_overview(behavior_rows):
                 "douyinSourceScenes": [],
                 "douyinVideoData": [],
             }
-
-        day_item = app_days[day_key]
+            apps[app_key].append(day_item)
+            current_ctx = {
+                "app_key": app_key,
+                "date": day_item.get("date"),
+                "os": day_item.get("os"),
+            }
+        else:
+            # Child row: no appId but has any field => create a NEW data item
+            # under the previous anchor app group.
+            if not current_ctx:
+                continue
+            app_key = current_ctx["app_key"]
+            day_item = {
+                "date": normalize(row.get("date")),
+                "os": normalize(row.get("os")),
+                "dailyUsers": to_int_if_possible(row.get("dailyUsers")),
+                "newUsers": to_int_if_possible(row.get("newUsers")),
+                "avgDuration": to_int_if_possible(row.get("avgDuration")),
+                "sharing": to_int_if_possible(row.get("sharing")),
+                "startup": to_int_if_possible(row.get("startup")),
+                "avgStartup": to_int_if_possible(row.get("avgStartup")),
+                "singleAvgDuration": to_int_if_possible(row.get("singleAvgDuration")),
+                "shareSuccess": to_int_if_possible(row.get("shareSuccess")),
+                "shareNewUsers": to_int_if_possible(row.get("shareNewUsers")),
+                "shareSuccessUsers": to_int_if_possible(row.get("shareSuccessUsers")),
+                "totalShares": to_int_if_possible(row.get("totalShares")),
+                "douyinSourceScenes": [],
+                "douyinVideoData": [],
+            }
+            apps[app_key].append(day_item)
+            current_ctx = {
+                "app_key": app_key,
+                "date": day_item.get("date"),
+                "os": day_item.get("os"),
+            }
 
         # source scene (optional per row)
         scene_id = normalize(row.get("SourceScenes_sceneId"))
@@ -136,9 +182,7 @@ def build_overview(behavior_rows):
                 day_item["douyinVideoData"].append(video_item)
 
     overview = []
-    for (app_id, app_name), day_map in apps.items():
-        data_list = list(day_map.values())
-        data_list.sort(key=lambda x: (x.get("date") or "", x.get("os") or ""))
+    for (app_id, app_name), data_list in apps.items():
         overview.append({
             "appId": app_id,
             "appName": app_name,
