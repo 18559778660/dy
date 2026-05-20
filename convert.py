@@ -7,11 +7,13 @@
 import csv
 import io
 import json
+import subprocess
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CONF1 = ROOT / "conf1"
+CHART_CONVERTER = ROOT / "excel_to_chart_data.py"
 
 
 def main() -> None:
@@ -23,7 +25,35 @@ def main() -> None:
             "从 conf1/<表名>.xlsx 读取，写入 conf/<游戏id>/<表名>.json"
         )
     game_id = sys.argv[1].strip()
-    base = Path(sys.argv[2].strip()).name
+    table_name = sys.argv[2].strip()
+    base = Path(table_name).name
+
+    # chart_data 走专用转换器：Excel(行为分析/实时分析) -> chart-data.json
+    if base.lower() in ("chart_data", "chart-data", "chart_data.xlsx", "chart-data.xlsx"):
+        src = CONF1 / "chart-data.xlsx"
+        if not src.is_file():
+            sys.exit(f"找不到 {src}")
+        if not CHART_CONVERTER.is_file():
+            sys.exit(f"找不到转换脚本 {CHART_CONVERTER}")
+
+        out = ROOT / "conf" / game_id / "chart-data.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+
+        cmd = [
+            sys.executable,
+            str(CHART_CONVERTER),
+            "--input",
+            str(src),
+            "--output",
+            str(out),
+        ]
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(f"chart_data 转换失败，退出码: {e.returncode}")
+        print(out)
+        return
+
     if not base.lower().endswith(".xlsx"):
         base = f"{base}.xlsx"
     src = CONF1 / base
