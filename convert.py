@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parent
 CONF1 = ROOT / "conf1"
 CHART_CONVERTER = ROOT / "excel_to_chart_data.py"
 VERSION_CONVERTER = ROOT / "excel_to_version_json.py"
+RETENTION_CONVERTER = ROOT / "excel_to_retention_json.py"
 
 
 def main() -> None:
@@ -28,6 +29,33 @@ def main() -> None:
     game_id = sys.argv[1].strip()
     table_name = sys.argv[2].strip()
     base = Path(table_name).name
+
+    # retention-data 走专用转换器：Excel(retention-data.xlsx) -> retention-data.json
+    if base.lower() in ("retention", "retention-data", "retention_data", "retention-data.xlsx"):
+        src = CONF1 / "retention-data.xlsx"
+        if not src.is_file():
+            sys.exit(f"找不到 {src}")
+        if not RETENTION_CONVERTER.is_file():
+            sys.exit(f"找不到转换脚本 {RETENTION_CONVERTER}")
+
+        out = ROOT / "conf" / game_id / "retention-data.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        cmd = [
+            sys.executable,
+            str(RETENTION_CONVERTER),
+            "--input",
+            str(src),
+            "--output",
+            str(out),
+            "--source-json",
+            str(out),
+        ]
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(f"retention-data 转换失败，退出码: {e.returncode}")
+        print(out)
+        return
 
     # version 走专用转换器：Excel(version.xlsx) -> version.json
     if base.lower() in ("version_excel", "version-xlsx", "version.xlsx", "version"):
