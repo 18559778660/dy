@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 CONF1 = ROOT / "conf1"
 CHART_CONVERTER = ROOT / "excel_to_chart_data.py"
+VERSION_CONVERTER = ROOT / "excel_to_version_json.py"
 
 
 def main() -> None:
@@ -27,6 +28,31 @@ def main() -> None:
     game_id = sys.argv[1].strip()
     table_name = sys.argv[2].strip()
     base = Path(table_name).name
+
+    # version 走专用转换器：Excel(version.xlsx) -> version.json
+    if base.lower() in ("version_excel", "version-xlsx", "version.xlsx", "version"):
+        src = CONF1 / "version.xlsx"
+        if not src.is_file():
+            sys.exit(f"找不到 {src}")
+        if not VERSION_CONVERTER.is_file():
+            sys.exit(f"找不到转换脚本 {VERSION_CONVERTER}")
+
+        out = ROOT / "conf" / game_id / "version.json"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        cmd = [
+            sys.executable,
+            str(VERSION_CONVERTER),
+            "--input",
+            str(src),
+            "--output",
+            str(out),
+        ]
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            sys.exit(f"version 转换失败，退出码: {e.returncode}")
+        print(out)
+        return
 
     # chart_data 走专用转换器：Excel(行为分析/实时分析) -> chart-data.json
     if base.lower() in ("chart_data", "chart-data", "chart_data.xlsx", "chart-data.xlsx"):
